@@ -1,2 +1,2 @@
-# SimpleLedStripeController
-Simple Controller for RGB-LED-Stripes
+# SimpleLedStripController
+Simple Controller for RGB-LED-Strips
