@@ -26,7 +26,6 @@ if __name__ == '__main__':
     print(42 * '*')
     print()
 
-
 ##########################################
 
 class Animation(object):
@@ -62,7 +61,7 @@ class Animation(object):
                     ]
                 },
             },
-            "pixel_count": 144*3,
+            "pixel_count": 144*1,
             "offset": 0,
         },
     }
