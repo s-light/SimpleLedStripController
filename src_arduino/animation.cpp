@@ -77,9 +77,11 @@ void MyAnimation::begin(Stream &out) {
     // start up...
     if (ready == false) {
         // setup
-        // out.println(F("setup pixels:"));
-        // FastLED.addLeds<APA102>(pixels, NUM_LEDS);
-        // out.println(F("  finished."));
+        out.println(F("setup pixels:"));
+        FastLED.addLeds<APA102>(pixels, PIXEL_COUNT);
+        // FastLED.setDither(0);
+        FastLED.setBrightness(10);
+        out.println(F("  finished."));
 
         animation_init(out);
 
@@ -203,7 +205,7 @@ void MyAnimation::animation_update() {
         effect__rainbow();
 
         // write data to chips
-        // tlc.show();
+        FastLED.show();
     }
 }
 
@@ -236,27 +238,29 @@ void MyAnimation::effect__pixel_checker() {
     //     effect_position, 0, PIXEL_COUNT);
     // tlc.set_pixel_all_16bit_value(0, 0, 0);
     // tlc.set_pixel_16bit_value(step, 0, 0, 500);
+    // pixels[step]
 }
 
 void MyAnimation::effect__rainbow() {
     for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
-        // full rainbow
-        CHSV color_hsv = CHSV(effect_position, 1.0, brightness);
-        CRGB color_rgb = hsv2rgb(color_hsv);
-        // tlc.set_pixel_float_value(
-        //     pmap[row_i][col_i],
-        //     color_rgb.r, color_rgb.g, color_rgb.b);
+        float pixel_offset = pixel_i * 1.0 / PIXEL_COUNT;
+        float offset = effect_position + (pixel_offset * 0.50);
+        uint8_t offset_int = offset * 255;
+        uint8_t hue = offset_int;
+        pixels[pixel_i] = CHSV(hue, 255, 255);
     }
+    // fill_rainbow(pixels, PIXEL_COUNT, effect_position_int);
 }
 
 void MyAnimation::effect__static() {
-    for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
-        CHSV color_hsv = CHSV(hue, saturation, brightness);
-        CRGB color_rgb = hsv2rgb(color_hsv);
-        // tlc.set_pixel_float_value(
-        //     pixel_i,
-        //     color_rgb.r, color_rgb.g, color_rgb.b);
-    }
+    // for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
+    //     // CHSV color_hsv = CHSV(hue, saturation, brightness);
+    //     // CRGB color_rgb = hsv2rgb(color_hsv);
+    //     // tlc.set_pixel_float_value(
+    //     //     pixel_i,
+    //     //     color_rgb.r, color_rgb.g, color_rgb.b);
+    // }
+    fill_solid(pixels, PIXEL_COUNT, color_hsv);
 }
 
 

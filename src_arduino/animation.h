@@ -54,9 +54,11 @@ SOFTWARE.
 
 #include <slight_DebugMenu.h>
 
-// #include <FastLED.h>
+#include <FastLED.h>
 
-#include "./color.h"
+// #include "./color.h"
+// ^ color.h is my own minimal FastLED compatible thing...
+
 // #include "./mapping.h"
 
 
@@ -88,11 +90,11 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // pixels
 
-    const uint16_t PIXEL_COUNT = (144*3);
-    // CHSVArray<PIXEL_COUNT> leds;
-    // CRGB pixels[PIXEL_COUNT];
+    // static const uint16_t PIXEL_COUNT = 144*3;
+    static const uint16_t PIXEL_COUNT = 100;
+    CRGB pixels[PIXEL_COUNT];
 
-    // const CHSV warm_white = CHSV(142, 100, 240);
+    const CHSV warm_white = CHSV(142, 100, 240);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
@@ -120,10 +122,11 @@ public:
 
     bool animation_run = true;
 
-    uint16_t effect_duration = 5 * 1000; //ms
+    uint16_t effect_duration = 10 * 1000; //ms
     float hue = 0.55;
     float saturation = 1.0;
-    float brightness = 0.3;
+    float brightness = 0.1;
+    CHSV color_hsv = warm_white;
 
 private:
 

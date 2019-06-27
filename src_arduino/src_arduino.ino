@@ -76,8 +76,8 @@
 
 #include <slight_RotaryEncoder_CallbackHelper.h>
 
-#include "animation.h"
-#include "settingsui.h"
+#include "./animation.h"
+#include "./settingsui.h"
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Info
