@@ -57,6 +57,7 @@ SOFTWARE.
 // #include <FastLED.h>
 
 #include "./color.h"
+// #include "./mapping.h"
 
 
 class MyAnimation {
@@ -76,22 +77,22 @@ public:
     // };
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // constructor
+
+    MyAnimation();
+    ~MyAnimation();
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // pixels
 
-    static const uint16_t PIXEL_COUNT = 144*3:
+    const uint16_t PIXEL_COUNT = (144*3);
     // CHSVArray<PIXEL_COUNT> leds;
     // CRGB pixels[PIXEL_COUNT];
 
     // const CHSV warm_white = CHSV(142, 100, 240);
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // constructor
-
-    MyAnimation();
-    ~MyAnimation();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
@@ -108,11 +109,8 @@ public:
     void print_tlc_buffer(Print &out);
 
     void menu__set_hue(Print &out, char *command);
-    void menu__set_contrast(Print &out, char *command);
+    void menu__set_saturation(Print &out, char *command);
     void menu__set_brightness(Print &out, char *command);
-
-    float gsclock_set_frequency_MHz(float frequency_MHz);
-    float gsclock_get_frequency_MHz();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // helper
@@ -122,13 +120,10 @@ public:
 
     bool animation_run = true;
 
-    uint16_t effect_duration = 30 * 1000; //ms
+    uint16_t effect_duration = 5 * 1000; //ms
     float hue = 0.55;
-    float contrast = 1.4;
+    float saturation = 1.0;
     float brightness = 0.3;
-
-    // const float PI = 3.141592;
-    // is already defined by arduino or some other defaults...
 
 private:
 
@@ -141,13 +136,8 @@ private:
     void calculate_effect_position();
 
     void effect__pixel_checker();
-    void effect__line();
     void effect__rainbow();
-
-    void effect_Matrix2D();
-    CHSV effect_Matrix2D_get_pixel(float col, float row, float offset);
-    CHSV effect__plasma(float col, float row, float offset);
-    CHSV effect__sparkle(float col, float row, float offset);
+    void effect__static();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes

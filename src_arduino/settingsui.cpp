@@ -315,7 +315,7 @@ void SettingsUI::handleMenu_Main(slight_DebugMenu *instance) {
         //     animation.menu__set_hue(out, command);
         // } break;
         // case 'c': {
-        //     animation.menu__set_contrast(out, command);
+        //     animation.menu__set_saturation(out, command);
         // } break;
         // case 'b': {
         //     animation.menu__set_brightness(out, command);

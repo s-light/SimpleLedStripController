@@ -76,9 +76,7 @@
 
 #include <slight_RotaryEncoder_CallbackHelper.h>
 
-// #include <slight_DebugMenu.h>
-
-// #include "animation.h"
+#include "animation.h"
 #include "settingsui.h"
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -149,7 +147,7 @@ void sketchinfo_print(Print &out) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Sub-Parts
 
-// MyAnimation animation = MyAnimation();
+MyAnimation animation = MyAnimation();
 
 SettingsUI settingsui = SettingsUI(sketchinfo_print);
 
@@ -198,7 +196,7 @@ void setup() {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // setup sub-Parts
 
-        // animation.begin(Serial);
+        animation.begin(Serial);
         settingsui.begin(Serial, settingsui_encoder_ISR);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -214,7 +212,7 @@ void setup() {
 // main loop
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void loop() {
-    // animation.update();
+    animation.update();
     settingsui.update();
 }
 

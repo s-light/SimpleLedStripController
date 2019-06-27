@@ -65,7 +65,6 @@ SOFTWARE.
 
 MyAnimation::MyAnimation() {
     ready = false;
-    pmap_init();
 }
 
 MyAnimation::~MyAnimation() {
@@ -106,48 +105,6 @@ void MyAnimation::update() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // menu
 
-void MyAnimation::menu__test_buffer(Print &out) {
-    out.println(F("SetBuffer:"));
-    out.println(F("--- old"));
-    print_tlc_buffer(out);
-    // tlc.set_pixel_all_16bit_value(
-    //     255, 1, 1);
-    //     // 0b11000110, 0b11000110, 0b11000110); // 198
-    //     // 0x0055, 0x0055, 0x0055);
-    //     // 0b01010101, 0b10101010, 0b10011001);
-    //     // 0x0055, 0x00AA, 0x0099);
-    //     // 85, 170, 153);
-    // out.println(F("--- new"));
-    // print_tlc_buffer(out);
-
-    out.println(F("--- red"));
-    tlc.set_pixel_all_16bit_value(1, 0, 0);
-    print_tlc_buffer(out);
-    tlc.show();
-    delay(1000);
-    out.println(F("--- green"));
-    tlc.set_pixel_all_16bit_value(0, 1, 0);
-    print_tlc_buffer(out);
-    tlc.show();
-    delay(1000);
-    out.println(F("--- blue"));
-    tlc.set_pixel_all_16bit_value(0, 0, 1);
-    print_tlc_buffer(out);
-    tlc.show();
-    delay(1000);
-    out.println(F("--- red full"));
-    tlc.set_pixel_all_16bit_value(65535, 0, 0);
-    print_tlc_buffer(out);
-    tlc.show();
-    delay(100);
-    out.println(F("--- white"));
-    tlc.set_pixel_all_16bit_value(1, 1, 1);
-    print_tlc_buffer(out);
-    tlc.show();
-
-    out.println();
-}
-
 void MyAnimation::menu__set_pixel(Print &out, char *command) {
     out.print(F("Set pixel "));
     uint8_t command_offset = 1;
@@ -163,7 +120,7 @@ void MyAnimation::menu__set_pixel(Print &out, char *command) {
     out.print(F(" to "));
     uint16_t value = atoi(&command[command_offset]);
     out.print(value);
-    tlc.set_pixel_16bit_value(index, value, value, value);
+    // tlc.set_pixel_16bit_value(index, value, value, value);
     out.println();
 }
 
@@ -177,8 +134,8 @@ void MyAnimation::menu__time_meassurements(Print &out) {
 
     for (size_t i = 0; i < tm_loop_count; i++) {
         tm_start = millis();
-        effect_Matrix2D();
-        tlc.show();
+        effect__rainbow();
+        // tlc.show();
         tm_end = millis();
         tm_duration += (tm_end - tm_start);
     }
@@ -198,12 +155,12 @@ void MyAnimation::menu__set_hue(Print &out, char *command) {
     out.println();
 }
 
-void MyAnimation::menu__set_contrast(Print &out, char *command) {
-    out.print(F("Set contrast "));
+void MyAnimation::menu__set_saturation(Print &out, char *command) {
+    out.print(F("Set saturation "));
     uint8_t command_offset = 1;
     float value = atof(&command[command_offset]);
     out.print(value);
-    contrast = value;
+    saturation = value;
     out.println();
 }
 
@@ -229,8 +186,8 @@ void MyAnimation::animation_init(Stream &out) {
         // out.println(F("  Set all Pixel to 21845."));
         // tlc.set_pixel_all_16bit_value(21845, 21845, 21845);
         out.println(F("  Set all Pixel to red=blue=100."));
-        tlc.set_pixel_all_16bit_value(100, 0, 100);
-        tlc.show();
+        // tlc.set_pixel_all_16bit_value(100, 0, 100);
+        // tlc.show();
 
         effect_start = millis();
         effect_end = millis() + effect_duration;
@@ -243,17 +200,18 @@ void MyAnimation::animation_update() {
     if (animation_run) {
         // effect__pixel_checker();
         // effect__line();
-        // effect__rainbow();
-
-        effect_Matrix2D();
+        effect__rainbow();
 
         // write data to chips
-        tlc.show();
+        // tlc.show();
     }
 }
 
 void MyAnimation::calculate_effect_position() {
-    effect_position = normalize_to_01(millis(), effect_start, effect_end);
+    // effect_position = normalize_to_01(millis(), effect_start, effect_end);
+    effect_position = (
+        ((millis() - effect_start) * 1.0) / (effect_end - effect_start)
+    );  // NOLINT(whitespace/parens)
     effect_loopcount++;
     if (effect_position >  1.0) {
         effect_position = 0;
@@ -274,131 +232,33 @@ void MyAnimation::calculate_effect_position() {
 
 
 void MyAnimation::effect__pixel_checker() {
-    uint8_t step = map_range_01_to__uint8(
-        effect_position, 0, MATRIX_PIXEL_COUNT);
-    tlc.set_pixel_all_16bit_value(0, 0, 0);
-    tlc.set_pixel_16bit_value(step, 0, 0, 500);
-}
-
-void MyAnimation::effect__line() {
-    uint8_t step = map_range_01_to__uint8(effect_position, 0, MATRIX_COL_COUNT);
-    tlc.set_pixel_all_16bit_value(0, 0, 0);
-    for (size_t row_index = 0; row_index < MATRIX_ROW_COUNT; row_index++) {
-        tlc.set_pixel_16bit_value(pmap[row_index][step], 0, 0, 500);
-    }
+    // uint8_t step = map_range_01_to__uint8(
+    //     effect_position, 0, PIXEL_COUNT);
+    // tlc.set_pixel_all_16bit_value(0, 0, 0);
+    // tlc.set_pixel_16bit_value(step, 0, 0, 500);
 }
 
 void MyAnimation::effect__rainbow() {
-    for (size_t row_i = 0; row_i < MATRIX_ROW_COUNT; row_i++) {
-        for (size_t col_i = 0; col_i < MATRIX_COL_COUNT; col_i++) {
-            // full rainbow
-            CHSV color_hsv = CHSV(effect_position, 1.0, brightness);
-            CRGB color_rgb = hsv2rgb(color_hsv);
-            tlc.set_pixel_float_value(
-                pmap[row_i][col_i],
-                color_rgb.r, color_rgb.g, color_rgb.b);
-            // tlc.set_pixel_16bit_value(
-            //     pmap[row_i][col_i],
-            //     0, col_i * step * 10 , row_i * 100);
-        }
+    for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
+        // full rainbow
+        CHSV color_hsv = CHSV(effect_position, 1.0, brightness);
+        CRGB color_rgb = hsv2rgb(color_hsv);
+        // tlc.set_pixel_float_value(
+        //     pmap[row_i][col_i],
+        //     color_rgb.r, color_rgb.g, color_rgb.b);
     }
 }
 
-
-
-CHSV MyAnimation::effect__plasma(
-    float col, float row, float offset
-) {
-    // calculate plasma
-    // mostly inspired by
-    // https://www.bidouille.org/prog/plasma
-    // moving rings
-    float cx = col + 0.5 * sin(offset / 5);
-    float cy = row + 0.5 * cos(offset / 3);
-    float xy_value = sin(
-        sqrt(100 * (cx*cx + cy*cy) + 1)
-        + offset);
-    // mapping
-    float pixel_hue = map_range(
-        xy_value,
-        -1.0, 1.0,
-        // self._hue_min, self._hue_max
-        // 0.0, 0.08
-        hue - 0.05, hue + 0.05);
-    float pixel_saturation = map_range(
-        xy_value,
-        -1.0, 1.0,
-        1.0, 1.0);
-    float pixel_value = map_range(
-        xy_value,
-        1.0, -1.0,
-        // self._contrast_min, self._contrast_max
-        // -0.005, 1.0
-        1.0 - contrast, 1.0);
-    // map to color
-    CHSV pixel_hsv = CHSV(pixel_hue, pixel_saturation, pixel_value);
-    return pixel_hsv;
-}
-
-CHSV MyAnimation::effect__sparkle(
-    float col, float row, float offset
-) {
-    CHSV pixel_hsv = CHSV(0.5, 1.0, 0.0);
-    return pixel_hsv;
-}
-
-
-CHSV MyAnimation::effect_Matrix2D_get_pixel(
-    float col, float row, float offset
-) {
-    CHSV pixel_hsv = CHSV(0.5, 0.0, 1.0);
-
-    // plasma
-    CHSV plasma = effect__plasma(col, row, offset);
-    pixel_hsv = plasma;
-
-    // sparkle
-    CHSV sparkle = effect__sparkle(
-        col, row, offset);
-    // not used currently..
-
-    // TODO(s-light): develop 'layer' / 'multiplyer' system...
-
-    return pixel_hsv;
-}
-
-void MyAnimation::effect_Matrix2D() {
-    float offset = map_range_01_to(effect_position, 0.0, (PI * 30));
-    for (size_t row_i = 0; row_i < MATRIX_ROW_COUNT; row_i++) {
-        // normalize row
-        float row = map_range(
-            row_i,
-            0, MATRIX_ROW_COUNT-1,
-            -0.5, 0.5);
-        for (size_t col_i = 0; col_i < MATRIX_COL_COUNT; col_i++) {
-            // normalize col
-            float col = map_range(
-                col_i,
-                0, MATRIX_COL_COUNT-1,
-                -0.5, 0.5);
-
-            // ------------------------------------------
-            CHSV pixel_hsv = effect_Matrix2D_get_pixel(col, row, offset);
-
-            // ------------------------------------------
-            // final conversions
-            // global brightness
-            pixel_hsv.value *= brightness;
-            // convert to rgb
-            CRGB pixel_rgb = hsv2rgb(pixel_hsv);
-            // gamma & global brightness
-            // fancyled.gamma_adjust(brightness=self.brightness);
-            tlc.set_pixel_float_value(
-                pmap[row_i][col_i],
-                pixel_rgb.r, pixel_rgb.g, pixel_rgb.b);
-        }
+void MyAnimation::effect__static() {
+    for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
+        CHSV color_hsv = CHSV(hue, saturation, brightness);
+        CRGB color_rgb = hsv2rgb(color_hsv);
+        // tlc.set_pixel_float_value(
+        //     pixel_i,
+        //     color_rgb.r, color_rgb.g, color_rgb.b);
     }
 }
+
 
 
 
