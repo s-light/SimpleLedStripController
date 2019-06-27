@@ -1,3 +1,5 @@
+// NOLINT(legal/copyright)
+
 /******************************************************************************
 
     __doc__ = """
@@ -315,28 +317,24 @@ CHSV MyAnimation::effect__plasma(
     float cy = row + 0.5 * cos(offset / 3);
     float xy_value = sin(
         sqrt(100 * (cx*cx + cy*cy) + 1)
-        + offset
-    );
+        + offset);
     // mapping
     float pixel_hue = map_range(
         xy_value,
         -1.0, 1.0,
         // self._hue_min, self._hue_max
         // 0.0, 0.08
-        hue - 0.05, hue + 0.05
-    );
+        hue - 0.05, hue + 0.05);
     float pixel_saturation = map_range(
         xy_value,
         -1.0, 1.0,
-        1.0, 1.0
-    );
+        1.0, 1.0);
     float pixel_value = map_range(
         xy_value,
         1.0, -1.0,
         // self._contrast_min, self._contrast_max
         // -0.005, 1.0
-        1.0 - contrast, 1.0
-    );
+        1.0 - contrast, 1.0);
     // map to color
     CHSV pixel_hsv = CHSV(pixel_hue, pixel_saturation, pixel_value);
     return pixel_hsv;
