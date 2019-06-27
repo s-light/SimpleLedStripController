@@ -66,7 +66,7 @@ class SettingsUI {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // basic library api
-    void begin(Stream &out);
+    void begin(Stream &out, slight_RotaryEncoder::tCallbackFunctionISR funcISR);
     void update();
     void end();
 
@@ -77,41 +77,43 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes & objects
 
-    // slight_ButtonInput mybutton;
+    boolean mybutton_get_input(slight_ButtonInput *instance);
+    void mybutton_event(slight_ButtonInput *instance);
+
     slight_ButtonInput mybutton = slight_ButtonInput(
-        // byte cbID_New
-        42,
-        // byte cbPin_New,
+        // uint8_t id_new
+        1,
+        // uint8_t pin_new,
         A3,
-        // tCbfuncGetInput cbfuncGetInput_New,
-        button_getinput_func,
-        // tcbfOnEvent cbfCallbackOnEvent_New,
-        button_event_func,
-        // const uint16_t cwDuration_Debounce_New = 30,
-          30,
-        // const uint16_t cwDuration_HoldingDown_New = 1000,
+        // tCallbackFunctionGetInput callbackGetInput_new,
+        std::bind(&SettingsUI::mybutton_get_input, this, std::placeholders::_1),
+        // tCallbackFunction callbackOnEvent_new,
+        std::bind(&SettingsUI::mybutton_event, this, std::placeholders::_1),
+        // const uint16_t duration_debounce_new = 20,
+        10,
+        // const uint16_t duration_holddown_new = 1000,
         1000,
-        // const uint16_t cwDuration_ClickSingle_New =   50,
-          50,
-        // const uint16_t cwDuration_ClickLong_New =   3000,
-        3000,
-        // const uint16_t cwDuration_ClickDouble_New = 1000
-         500
+        // const uint16_t duration_click_long_new =   3000,
+        500,
+        // const uint16_t duration_click_double_new = 250
+        250
     );
 
-    //
-    // slight_RotaryEncoder myencoder = slight_RotaryEncoder(
-    //     // uint8_t id_new,
-    //     1,
-    //     // uint8_t pin_A_new,
-    //     A4,
-    //     // uint8_t pin_B_new,
-    //     A5,
-    //     // uint8_t pulse_per_step_new,
-    //     2,
-    //     // tcbfOnEvent cbfCallbackOnEvent_New
-    //     encoder_event
-    // );
+
+    void myencoder_event(slight_RotaryEncoder *instance);
+
+    slight_RotaryEncoder myencoder = slight_RotaryEncoder(
+        // uint8_t id_new,
+        1,
+        // uint8_t pin_A_new,
+        A4,
+        // uint8_t pin_B_new,
+        A5,
+        // uint8_t pulse_per_step_new,
+        2,
+        // tCallbackFunction callbackOnEvent_new
+        std::bind(&SettingsUI::myencoder_event, this, std::placeholders::_1)
+    );
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -145,8 +147,8 @@ class SettingsUI {
     void button_init(Stream &out);
     bool button_getinput(byte id, byte pin);
     void button_event(slight_ButtonInput *instance, byte event);
-    slight_ButtonInput::tCbfuncGetInput button_getinput_func;
-    slight_ButtonInput::tcbfOnEvent button_event_func;
+    // slight_ButtonInput::tCbfuncGetInput button_getinput_func;
+    // slight_ButtonInput::tcbfOnEvent button_event_func;
 
     // button input
     // void encoder_init(Stream &out);
@@ -158,7 +160,14 @@ class SettingsUI {
     // internal attributes
     bool ready;
 
-    const int16_t placeholder;
+    int16_t placeholder;
+
+    int16_t counter = 0;
+    int16_t counter_last = 0;
+
+    uint8_t state = 0;
+    uint8_t state_last = 0;
+
     // uint32_t light_start = 0;
     // uint32_t light_end = 0;
     // uint32_t light_loopcount = 0;

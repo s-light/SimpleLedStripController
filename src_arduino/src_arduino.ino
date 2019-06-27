@@ -17,6 +17,16 @@
                 A: A4
                 B: A5
 
+    ToDo:
+    more research on sleep-mode
+    Adafruit_SleepyDog
+        https://github.com/adafruit/Adafruit_SleepyDog/blob/master/examples/Sleep/Sleep.ino
+    STANDBY sleep mode on SAMD51?
+        https://forum.arduino.cc/index.php?topic=600359.0
+    ArduinoLowPower - External wakeup
+        https://www.arduino.cc/en/Tutorial/LowPowerExternalWakeup
+
+
 
     libraries used:
         ~ FastLED
@@ -63,6 +73,8 @@
 // #include "file.h"
 // use <file.h> for files in library directory
 // #include <file.h>
+
+#include <slight_RotaryEncoder_CallbackHelper.h>
 
 #include <slight_DebugMenu.h>
 
@@ -144,7 +156,7 @@ const byte infoled_pin = 13;
 uint32_t debugOut_LastAction = 0;
 const uint16_t debugOut_interval = 1000; //ms
 
-boolean debugOut_Serial_Enabled = 0;
+boolean debugOut_Serial_Enabled = 1;
 boolean debugOut_LED_Enabled = 1;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -388,22 +400,9 @@ void handleMenu_Main(slight_DebugMenu *pInstance) {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Subparts things
-// void settingsui_encoder_ISR() {
-//     settingsui.encoder.updateClassic();
-//     // settingsui.encoder.updateGray();
-// }
-
-void settingsui_begin(Print &out) {
-    // out.println(F("settingsui encoder attach interrupts"));
-    // attachInterrupt(
-    //     digitalPinToInterrupt(settingsui.encoder.pin_A),
-    //     settingsui_encoder_ISR,
-    //     CHANGE);
-    // attachInterrupt(
-    //     digitalPinToInterrupt(settingsui.encoder.pin_B),
-    //     settingsui_encoder_ISR,
-    //     CHANGE);
-    settingsui.begin(Serial);
+void settingsui_encoder_ISR() {
+    settingsui.myencoder.updateClassic();
+    // settingsui.encoder.updateGray();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -446,7 +445,7 @@ void setup() {
     // setup sub-Parts
 
         animation.begin(Serial);
-        settingsui_begin(Serial);
+        settingsui.begin(Serial, settingsui_encoder_ISR);
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
