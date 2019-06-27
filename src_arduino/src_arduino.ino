@@ -146,19 +146,6 @@ void sketchinfo_print(Print &out) {
 // definitions (global)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Debug Output
-
-boolean infoled_state = 0;
-const byte infoled_pin = 13;
-
-uint32_t debugOut_LastAction = 0;
-const uint16_t debugOut_interval = 1000; //ms
-
-boolean debugOut_Serial_Enabled = 1;
-boolean debugOut_LED_Enabled = 1;
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Sub-Parts
 
@@ -170,36 +157,6 @@ SettingsUI settingsui = SettingsUI(sketchinfo_print);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // functions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// debug things
-
-void debugOut_update() {
-    uint32_t duration_temp = millis() - debugOut_LastAction;
-    if (duration_temp > debugOut_interval) {
-        debugOut_LastAction = millis();
-
-        if ( debugOut_Serial_Enabled ) {
-            Serial.print(millis());
-            Serial.print(F("ms;"));
-            Serial.println();
-        }
-
-        if ( debugOut_LED_Enabled ) {
-            infoled_state = ! infoled_state;
-            if (infoled_state) {
-                //set LED to HIGH
-                digitalWrite(infoled_pin, HIGH);
-            } else {
-                //set LED to LOW
-                digitalWrite(infoled_pin, LOW);
-            }
-        }
-
-    }
-}
-
-
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Subparts things
@@ -214,12 +171,6 @@ void settingsui_encoder_ISR() {
 void setup() {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // initialise PINs
-
-        //LiveSign
-        pinMode(infoled_pin, OUTPUT);
-        digitalWrite(infoled_pin, HIGH);
-
-        // as of arduino 1.0.1 you can use INPUT_PULLUP
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // initialise serial
@@ -265,7 +216,6 @@ void setup() {
 void loop() {
     // animation.update();
     settingsui.update();
-    debugOut_update();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

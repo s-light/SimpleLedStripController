@@ -76,7 +76,20 @@ class SettingsUI {
     void end();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // CONST
+
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Debug Output
+
+    boolean infoled_state = 0;
+    const byte infoled_pin = 13;
+
+    uint32_t debugOut_LastAction = 0;
+    const uint16_t debugOut_interval = 1000; //ms
+
+    boolean debugOut_Serial_Enabled = 1;
+    boolean debugOut_LED_Enabled = 1;
+    void debugOut_update();
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,7 +139,7 @@ class SettingsUI {
     void handleMenu_Main(slight_DebugMenu *instance);
 
     // slight_DebugMenu(Stream &in_ref, Print &out_ref, uint8_t input_length_new);
-    // slight_DebugMenu myDebugMenu(Serial, Serial, 20);
+    slight_DebugMenu myDebugMenu;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
