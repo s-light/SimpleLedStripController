@@ -56,11 +56,16 @@ SOFTWARE.
 class SettingsUI {
  public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // defines
+
+    using sketchinfo_func = void (*)(Print &out);
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
 
     // SettingsUI();
     SettingsUI(
-        const uint8_t placeholder
+        const sketchinfo_func sketchinfo_print
     );
     ~SettingsUI();
 
@@ -77,6 +82,7 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes & objects
 
+    // button
     boolean mybutton_get_input(slight_ButtonInput *instance);
     void mybutton_event(slight_ButtonInput *instance);
 
@@ -99,7 +105,7 @@ class SettingsUI {
         250
     );
 
-
+    // encoder
     void myencoder_event(slight_RotaryEncoder *instance);
 
     slight_RotaryEncoder myencoder = slight_RotaryEncoder(
@@ -115,6 +121,12 @@ class SettingsUI {
         std::bind(&SettingsUI::myencoder_event, this, std::placeholders::_1)
     );
 
+    // serial menu
+    void menu__print_help(Print &out);
+    void handleMenu_Main(slight_DebugMenu *instance);
+
+    // slight_DebugMenu(Stream &in_ref, Print &out_ref, uint8_t input_length_new);
+    // slight_DebugMenu myDebugMenu(Serial, Serial, 20);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
@@ -159,8 +171,9 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // internal attributes
     bool ready;
+    const sketchinfo_func sketchinfo_print;
 
-    int16_t placeholder;
+    // int16_t placeholder;
 
     int16_t counter = 0;
     int16_t counter_last = 0;
