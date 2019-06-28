@@ -178,6 +178,10 @@ void MyAnimation::menu__set_brightness(Print &out, char *command) {
 }
 
 
+void MyAnimation::fill_black() {
+    fill_solid(pixels, PIXEL_COUNT, CHSV(0, 255, 0));
+}
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // animation
 

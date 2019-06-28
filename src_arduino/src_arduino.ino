@@ -78,6 +78,7 @@
 
 #include "./animation.h"
 #include "./settingsui.h"
+#include "./mymenu.h"
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Info
@@ -149,7 +150,8 @@ void sketchinfo_print(Print &out) {
 
 MyAnimation animation = MyAnimation();
 
-SettingsUI settingsui = SettingsUI(sketchinfo_print, animation);
+SettingsUI settingsui = SettingsUI(animation);
+MyMenu mymenu = MyMenu(animation, sketchinfo_print);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -198,6 +200,7 @@ void setup() {
 
         animation.begin(Serial);
         settingsui.begin(Serial, settingsui_encoder_ISR);
+        mymenu.begin(Serial);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // go
@@ -214,6 +217,7 @@ void setup() {
 void loop() {
     animation.update();
     settingsui.update();
+    mymenu.update();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -42,83 +42,75 @@ SOFTWARE.
 
 
 
-#ifndef SRC_ARDUINO_SETTINGSUI_H_
-#define SRC_ARDUINO_SETTINGSUI_H_
+#ifndef SRC_ARDUINO_MYMENU_H_
+#define SRC_ARDUINO_MYMENU_H_
 
 // include Core Arduino functionality
 #include <Arduino.h>
 
-#include <slight_ButtonInput.h>
+#include <slight_DebugMenu.h>
 #include <slight_RotaryEncoder.h>
 
 #include "./animation.h"
 
 
-class SettingsUI {
+class MyMenu {
  public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // defines
 
+    using sketchinfo_func = void (*)(Print &out);
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
 
-    // SettingsUI();
-    SettingsUI(
-        const MyAnimation animation
+    // MyMenu();
+    MyMenu(
+        MyAnimation animation,
+        const sketchinfo_func sketchinfo_print
     );
-    ~SettingsUI();
+    ~MyMenu();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // basic library api
-    void begin(Stream &out, slight_RotaryEncoder::tCallbackFunctionISR funcISR);
+    void begin(Stream &out);
     void update();
     void end();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // attributes & objects
 
-    // button
-    boolean mybutton_get_input(slight_ButtonInput *instance);
-    void mybutton_event(slight_ButtonInput *instance);
 
-    slight_ButtonInput mybutton = slight_ButtonInput(
-        // uint8_t id_new
-        1,
-        // uint8_t pin_new,
-        A3,
-        // tCallbackFunctionGetInput callbackGetInput_new,
-        std::bind(&SettingsUI::mybutton_get_input, this, std::placeholders::_1),
-        // tCallbackFunction callbackOnEvent_new,
-        std::bind(&SettingsUI::mybutton_event, this, std::placeholders::_1),
-        // const uint16_t duration_debounce_new = 20,
-        10,
-        // const uint16_t duration_holddown_new = 1000,
-        1000,
-        // const uint16_t duration_click_long_new =   3000,
-        500,
-        // const uint16_t duration_click_double_new = 250
-        250
-    );
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Debug Output
 
-    // encoder
-    void myencoder_event(slight_RotaryEncoder *instance);
+    boolean infoled_state = 0;
+    const byte infoled_pin = 13;
 
-    slight_RotaryEncoder myencoder = slight_RotaryEncoder(
-        // uint8_t id_new,
-        1,
-        // uint8_t pin_A_new,
-        A4,
-        // uint8_t pin_B_new,
-        A5,
-        // uint8_t pulse_per_step_new,
-        2,
-        // tCallbackFunction callbackOnEvent_new
-        std::bind(&SettingsUI::myencoder_event, this, std::placeholders::_1)
-    );
+    uint32_t debugOut_LastAction = 0;
+    const uint16_t debugOut_interval = 1000; //ms
+
+    boolean debugOut_Serial_Enabled = 1;
+    boolean debugOut_LED_Enabled = 1;
+    void debugOut_update();
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // attributes & objects
+
+    // serial menu
+    void menu__print_help(Print &out);
+    void handleMenu_Main(slight_DebugMenu *instance);
+
+    // slight_DebugMenu(Stream &in_ref, Print &out_ref, uint8_t input_length_new);
+    slight_DebugMenu myDebugMenu;
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
+
+    // menu & helper
+    void menu__test_xxx(Print &out);
+    void menu__set_yyy(Print &out, char *command);
+
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
@@ -130,30 +122,13 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // private functions
 
-    const MyAnimation animation;
-
-    // ambientlight sensor
-    // void light_init(Stream &out);
-    // void light_update();
-
-    // button input
-    void button_init(Stream &out);
+    MyAnimation animation;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // internal attributes
     bool ready;
+    const sketchinfo_func sketchinfo_print;
 
-    int16_t counter = 0;
-    int16_t counter_last = 0;
+};  // class MyMenu
 
-    uint8_t state = 0;
-    uint8_t state_last = 0;
-
-    // uint32_t light_start = 0;
-    // uint32_t light_end = 0;
-    // uint32_t light_loopcount = 0;
-    // float effect_position = 0.0;
-
-};  // class SettingsUI
-
-#endif  // SRC_ARDUINO_SETTINGSUI_H_
+#endif  // SRC_ARDUINO_MYMENU_H_

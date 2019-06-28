@@ -118,6 +118,9 @@ public:
     void menu__set_saturation(Print &out, char *command);
     void menu__set_brightness(Print &out, char *command);
 
+
+    void fill_black();
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // helper
 
