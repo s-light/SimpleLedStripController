@@ -66,7 +66,7 @@ class MyMenu {
 
     // MyMenu();
     MyMenu(
-        MyAnimation animation,
+        MyAnimation &animation,
         const sketchinfo_func sketchinfo_print
     );
     ~MyMenu();
@@ -122,7 +122,7 @@ class MyMenu {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // private functions
 
-    MyAnimation animation;
+    MyAnimation &animation;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // internal attributes

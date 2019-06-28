@@ -64,11 +64,13 @@ SOFTWARE.
 // functions
 
 MyMenu::MyMenu(
-    MyAnimation animation,
+    MyAnimation &animation,
     const sketchinfo_func sketchinfo_print
 ):
     myDebugMenu{slight_DebugMenu(Serial, Serial, 20)},
-    animation{animation},
+    animation(animation),
+    //       ^ '(' needed. its a bug in gcc..
+    // https://stackoverflow.com/questions/10509603/why-cant-i-initialize-a-reference-in-an-initializer-list-with-uniform-initializ
     ready{false},
     sketchinfo_print{sketchinfo_print}
 // NOLINTNEXTLINE(whitespace/braces)

@@ -64,7 +64,7 @@ class SettingsUI {
 
     // SettingsUI();
     SettingsUI(
-        const MyAnimation animation
+        MyAnimation &animation
     );
     ~SettingsUI();
 
@@ -130,7 +130,7 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // private functions
 
-    const MyAnimation animation;
+    MyAnimation &animation;
 
     // ambientlight sensor
     // void light_init(Stream &out);

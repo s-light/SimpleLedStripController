@@ -69,9 +69,11 @@ SOFTWARE.
 // ) {
 // SettingsUI::SettingsUI() {
 SettingsUI::SettingsUI(
-    const MyAnimation animation
+    MyAnimation &animation
 ):
-    animation{animation},
+    animation(animation),
+    //       ^ '(' needed. its a bug in gcc..
+    // https://stackoverflow.com/questions/10509603/why-cant-i-initialize-a-reference-in-an-initializer-list-with-uniform-initializ
     ready{false}
 // NOLINTNEXTLINE(whitespace/braces)
 {
