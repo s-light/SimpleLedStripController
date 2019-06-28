@@ -54,6 +54,11 @@ SOFTWARE.
 
 #include <slight_DebugMenu.h>
 
+// #define FASTLED_USE_GLOBAL_BRIGHTNESS 1
+// i can't test this  - it needs the min and max functions defined by Arduino.h
+// but the slight_* libs
+// that are using std:function are undef them so the std:: namespace works..
+
 #include <FastLED.h>
 
 // #include "./color.h"
@@ -90,8 +95,7 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // pixels
 
-    // static const uint16_t PIXEL_COUNT = 144*3;
-    static const uint16_t PIXEL_COUNT = 100;
+    static const uint16_t PIXEL_COUNT = 144*1;
     CRGB pixels[PIXEL_COUNT];
 
     const CHSV warm_white = CHSV(142, 100, 240);
@@ -122,7 +126,7 @@ public:
 
     bool animation_run = true;
 
-    uint16_t effect_duration = 10 * 1000; //ms
+    uint16_t effect_duration = 30 * 1000; //ms
     float hue = 0.55;
     float saturation = 1.0;
     float brightness = 0.1;

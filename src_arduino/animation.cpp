@@ -79,8 +79,10 @@ void MyAnimation::begin(Stream &out) {
         // setup
         out.println(F("setup pixels:"));
         FastLED.addLeds<APA102>(pixels, PIXEL_COUNT);
+        // https://github.com/FastLED/FastLED/wiki/Frequently-Asked-Questions#5-with-apa102-leds-my-wiring-is-right-but-my-leds-are-flickering--or-my-leds-start-flickering-somewhere-down-the-line
+        // FastLED.addLeds<APA102, MOSI, SCK, RGB, DATA_RATE_KHZ(300)>(pixels, PIXEL_COUNT);
         // FastLED.setDither(0);
-        FastLED.setBrightness(10);
+        FastLED.setBrightness(5);
         out.println(F("  finished."));
 
         animation_init(out);

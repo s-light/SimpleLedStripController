@@ -52,6 +52,8 @@ SOFTWARE.
 #include <slight_ButtonInput.h>
 #include <slight_RotaryEncoder.h>
 
+#include "./animation.h"
+
 
 class SettingsUI {
  public:
@@ -65,7 +67,8 @@ class SettingsUI {
 
     // SettingsUI();
     SettingsUI(
-        const sketchinfo_func sketchinfo_print
+        const sketchinfo_func sketchinfo_print,
+        const MyAnimation animation
     );
     ~SettingsUI();
 
@@ -163,6 +166,8 @@ class SettingsUI {
  private:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // private functions
+
+    const MyAnimation animation;
 
     // ambientlight sensor
     // void light_init(Stream &out);

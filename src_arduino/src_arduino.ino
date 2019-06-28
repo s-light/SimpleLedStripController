@@ -149,7 +149,7 @@ void sketchinfo_print(Print &out) {
 
 MyAnimation animation = MyAnimation();
 
-SettingsUI settingsui = SettingsUI(sketchinfo_print);
+SettingsUI settingsui = SettingsUI(sketchinfo_print, animation);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

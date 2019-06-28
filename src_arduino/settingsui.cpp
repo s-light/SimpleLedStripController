@@ -69,9 +69,11 @@ SOFTWARE.
 // ) {
 // SettingsUI::SettingsUI() {
 SettingsUI::SettingsUI(
-    const sketchinfo_func sketchinfo_print
+    const sketchinfo_func sketchinfo_print,
+    const MyAnimation animation
 ):
     myDebugMenu{slight_DebugMenu(Serial, Serial, 20)},
+    animation{animation},
     ready{false},
     sketchinfo_print{sketchinfo_print}
 // NOLINTNEXTLINE(whitespace/braces)
