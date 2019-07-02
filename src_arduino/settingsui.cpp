@@ -116,16 +116,189 @@ void SettingsUI::update() {
         mybutton.update();
         myencoder.update();
 
-        if (state != state_last) {
-            state_last = state;
-            Serial.println("state changed!");
-        }
         if (counter != counter_last) {
             counter_last = counter;
             Serial.print("counter changed: ");
             Serial.print(counter);
             Serial.println();
         }
+
+
+
+        active_update();
+    }
+}
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// active handling
+
+void SettingsUI::active_update() {
+    if (flag_active) {
+        if (millis() - active_last >= active_timeout) {
+            active_leave();
+        }
+    }
+}
+
+void SettingsUI::active_activate() {
+    active_last = millis();
+    if (!flag_active) {
+        flag_active = true;
+        Serial.println("flag_active = true");
+    } else {
+        // nothing to do..
+    }
+}
+
+void SettingsUI::active_leave() {
+    Serial.println("active_leave()");
+
+    Print &out = Serial;
+    print_mode(out);
+    out.print(F(" - "));
+    print_param(out);
+    out.println();
+
+    flag_active = false;
+    active_last = millis();
+    if (flag_dirty) {
+        // save changes
+        Serial.println("TODO: Save changes...");
+        flag_dirty = false;
+    }
+}
+
+
+void SettingsUI::switch_mode() {
+    switch (animation_mode) {
+        case ANIMATION_MODE::OFF: {
+            // currently not in use.
+            animation_mode = ANIMATION_MODE::STATIC;
+        } break;
+        case ANIMATION_MODE::STATIC: {
+            animation_mode = ANIMATION_MODE::RAINBOW;
+        } break;
+        case ANIMATION_MODE::RAINBOW: {
+            animation_mode = ANIMATION_MODE::STATIC;
+            // animation_mode = ANIMATION_MODE::OFF;
+        } break;
+    }
+}
+
+void SettingsUI::print_mode(Print &out) {
+    switch (animation_mode) {
+        case ANIMATION_MODE::OFF: {
+            out.print(F("OFF"));
+        } break;
+        case ANIMATION_MODE::STATIC: {
+            out.print(F("STATIC"));
+        } break;
+        case ANIMATION_MODE::RAINBOW: {
+            out.print(F("RAINBOW"));
+        } break;
+    }
+}
+
+void SettingsUI::change_param(int16_t value) {
+    switch (animation_mode) {
+        case ANIMATION_MODE::OFF: {
+            // Nothing to do..
+        } break;
+        case ANIMATION_MODE::STATIC: {
+            switch (static_current) {
+                case STATIC_PARAM::HUE: {
+                    animation.color_hsv.hue += value;
+                } break;
+                case STATIC_PARAM::SATURATION: {
+                    animation.color_hsv.saturation += value;
+                } break;
+                case STATIC_PARAM::VALUE: {
+                    animation.color_hsv.value += value;
+                } break;
+            }
+        } break;
+        case ANIMATION_MODE::RAINBOW: {
+            switch (rainbow_current) {
+                case RAINBOW_PARAM::DURATION: {
+                    animation.effect_duration = value;
+                } break;
+                case RAINBOW_PARAM::BRIGHTNESS: {
+                    animation.brightness = value;
+                } break;
+                case RAINBOW_PARAM::SPREAD: {
+                    animation.spread = value;
+                } break;
+            }
+        } break;
+    }
+}
+
+void SettingsUI::print_param(Print &out) {
+    switch (animation_mode) {
+        case ANIMATION_MODE::OFF: {
+            out.print(F("-"));
+        } break;
+        case ANIMATION_MODE::STATIC: {
+            switch (static_current) {
+                case STATIC_PARAM::HUE: {
+                    out.print(F("HUE"));
+                } break;
+                case STATIC_PARAM::SATURATION: {
+                    out.print(F("SATURATION"));
+                } break;
+                case STATIC_PARAM::VALUE: {
+                    out.print(F("VALUE"));
+                } break;
+            }
+        } break;
+        case ANIMATION_MODE::RAINBOW: {
+            switch (rainbow_current) {
+                case RAINBOW_PARAM::DURATION: {
+                    out.print(F("BRIGHTNESS"));
+                } break;
+                case RAINBOW_PARAM::BRIGHTNESS: {
+                    out.print(F("SPREAD"));
+                } break;
+                case RAINBOW_PARAM::SPREAD: {
+                    out.print(F("DURATION"));
+                } break;
+            }
+        } break;
+    }
+}
+
+void SettingsUI::switch_param() {
+    switch (animation_mode) {
+        case ANIMATION_MODE::OFF: {
+            // Nothing to do..
+        } break;
+        case ANIMATION_MODE::STATIC: {
+            switch (static_current) {
+                case STATIC_PARAM::HUE: {
+                    static_current = STATIC_PARAM::SATURATION;
+                } break;
+                case STATIC_PARAM::SATURATION: {
+                    static_current = STATIC_PARAM::VALUE;
+                } break;
+                case STATIC_PARAM::VALUE: {
+                    static_current = STATIC_PARAM::HUE;
+                } break;
+            }
+        } break;
+        case ANIMATION_MODE::RAINBOW: {
+            switch (rainbow_current) {
+                case RAINBOW_PARAM::DURATION: {
+                    rainbow_current = RAINBOW_PARAM::BRIGHTNESS;
+                } break;
+                case RAINBOW_PARAM::BRIGHTNESS: {
+                    rainbow_current = RAINBOW_PARAM::SPREAD;
+                } break;
+                case RAINBOW_PARAM::SPREAD: {
+                    rainbow_current = RAINBOW_PARAM::DURATION;
+                } break;
+            }
+        } break;
     }
 }
 
@@ -171,6 +344,8 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
     // (*instance).printEventLast(Serial);
     // Serial.println();
 
+    active_activate();
+
     // react on event
     switch ((*instance).getEventLast()) {
         case slight_ButtonInput::event_down : {
@@ -185,7 +360,7 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
         } break;
         case slight_ButtonInput::event_click : {
             Serial.println(F("click"));
-            state += 1;
+            switch_param();
         } break;
         case slight_ButtonInput::event_click_long : {
             Serial.print(F("click long "));
@@ -193,6 +368,7 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
         } break;
         case slight_ButtonInput::event_click_double : {
             Serial.println(F("click double"));
+            switch_mode();
         } break;
         case slight_ButtonInput::event_click_triple : {
             // Serial.println(F("click triple"));
@@ -235,6 +411,9 @@ void SettingsUI::myencoder_event(slight_RotaryEncoder *instance) {
             Serial.print(F(" -> "));
             Serial.println(temp_stepsAccel);
             counter += temp_stepsAccel;
+
+            active_activate();
+            change_param(temp_stepsAccel);
         } break;
         // currently there are no other events fired.
     }  // end switch

@@ -253,7 +253,7 @@ void MyAnimation::effect__rainbow() {
         float offset = effect_position + (pixel_offset * 0.50);
         uint8_t offset_int = offset * 255;
         uint8_t hue = offset_int;
-        pixels[pixel_i] = CHSV(hue, 255, 255);
+        pixels[pixel_i] = CHSV(hue, 255, color_hsv.value);
     }
     // fill_rainbow(pixels, PIXEL_COUNT, effect_position_int);
 }

@@ -106,6 +106,7 @@ class SettingsUI(object):
         self.check_mode()
         print("doubleclick")
 
+
 ##########################################
 # test main loop
 

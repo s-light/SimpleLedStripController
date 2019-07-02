@@ -83,6 +83,12 @@ public:
     //   const uint16_t defaultv;
     // };
 
+    // class EffectRainbow {
+    //     uint8_t brightness = 255;
+    //     uint32_t duration = 10 * 1000;  // ms
+    //     float spread = 1.0;
+    // }
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
 
@@ -133,7 +139,9 @@ public:
     float hue = 0.55;
     float saturation = 1.0;
     float brightness = 0.1;
+    float spread = 0.5;
     CHSV color_hsv = warm_white;
+    // EffectRainbow rainbow_settings;
 
 private:
 

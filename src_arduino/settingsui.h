@@ -59,6 +59,26 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // defines
 
+    enum class ANIMATION_MODE {
+        OFF,
+        STATIC,
+        RAINBOW,
+    };
+
+    enum class STATIC_PARAM {
+        HUE,
+        SATURATION,
+        VALUE,
+    };
+
+    enum class RAINBOW_PARAM {
+        DURATION,
+        // SATTURATION,
+        // VALUE,
+        BRIGHTNESS,
+        SPREAD,
+    };
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
 
@@ -127,9 +147,6 @@ class SettingsUI {
     // helper
 
  private:
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // private functions
-
     MyAnimation &animation;
 
     // ambientlight sensor
@@ -139,17 +156,30 @@ class SettingsUI {
     // button input
     void button_init(Stream &out);
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // internal attributes
     bool ready;
 
     int16_t counter = 0;
     int16_t counter_last = 0;
 
-    uint8_t state = 0;
-    uint8_t state_last = 0;
+    // active handling
+    bool flag_dirty = false;
+    bool flag_active = false;
+    uint32_t active_last = 0;
+    uint32_t active_timeout = 5000;
+    void active_update();
+    void active_activate();
+    void active_leave();
 
-    // uint32_t light_start = 0;
+
+    ANIMATION_MODE animation_mode = ANIMATION_MODE::OFF;
+    void print_mode(Print &out);
+    void switch_mode();
+    STATIC_PARAM static_current = STATIC_PARAM::HUE;
+    RAINBOW_PARAM rainbow_current = RAINBOW_PARAM::BRIGHTNESS;
+    void print_param(Print &out);
+    void switch_param();
+    void change_param(int16_t value);
+
     // uint32_t light_end = 0;
     // uint32_t light_loopcount = 0;
     // float effect_position = 0.0;
