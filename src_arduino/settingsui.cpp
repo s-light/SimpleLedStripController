@@ -116,12 +116,12 @@ void SettingsUI::update() {
         mybutton.update();
         myencoder.update();
 
-        if (counter != counter_last) {
-            counter_last = counter;
-            Serial.print("counter changed: ");
-            Serial.print(counter);
-            Serial.println();
-        }
+        // if (counter != counter_last) {
+        //     counter_last = counter;
+        //     Serial.print("counter changed: ");
+        //     Serial.print(counter);
+        //     Serial.println();
+        // }
 
 
 
@@ -155,7 +155,7 @@ void SettingsUI::active_leave() {
     Serial.println("active_leave()");
 
     Print &out = Serial;
-    print_mode(out);
+    animation.effect_print_current(out);
     out.print(F(" - "));
     print_param(out);
     out.println();
@@ -169,77 +169,78 @@ void SettingsUI::active_leave() {
     }
 }
 
+// ~~~~~~~~~~~~~~~~~~~~~
 
 void SettingsUI::switch_mode() {
-    switch (animation_mode) {
-        case ANIMATION_MODE::OFF: {
+    switch (animation.effect_current) {
+        case MyAnimation::EFFECT::OFF: {
             // currently not in use.
-            animation_mode = ANIMATION_MODE::STATIC;
+            animation.effect_current = MyAnimation::EFFECT::STATIC;
         } break;
-        case ANIMATION_MODE::STATIC: {
-            animation_mode = ANIMATION_MODE::RAINBOW;
+        case MyAnimation::EFFECT::STATIC: {
+            animation.effect_current = MyAnimation::EFFECT::RAINBOW;
         } break;
-        case ANIMATION_MODE::RAINBOW: {
-            animation_mode = ANIMATION_MODE::STATIC;
-            // animation_mode = ANIMATION_MODE::OFF;
-        } break;
-    }
-}
-
-void SettingsUI::print_mode(Print &out) {
-    switch (animation_mode) {
-        case ANIMATION_MODE::OFF: {
-            out.print(F("OFF"));
-        } break;
-        case ANIMATION_MODE::STATIC: {
-            out.print(F("STATIC"));
-        } break;
-        case ANIMATION_MODE::RAINBOW: {
-            out.print(F("RAINBOW"));
+        case MyAnimation::EFFECT::RAINBOW: {
+            animation.effect_current = MyAnimation::EFFECT::STATIC;
+            // animation.effect_current = EFFECT::OFF;
         } break;
     }
+    Print &out = Serial;
+    animation.effect_print_current(out);
+    out.println();
 }
 
 void SettingsUI::change_param(int16_t value) {
-    switch (animation_mode) {
-        case ANIMATION_MODE::OFF: {
+    Print &out = Serial;
+    out.print(F("Param: "));
+    print_param(out);
+    out.print(F(" = "));
+    switch (animation.effect_current) {
+        case MyAnimation::EFFECT::OFF: {
             // Nothing to do..
         } break;
-        case ANIMATION_MODE::STATIC: {
+        case MyAnimation::EFFECT::STATIC: {
             switch (static_current) {
                 case STATIC_PARAM::HUE: {
                     animation.color_hsv.hue += value;
+                    out.print(animation.color_hsv.hue);
                 } break;
                 case STATIC_PARAM::SATURATION: {
                     animation.color_hsv.saturation += value;
+                    out.print(animation.color_hsv.saturation);
                 } break;
                 case STATIC_PARAM::VALUE: {
                     animation.color_hsv.value += value;
+                    out.print(animation.color_hsv.value);
                 } break;
             }
         } break;
-        case ANIMATION_MODE::RAINBOW: {
+        case MyAnimation::EFFECT::RAINBOW: {
             switch (rainbow_current) {
                 case RAINBOW_PARAM::DURATION: {
-                    animation.effect_duration = value;
+                    animation.effect_duration += value * 100;
+                    out.print(animation.effect_duration);
                 } break;
                 case RAINBOW_PARAM::BRIGHTNESS: {
-                    animation.brightness = value;
+                    animation.rainbow_brightness += value;
+                    out.print(animation.rainbow_brightness);
                 } break;
                 case RAINBOW_PARAM::SPREAD: {
-                    animation.spread = value;
+                    animation.rainbow_spread += value * 0.01;
+                    out.print(animation.rainbow_spread);
                 } break;
             }
         } break;
     }
+    out.println();
 }
 
 void SettingsUI::print_param(Print &out) {
-    switch (animation_mode) {
-        case ANIMATION_MODE::OFF: {
+    switch (animation.effect_current) {
+        case MyAnimation::EFFECT::OFF: {
             out.print(F("-"));
         } break;
-        case ANIMATION_MODE::STATIC: {
+        case MyAnimation::EFFECT::STATIC: {
             switch (static_current) {
                 case STATIC_PARAM::HUE: {
                     out.print(F("HUE"));
@@ -252,16 +253,16 @@ void SettingsUI::print_param(Print &out) {
                 } break;
             }
         } break;
-        case ANIMATION_MODE::RAINBOW: {
+        case MyAnimation::EFFECT::RAINBOW: {
             switch (rainbow_current) {
                 case RAINBOW_PARAM::DURATION: {
-                    out.print(F("BRIGHTNESS"));
+                    out.print(F("DURATION"));
                 } break;
                 case RAINBOW_PARAM::BRIGHTNESS: {
-                    out.print(F("SPREAD"));
+                    out.print(F("BRIGHTNESS"));
                 } break;
                 case RAINBOW_PARAM::SPREAD: {
-                    out.print(F("DURATION"));
+                    out.print(F("SPREAD"));
                 } break;
             }
         } break;
@@ -269,11 +270,11 @@ void SettingsUI::print_param(Print &out) {
 }
 
 void SettingsUI::switch_param() {
-    switch (animation_mode) {
-        case ANIMATION_MODE::OFF: {
+    switch (animation.effect_current) {
+        case MyAnimation::EFFECT::OFF: {
             // Nothing to do..
         } break;
-        case ANIMATION_MODE::STATIC: {
+        case MyAnimation::EFFECT::STATIC: {
             switch (static_current) {
                 case STATIC_PARAM::HUE: {
                     static_current = STATIC_PARAM::SATURATION;
@@ -286,7 +287,7 @@ void SettingsUI::switch_param() {
                 } break;
             }
         } break;
-        case ANIMATION_MODE::RAINBOW: {
+        case MyAnimation::EFFECT::RAINBOW: {
             switch (rainbow_current) {
                 case RAINBOW_PARAM::DURATION: {
                     rainbow_current = RAINBOW_PARAM::BRIGHTNESS;
@@ -300,6 +301,9 @@ void SettingsUI::switch_param() {
             }
         } break;
     }
+    Print &out = Serial;
+    print_param(out);
+    out.println();
 }
 
 
@@ -401,16 +405,16 @@ void SettingsUI::myencoder_event(slight_RotaryEncoder *instance) {
         // rotation
         case slight_RotaryEncoder::event_Rotated : {
             // get current data
-            int16_t temp_steps = (*instance).getSteps();
+            // int16_t temp_steps = (*instance).getSteps();
             int16_t temp_stepsAccel = (*instance).getStepsAccelerated();
             // clear data
             (*instance).clearSteps();
 
-            Serial.print(F("  steps: "));
-            Serial.print(temp_steps);
-            Serial.print(F(" -> "));
-            Serial.println(temp_stepsAccel);
-            counter += temp_stepsAccel;
+            // Serial.print(F("  steps: "));
+            // Serial.print(temp_steps);
+            // Serial.print(F(" -> "));
+            // Serial.println(temp_stepsAccel);
+            // counter += temp_stepsAccel;
 
             active_activate();
             change_param(temp_stepsAccel);

@@ -59,12 +59,6 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // defines
 
-    enum class ANIMATION_MODE {
-        OFF,
-        STATIC,
-        RAINBOW,
-    };
-
     enum class STATIC_PARAM {
         HUE,
         SATURATION,
@@ -158,8 +152,8 @@ class SettingsUI {
 
     bool ready;
 
-    int16_t counter = 0;
-    int16_t counter_last = 0;
+    // int16_t counter = 0;
+    // int16_t counter_last = 0;
 
     // active handling
     bool flag_dirty = false;
@@ -170,9 +164,6 @@ class SettingsUI {
     void active_activate();
     void active_leave();
 
-
-    ANIMATION_MODE animation_mode = ANIMATION_MODE::OFF;
-    void print_mode(Print &out);
     void switch_mode();
     STATIC_PARAM static_current = STATIC_PARAM::HUE;
     RAINBOW_PARAM rainbow_current = RAINBOW_PARAM::BRIGHTNESS;

@@ -83,7 +83,8 @@ void MyAnimation::begin(Stream &out) {
         // FastLED.addLeds<APA102, MOSI, SCK, RGB, DATA_RATE_KHZ(300)>(
         //     pixels, PIXEL_COUNT);
         // FastLED.setDither(0);
-        FastLED.setBrightness(5);
+        out.println(F("  setBrightness(50)."));
+        FastLED.setBrightness(50);
         out.println(F("  finished."));
 
         animation_init(out);
@@ -186,6 +187,26 @@ void MyAnimation::fill_black() {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // animation
 
+
+void MyAnimation::effect_print(Print &out, EFFECT fx) {
+    switch (fx) {
+        case EFFECT::OFF: {
+            out.print(F("OFF"));
+        } break;
+        case EFFECT::STATIC: {
+            out.print(F("STATIC"));
+        } break;
+        case EFFECT::RAINBOW: {
+            out.print(F("RAINBOW"));
+        } break;
+    }
+}
+
+void MyAnimation::effect_print_current(Print &out) {
+    effect_print(out, effect_current);
+}
+
+
 void MyAnimation::animation_init(Stream &out) {
     out.println(F("init animation:")); {
         out.print(F("  effect_duration: "));
@@ -205,11 +226,23 @@ void MyAnimation::animation_init(Stream &out) {
 }
 
 void MyAnimation::animation_update() {
+    fps_update();
     if (animation_run) {
         calculate_effect_position();
-        // effect__pixel_checker();
-        // effect__line();
-        effect__rainbow();
+        switch (effect_current) {
+            case EFFECT::OFF: {
+                fill_black();
+            } break;
+            // case EFFECT::PIXEL_CHECKER: {
+            //     effect__pixel_checker();
+            // } break;
+            case EFFECT::STATIC: {
+                effect__static();
+            } break;
+            case EFFECT::RAINBOW: {
+                effect__rainbow();
+            } break;
+        }
     }
     // write data to chips
     FastLED.show();
@@ -217,21 +250,30 @@ void MyAnimation::animation_update() {
 
 void MyAnimation::calculate_effect_position() {
     // effect_position = normalize_to_01(millis(), effect_start, effect_end);
+    effect_end = effect_start + effect_duration;
     effect_position = (
         ((millis() - effect_start) * 1.0) / (effect_end - effect_start)
     );  // NOLINT(whitespace/parens)
-    effect_loopcount++;
     if (effect_position >  1.0) {
         effect_position = 0;
-        float duration_seconds = (millis() - effect_start) / 1000.0;
-        float fps = effect_loopcount / duration_seconds;
-        effect_loopcount = 0;
         effect_start = millis();
-        effect_end = millis() + effect_duration;
         if (animation_run) {
-            Serial.print("effect_position loop restart. (");
+            Serial.println("effect_position loop restart.");
+        }
+    }
+}
+
+void MyAnimation::fps_update() {
+    fps_loopcount++;
+    if ((millis() - fps_start) >=  fps_duration) {
+        float duration_seconds = (millis() - fps_start) / 1000.0;
+        float fps = fps_loopcount / duration_seconds;
+        fps_loopcount = 0;
+        fps_start = millis();
+        if (animation_run) {
+            Serial.print("FPS: ");
             Serial.print(fps);
-            Serial.print("FPS)");
+            // Serial.print("");
             Serial.println();
         }
     }
@@ -250,22 +292,15 @@ void MyAnimation::effect__pixel_checker() {
 void MyAnimation::effect__rainbow() {
     for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
         float pixel_offset = pixel_i * 1.0 / PIXEL_COUNT;
-        float offset = effect_position + (pixel_offset * 0.50);
+        float offset = effect_position + (pixel_offset * rainbow_spread);
         uint8_t offset_int = offset * 255;
         uint8_t hue = offset_int;
-        pixels[pixel_i] = CHSV(hue, 255, color_hsv.value);
+        pixels[pixel_i] = CHSV(hue, 255, rainbow_brightness);
     }
     // fill_rainbow(pixels, PIXEL_COUNT, effect_position_int);
 }
 
 void MyAnimation::effect__static() {
-    // for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
-    //     // CHSV color_hsv = CHSV(hue, saturation, brightness);
-    //     // CRGB color_rgb = hsv2rgb(color_hsv);
-    //     // tlc.set_pixel_float_value(
-    //     //     pixel_i,
-    //     //     color_rgb.r, color_rgb.g, color_rgb.b);
-    // }
     fill_solid(pixels, PIXEL_COUNT, color_hsv);
 }
 

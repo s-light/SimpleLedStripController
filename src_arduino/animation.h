@@ -133,13 +133,25 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
 
+    enum class EFFECT {
+        OFF,
+        STATIC,
+        RAINBOW,
+    };
+    EFFECT effect_current = EFFECT::OFF;
+    void effect_print(Print &out, EFFECT fx);
+    void effect_print_current(Print &out);
+
     bool animation_run = true;
 
-    uint16_t effect_duration = 30 * 1000; //ms
+    uint32_t effect_duration = 30 * 1000; //ms
+
     float hue = 0.55;
     float saturation = 1.0;
     float brightness = 0.1;
-    float spread = 0.5;
+
+    float rainbow_spread = 0.5;
+    uint8_t rainbow_brightness = 255;
     CHSV color_hsv = warm_white;
     // EffectRainbow rainbow_settings;
 
@@ -151,6 +163,7 @@ private:
     // animation
     void animation_init(Stream &out);
     void animation_update();
+    void fps_update();
     void calculate_effect_position();
 
     void effect__pixel_checker();
@@ -163,8 +176,11 @@ private:
 
     uint32_t effect_start = 0;
     uint32_t effect_end = 0;
-    uint32_t effect_loopcount = 0;
     float effect_position = 0.0;
+
+    uint32_t fps_start = 0;
+    uint32_t fps_duration = 10 * 1000;  // ms
+    uint32_t fps_loopcount = 0;
 
 };  // class MyAnimation
 
