@@ -258,7 +258,7 @@ void MyAnimation::calculate_effect_position() {
         effect_position = 0;
         effect_start = millis();
         if (animation_run) {
-            Serial.println("effect_position loop restart.");
+            // Serial.println("effect_position loop restart.");
         }
     }
 }

@@ -138,7 +138,7 @@ public:
         STATIC,
         RAINBOW,
     };
-    EFFECT effect_current = EFFECT::OFF;
+    EFFECT effect_current = EFFECT::RAINBOW;
     void effect_print(Print &out, EFFECT fx);
     void effect_print_current(Print &out);
 

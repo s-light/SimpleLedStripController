@@ -61,6 +61,8 @@ SOFTWARE.
 #include <slight_ButtonInput.h>
 #include <slight_RotaryEncoder.h>
 
+#include "./mapping.h"
+
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // functions
@@ -218,7 +220,28 @@ void SettingsUI::change_param(int16_t value) {
         case MyAnimation::EFFECT::RAINBOW: {
             switch (rainbow_current) {
                 case RAINBOW_PARAM::DURATION: {
-                    animation.effect_duration += value * 100;
+                    uint32_t factor = duration_factor_map.mapit(
+                        animation.effect_duration);
+                    int32_t value_wf = (value * factor);
+                    uint32_t temp = animation.effect_duration + value_wf;
+                    // constrain to full step value..
+                    temp = (temp / factor) * factor;
+                    // Serial.print("temp ");
+                    // Serial.println(temp);
+                    // Serial.print("factor ");
+                    // Serial.println(factor);
+                    // Serial.print("temp / factor ");
+                    // Serial.println(temp / factor);
+                    // Serial.print("(temp / factor) * factor ");
+                    // Serial.println((temp / factor) * factor);
+                    if (temp > duration_max) {
+                        if (value_wf > 0) {
+                            temp = 100;
+                        } else {
+                            temp = duration_max;
+                        }
+                    }
+                    animation.effect_duration = temp;
                     out.print(animation.effect_duration);
                 } break;
                 case RAINBOW_PARAM::BRIGHTNESS: {

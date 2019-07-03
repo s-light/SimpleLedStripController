@@ -52,7 +52,7 @@ SOFTWARE.
 #include <slight_RotaryEncoder.h>
 
 #include "./animation.h"
-
+#include "./mapping.h"
 
 class SettingsUI {
  public:
@@ -155,6 +155,34 @@ class SettingsUI {
     // int16_t counter = 0;
     // int16_t counter_last = 0;
 
+    const uint32_t duration_max = 1800000;
+    // duration mapping:
+    // ms               = step_size (factor)
+    //      0..    500    =     1 (0ms - 500ms = 1ms)
+    //    501..   1000    =    10 (500ms - 1s = 10ms)
+    //   1001..  10000    =   100 (1s - 10s = 100ms)
+    //  10001..  60000    =  1000 (10s - 1min = 1s)
+    //  60001.. 300000    = 10000 (1min - 5min = 10s)
+    // 300001..1800000    = 60000 (5min - 30min = 1min)
+    MultiMap<uint32_t, 12> duration_factor_map{
+        std::array<uint32_t, 12>{
+                 0,     500,
+               501,    1000,
+              1001,   10000,
+             10001,   60000,
+             60001,  300000,
+            300001, duration_max,
+        },
+        std::array<uint32_t, 12>{
+                 1,       1,
+                10,      10,
+               100,     100,
+              1000,    1000,
+             10000,   10000,
+             60000,   60000,
+        }
+    };
+
     // active handling
     bool flag_dirty = false;
     bool flag_active = false;
@@ -166,7 +194,7 @@ class SettingsUI {
 
     void switch_mode();
     STATIC_PARAM static_current = STATIC_PARAM::HUE;
-    RAINBOW_PARAM rainbow_current = RAINBOW_PARAM::BRIGHTNESS;
+    RAINBOW_PARAM rainbow_current = RAINBOW_PARAM::DURATION;
     void print_param(Print &out);
     void switch_param();
     void change_param(int16_t value);
