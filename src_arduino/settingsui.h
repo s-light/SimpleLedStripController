@@ -54,6 +54,8 @@ SOFTWARE.
 #include "./animation.h"
 #include "./mapping.h"
 
+#define debug_FaderLin
+
 class SettingsUI {
  public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -155,6 +157,7 @@ class SettingsUI {
     // int16_t counter = 0;
     // int16_t counter_last = 0;
 
+    const uint32_t duration_min =     300;
     const uint32_t duration_max = 1800000;
     // duration mapping:
     // ms               = step_size (factor)

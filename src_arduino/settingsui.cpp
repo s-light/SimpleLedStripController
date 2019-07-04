@@ -236,7 +236,13 @@ void SettingsUI::change_param(int16_t value) {
                     // Serial.println((temp / factor) * factor);
                     if (temp > duration_max) {
                         if (value_wf > 0) {
-                            temp = 100;
+                            temp = 300;
+                        } else {
+                            temp = duration_max;
+                        }
+                    } else if (temp < duration_min) {
+                        if (value_wf > 0) {
+                            temp = 300;
                         } else {
                             temp = duration_max;
                         }

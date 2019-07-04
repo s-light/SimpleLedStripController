@@ -101,7 +101,7 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // pixels
 
-    static const uint16_t PIXEL_COUNT = 144*1;
+    static const uint16_t PIXEL_COUNT = 144*3;
     CRGB pixels[PIXEL_COUNT];
 
     const CHSV warm_white = CHSV(142, 100, 240);
