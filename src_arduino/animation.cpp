@@ -76,6 +76,16 @@ void MyAnimation::begin(Stream &out) {
     end();
     // start up...
     if (ready == false) {
+        out.println(F("setup control pins:"));
+        out.println(F("  output_active_pin"));
+        pinMode(output_active_pin, OUTPUT);
+        out.println(F("  psu_off_pin"));
+        pinMode(psu_off_pin, OUTPUT);
+        out.println(F("  psu_on_pin"));
+        pinMode(psu_on_pin, OUTPUT);
+        out.println(F("  output_off()"));
+        output_off();
+
         // setup
         out.println(F("setup pixels:"));
         // FastLED.addLeds<APA102>(pixels, PIXEL_COUNT);
@@ -112,81 +122,47 @@ void MyAnimation::update() {
 }
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// output
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// menu
+bool MyAnimation::output_get() {
+    return output_active;
+}
 
-void MyAnimation::menu__set_pixel(Print &out, char *command) {
-    out.print(F("Set pixel "));
-    uint8_t command_offset = 1;
-    uint8_t index = atoi(&command[command_offset]);
-    // a better way than this would be to search for the ':'
-    // i have used this a long time ago for MAC address format parsing
-    // was something with 'tokenize' or similar..
-    command_offset = 3;
-    if (index > 9) {
-        command_offset = command_offset +1;
+void MyAnimation::output_toggle() {
+    if (output_active) {
+        output_off();
+    } else {
+        output_on();
     }
-    out.print(index);
-    out.print(F(" to "));
-    uint16_t value = atoi(&command[command_offset]);
-    out.print(value);
-    // tlc.set_pixel_16bit_value(index, value, value, value);
-    out.println();
 }
 
-void MyAnimation::menu__time_meassurements(Print &out) {
-    out.println(F("time_meassurements:"));
-
-    uint32_t tm_start = 0;
-    uint32_t tm_end = 0;
-    uint32_t tm_duration = 0;
-    uint32_t tm_loop_count = 10;
-
-    for (size_t i = 0; i < tm_loop_count; i++) {
-        tm_start = millis();
-        effect__rainbow();
-        // tlc.show();
-        tm_end = millis();
-        tm_duration += (tm_end - tm_start);
+void MyAnimation::output_off() {
+    if (output_active) {
+        animation_run = false;
+        fill_black();
+        FastLED.show();
+        // deactivate level-shifter output
+        digitalWrite(output_active_pin, HIGH);
+        // deactivate power supply
+        digitalWrite(psu_off_pin, HIGH);
+        delay(1);
+        digitalWrite(psu_off_pin, LOW);
+        output_active = false;
     }
-
-    out.print(tm_duration / static_cast<float>(tm_loop_count));
-    out.print(F("ms / call"));
-    out.println();
 }
 
-
-void MyAnimation::menu__set_hue(Print &out, char *command) {
-    out.print(F("Set hue "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    hue = value;
-    out.println();
-}
-
-void MyAnimation::menu__set_saturation(Print &out, char *command) {
-    out.print(F("Set saturation "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    saturation = value;
-    out.println();
-}
-
-void MyAnimation::menu__set_brightness(Print &out, char *command) {
-    out.print(F("Set brightness "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    brightness = value;
-    out.println();
-}
-
-
-void MyAnimation::fill_black() {
-    fill_solid(pixels, PIXEL_COUNT, CHSV(0, 255, 0));
+void MyAnimation::output_on() {
+    if (!output_active) {
+        // activate power supply
+        digitalWrite(psu_on_pin, HIGH);
+        delay(1);
+        digitalWrite(psu_on_pin, LOW);
+        // activate level-shifter output
+        digitalWrite(output_active_pin, LOW);
+        animation_run = true;
+        output_active = true;
+    }
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -285,6 +261,12 @@ void MyAnimation::fps_update() {
 }
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// effects
+
+void MyAnimation::fill_black() {
+    fill_solid(pixels, PIXEL_COUNT, CHSV(0, 255, 0));
+}
 
 void MyAnimation::effect__pixel_checker() {
     // uint8_t step = map_range_01_to__uint8(
@@ -310,6 +292,79 @@ void MyAnimation::effect__static() {
 }
 
 
+
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// menu
+
+void MyAnimation::menu__set_pixel(Print &out, char *command) {
+    out.print(F("Set pixel "));
+    uint8_t command_offset = 1;
+    uint8_t index = atoi(&command[command_offset]);
+    // a better way than this would be to search for the ':'
+    // i have used this a long time ago for MAC address format parsing
+    // was something with 'tokenize' or similar..
+    command_offset = 3;
+    if (index > 9) {
+        command_offset = command_offset +1;
+    }
+    out.print(index);
+    out.print(F(" to "));
+    uint16_t value = atoi(&command[command_offset]);
+    out.print(value);
+    // tlc.set_pixel_16bit_value(index, value, value, value);
+    out.println();
+}
+
+void MyAnimation::menu__time_meassurements(Print &out) {
+    out.println(F("time_meassurements:"));
+
+    uint32_t tm_start = 0;
+    uint32_t tm_end = 0;
+    uint32_t tm_duration = 0;
+    uint32_t tm_loop_count = 10;
+
+    for (size_t i = 0; i < tm_loop_count; i++) {
+        tm_start = millis();
+        effect__rainbow();
+        // tlc.show();
+        tm_end = millis();
+        tm_duration += (tm_end - tm_start);
+    }
+
+    out.print(tm_duration / static_cast<float>(tm_loop_count));
+    out.print(F("ms / call"));
+    out.println();
+}
+
+
+void MyAnimation::menu__set_hue(Print &out, char *command) {
+    out.print(F("Set hue "));
+    uint8_t command_offset = 1;
+    float value = atof(&command[command_offset]);
+    out.print(value);
+    hue = value;
+    out.println();
+}
+
+void MyAnimation::menu__set_saturation(Print &out, char *command) {
+    out.print(F("Set saturation "));
+    uint8_t command_offset = 1;
+    float value = atof(&command[command_offset]);
+    out.print(value);
+    saturation = value;
+    out.println();
+}
+
+void MyAnimation::menu__set_brightness(Print &out, char *command) {
+    out.print(F("Set brightness "));
+    uint8_t command_offset = 1;
+    float value = atof(&command[command_offset]);
+    out.print(value);
+    brightness = value;
+    out.println();
+}
 
 
 

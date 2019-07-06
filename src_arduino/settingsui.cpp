@@ -387,17 +387,25 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
         case slight_ButtonInput::event_holddown : {
             Serial.print(F("duration active: "));
             Serial.println((*instance).getDurationActive());
+            if ((*instance).getDurationActive() <= 2000) {
+                animation.output_off();
+            }
         } break;
         case slight_ButtonInput::event_up : {
             // Serial.println(F("up"));
         } break;
         case slight_ButtonInput::event_click : {
             Serial.println(F("click"));
-            switch_param();
+            if (animation.output_get()) {
+                switch_param();
+            } else {
+                animation.output_on();
+            }
         } break;
         case slight_ButtonInput::event_click_long : {
             Serial.print(F("click long "));
             Serial.println((*instance).getDurationActive());
+            animation.output_off();
         } break;
         case slight_ButtonInput::event_click_double : {
             Serial.println(F("click double"));

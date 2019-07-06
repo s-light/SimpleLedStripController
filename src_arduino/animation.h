@@ -151,9 +151,17 @@ public:
     float brightness = 0.1;
 
     float rainbow_spread = 0.5;
-    uint8_t rainbow_brightness = 255;
+    uint8_t rainbow_brightness = 50;
     CHSV color_hsv = warm_white;
     // EffectRainbow rainbow_settings;
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // output
+    void output_toggle();
+    bool output_get();
+    void output_on();
+    void output_off();
+
 
 private:
 
@@ -173,6 +181,11 @@ private:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes
     bool ready;
+
+    uint8_t psu_on_pin = 7;
+    uint8_t psu_off_pin = 9;
+    uint8_t output_active_pin = 2;
+    bool output_active = false;
 
     uint32_t effect_start = 0;
     uint32_t effect_end = 0;

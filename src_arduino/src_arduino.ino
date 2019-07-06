@@ -183,7 +183,7 @@ void setup() {
         // Wait for Serial Connection to be Opend from Host or
         // timeout after 6second
         uint32_t timeStamp_Start = millis();
-        while( (! Serial) && ( (millis() - timeStamp_Start) < 2000 ) ) {
+        while( (! Serial) && ( (millis() - timeStamp_Start) < 1000 ) ) {
             // nothing to do
         }
 

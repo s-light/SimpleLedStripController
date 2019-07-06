@@ -194,6 +194,9 @@ void MyMenu::menu__print_help(Print &out) {
     out.println(F("\t 'Y': toggle DebugOut livesign LED"));
     out.println(F("\t 'x': tests"));
     out.println();
+    out.print(F("\t 'o': toggle animation.output 'o' ("));
+    out.print(animation.output_get());
+    out.println(F(")"));
     out.print(F("\t 'r': toggle animation_run 'r' ("));
     out.print(animation.animation_run);
     out.println(F(")"));
@@ -268,6 +271,10 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             out.println(F("__________"));
         } break;
         // ---------------------
+        case 'o': {
+            out.println(F("toggle animation.output"));
+            animation.output_toggle();
+        } break;
         case 'r': {
             out.println(F("toggle animation_run"));
             animation.animation_run = !animation.animation_run;
