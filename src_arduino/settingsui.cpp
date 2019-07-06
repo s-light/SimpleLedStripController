@@ -387,7 +387,7 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
         case slight_ButtonInput::event_holddown : {
             Serial.print(F("duration active: "));
             Serial.println((*instance).getDurationActive());
-            if ((*instance).getDurationActive() <= 2000) {
+            if ((*instance).getDurationActive() <= 5000) {
                 animation.output_off();
             }
         } break;

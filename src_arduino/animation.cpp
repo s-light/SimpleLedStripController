@@ -138,18 +138,16 @@ void MyAnimation::output_toggle() {
 }
 
 void MyAnimation::output_off() {
-    if (output_active) {
-        animation_run = false;
-        fill_black();
-        FastLED.show();
-        // deactivate level-shifter output
-        digitalWrite(output_active_pin, HIGH);
-        // deactivate power supply
-        digitalWrite(psu_off_pin, HIGH);
-        delay(1);
-        digitalWrite(psu_off_pin, LOW);
-        output_active = false;
-    }
+    animation_run = false;
+    fill_black();
+    FastLED.show();
+    // deactivate level-shifter output
+    digitalWrite(output_active_pin, HIGH);
+    // deactivate power supply
+    digitalWrite(psu_off_pin, HIGH);
+    delay(1);
+    digitalWrite(psu_off_pin, LOW);
+    output_active = false;
 }
 
 void MyAnimation::output_on() {
