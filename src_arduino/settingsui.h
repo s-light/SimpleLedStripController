@@ -51,6 +51,8 @@ SOFTWARE.
 #include <slight_ButtonInput.h>
 #include <slight_RotaryEncoder.h>
 
+#include <Adafruit_DotStar.h>
+
 #include "./animation.h"
 #include "./mapping.h"
 
@@ -93,6 +95,9 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes & objects
 
+    // OnBoardDotstar
+    Adafruit_DotStar board_dotstar = Adafruit_DotStar(1, 8, 6, DOTSTAR_BGR);
+
     // button
     boolean mybutton_get_input(slight_ButtonInput *instance);
     void mybutton_event(slight_ButtonInput *instance);
@@ -111,7 +116,7 @@ class SettingsUI {
         // const uint16_t duration_holddown_new = 1000,
         1000,
         // const uint16_t duration_click_long_new =   3000,
-        500,
+        700,
         // const uint16_t duration_click_double_new = 250
         250
     );

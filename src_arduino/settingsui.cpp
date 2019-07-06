@@ -96,6 +96,11 @@ void SettingsUI::begin(
     if (ready == false) {
         // setup
         out.println("SettingsUI begin:");
+        board_dotstar.begin();
+        // board_dotstar.setPixelColor(0, 0, 255, 255);
+        // delay(1);
+        board_dotstar.setPixelColor(0, 0, 0, 0);
+        board_dotstar.show();
         // light_init(out);
         button_init(out);
         out.println("  myencoder.begin");
@@ -389,6 +394,8 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
             Serial.println((*instance).getDurationActive());
             if ((*instance).getDurationActive() <= 5000) {
                 animation.output_off();
+                // board_dotstar.setPixelColor(0, 0, 255, 0);
+                // board_dotstar.show();
             }
         } break;
         case slight_ButtonInput::event_up : {
@@ -400,12 +407,16 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
                 switch_param();
             } else {
                 animation.output_on();
+                // board_dotstar.setPixelColor(0, 0, 255, 255);
+                // board_dotstar.show();
             }
         } break;
         case slight_ButtonInput::event_click_long : {
             Serial.print(F("click long "));
             Serial.println((*instance).getDurationActive());
             animation.output_off();
+            // board_dotstar.setPixelColor(0, 0, 0, 0);
+            // board_dotstar.show();
         } break;
         case slight_ButtonInput::event_click_double : {
             Serial.println(F("click double"));
