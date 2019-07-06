@@ -52,6 +52,7 @@ SOFTWARE.
 #include <slight_RotaryEncoder.h>
 
 #include "./animation.h"
+#include "./settingsui.h"
 
 
 class MyMenu {
@@ -67,6 +68,7 @@ class MyMenu {
     // MyMenu();
     MyMenu(
         MyAnimation &animation,
+        SettingsUI &settingsui,
         const sketchinfo_func sketchinfo_print
     );
     ~MyMenu();
@@ -90,7 +92,7 @@ class MyMenu {
     const uint16_t debugOut_interval = 1000; //ms
 
     boolean debugOut_Serial_Enabled = 0;
-    boolean debugOut_LED_Enabled = 1;
+    boolean debugOut_LED_Enabled = 0;
     void debugOut_update();
 
 
@@ -111,6 +113,14 @@ class MyMenu {
     void menu__test_xxx(Print &out);
     void menu__set_yyy(Print &out, char *command);
 
+    void menu__set_pixel(Print &out, char *command);
+    void menu__set_board_dotstar(Print &out, char *command);
+    void menu__test_buffer(Print &out);
+    void menu__time_meassurements(Print &out);
+
+    void menu__set_hue(Print &out, char *command);
+    void menu__set_saturation(Print &out, char *command);
+    void menu__set_brightness(Print &out, char *command);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
@@ -123,6 +133,7 @@ class MyMenu {
     // private functions
 
     MyAnimation &animation;
+    SettingsUI &settingsui;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // internal attributes

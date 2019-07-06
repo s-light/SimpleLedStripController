@@ -227,6 +227,11 @@ void MyAnimation::animation_update() {
     FastLED.show();
 }
 
+void MyAnimation::show() {
+    // write data to chips
+    FastLED.show();
+}
+
 void MyAnimation::calculate_effect_position() {
     // effect_position = normalize_to_01(millis(), effect_start, effect_end);
     effect_end = effect_start + effect_duration;
@@ -294,78 +299,7 @@ void MyAnimation::effect__static() {
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// menu
-
-void MyAnimation::menu__set_pixel(Print &out, char *command) {
-    out.print(F("Set pixel "));
-    uint8_t command_offset = 1;
-    uint8_t index = atoi(&command[command_offset]);
-    // a better way than this would be to search for the ':'
-    // i have used this a long time ago for MAC address format parsing
-    // was something with 'tokenize' or similar..
-    command_offset = 3;
-    if (index > 9) {
-        command_offset = command_offset +1;
-    }
-    out.print(index);
-    out.print(F(" to "));
-    uint16_t value = atoi(&command[command_offset]);
-    out.print(value);
-    // tlc.set_pixel_16bit_value(index, value, value, value);
-    out.println();
-}
-
-void MyAnimation::menu__time_meassurements(Print &out) {
-    out.println(F("time_meassurements:"));
-
-    uint32_t tm_start = 0;
-    uint32_t tm_end = 0;
-    uint32_t tm_duration = 0;
-    uint32_t tm_loop_count = 10;
-
-    for (size_t i = 0; i < tm_loop_count; i++) {
-        tm_start = millis();
-        effect__rainbow();
-        // tlc.show();
-        tm_end = millis();
-        tm_duration += (tm_end - tm_start);
-    }
-
-    out.print(tm_duration / static_cast<float>(tm_loop_count));
-    out.print(F("ms / call"));
-    out.println();
-}
-
-
-void MyAnimation::menu__set_hue(Print &out, char *command) {
-    out.print(F("Set hue "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    hue = value;
-    out.println();
-}
-
-void MyAnimation::menu__set_saturation(Print &out, char *command) {
-    out.print(F("Set saturation "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    saturation = value;
-    out.println();
-}
-
-void MyAnimation::menu__set_brightness(Print &out, char *command) {
-    out.print(F("Set brightness "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    brightness = value;
-    out.println();
-}
-
-
-
+// xx
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

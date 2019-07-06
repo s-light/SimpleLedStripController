@@ -151,7 +151,7 @@ void sketchinfo_print(Print &out) {
 MyAnimation animation = MyAnimation();
 
 SettingsUI settingsui = SettingsUI(animation);
-MyMenu mymenu = MyMenu(animation, sketchinfo_print);
+MyMenu mymenu = MyMenu(animation, settingsui, sketchinfo_print);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

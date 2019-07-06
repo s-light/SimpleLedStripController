@@ -407,16 +407,16 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
                 switch_param();
             } else {
                 animation.output_on();
-                // board_dotstar.setPixelColor(0, 0, 255, 255);
-                // board_dotstar.show();
+                board_dotstar.setPixelColor(0, 0, 40, 0);
+                board_dotstar.show();
             }
         } break;
         case slight_ButtonInput::event_click_long : {
             Serial.print(F("click long "));
             Serial.println((*instance).getDurationActive());
             animation.output_off();
-            // board_dotstar.setPixelColor(0, 0, 0, 0);
-            // board_dotstar.show();
+            board_dotstar.setPixelColor(0, 0, 0, 10);
+            board_dotstar.show();
         } break;
         case slight_ButtonInput::event_click_double : {
             Serial.println(F("click double"));

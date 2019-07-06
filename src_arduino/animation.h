@@ -114,25 +114,22 @@ public:
     void update();
     void end();
 
-    // menu & helper
-    void menu__set_pixel(Print &out, char *command);
-    void menu__test_buffer(Print &out);
-    void menu__time_meassurements(Print &out);
-    void print_tlc_buffer(Print &out);
-
-    void menu__set_hue(Print &out, char *command);
-    void menu__set_saturation(Print &out, char *command);
-    void menu__set_brightness(Print &out, char *command);
-
-
-    void fill_black();
+    void show();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // helper
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
+    bool animation_run = true;
+    uint32_t effect_duration = 30 * 1000; //ms
 
+    float hue = 0.55;
+    float saturation = 1.0;
+    float brightness = 0.1;
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // effects
     enum class EFFECT {
         OFF,
         STATIC,
@@ -142,18 +139,18 @@ public:
     void effect_print(Print &out, EFFECT fx);
     void effect_print_current(Print &out);
 
-    bool animation_run = true;
+    void fill_black();
 
-    uint32_t effect_duration = 30 * 1000; //ms
+    void effect__pixel_checker();
 
-    float hue = 0.55;
-    float saturation = 1.0;
-    float brightness = 0.1;
-
+    // rainbow
+    void effect__rainbow();
     float rainbow_spread = 0.5;
     uint8_t rainbow_brightness = 50;
-    CHSV color_hsv = warm_white;
     // EffectRainbow rainbow_settings;
+
+    void effect__static();
+    CHSV color_hsv = warm_white;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // output
@@ -173,10 +170,6 @@ private:
     void animation_update();
     void fps_update();
     void calculate_effect_position();
-
-    void effect__pixel_checker();
-    void effect__rainbow();
-    void effect__static();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes

@@ -65,11 +65,13 @@ SOFTWARE.
 
 MyMenu::MyMenu(
     MyAnimation &animation,
+    SettingsUI &settingsui,
     const sketchinfo_func sketchinfo_print
 ):
     myDebugMenu{slight_DebugMenu(Serial, Serial, 20)},
     animation(animation),
-    //       ^ '(' needed. its a bug in gcc..
+    settingsui(settingsui),
+    //      ^ '(' needed. its a kind of bug in gcc..
     // https://stackoverflow.com/questions/10509603/why-cant-i-initialize-a-reference-in-an-initializer-list-with-uniform-initializ
     ready{false},
     sketchinfo_print{sketchinfo_print}
@@ -92,7 +94,7 @@ void MyMenu::begin(Stream &out) {
 
         // LiveSign
         pinMode(infoled_pin, OUTPUT);
-        digitalWrite(infoled_pin, HIGH);
+        digitalWrite(infoled_pin, LOW);
         // as of arduino 1.0.1 you can use INPUT_PULLUP
 
         // out.println("  mydebugmenu.begin");
@@ -178,6 +180,101 @@ void MyMenu::menu__set_yyy(Print &out, char *command) {
     out.println();
 }
 
+
+
+void MyMenu::menu__set_pixel(Print &out, char *command) {
+    out.print(F("Set pixel "));
+    uint8_t command_offset = 1;
+    uint8_t index = atoi(&command[command_offset]);
+    // a better way than this would be to search for the ':'
+    // i have used this a long time ago for MAC address format parsing
+    // was something with 'tokenize' or similar..
+    command_offset = 3;
+    if (index > 9) {
+        command_offset = command_offset +1;
+    }
+    out.print(index);
+    out.print(F(" to "));
+    uint16_t value = atoi(&command[command_offset]);
+    out.print(value);
+    // animation.pixels.set_pixel_16bit_value(index, value, value, value);
+    out.println();
+}
+
+void MyMenu::menu__set_board_dotstar(Print &out, char *command) {
+    out.print(F("Set board_dotstar: "));
+    char *command_offset = command;
+    uint8_t red = atoi(command_offset);
+    command_offset = strchr(command_offset, ',');
+    uint8_t green = atoi(command_offset+1);
+    command_offset = strchr(command_offset+1, ',');
+    uint8_t blue = atoi(command_offset+1);
+    // out.print(F(" red:"));
+    // out.print(red);
+    // out.print(F(" green:"));
+    // out.print(green);
+    // out.print(F(" blue:"));
+    // out.print(blue);
+    out.printf("red %03d, green %03d, blue %03d", red, green, blue);
+    settingsui.board_dotstar.setPixelColor(0, red, green, blue);
+    settingsui.board_dotstar.show();
+    out.println();
+}
+
+void MyMenu::menu__time_meassurements(Print &out) {
+    out.println(F("time_meassurements:"));
+
+    uint32_t tm_start = 0;
+    uint32_t tm_end = 0;
+    uint32_t tm_duration = 0;
+    uint32_t tm_loop_count = 10;
+
+    for (size_t i = 0; i < tm_loop_count; i++) {
+        tm_start = millis();
+        animation.effect__rainbow();
+        animation.show();
+        tm_end = millis();
+        tm_duration += (tm_end - tm_start);
+    }
+
+    out.print(tm_duration / static_cast<float>(tm_loop_count));
+    out.print(F("ms / call"));
+    out.println();
+}
+
+
+void MyMenu::menu__set_hue(Print &out, char *command) {
+    out.print(F("Set hue "));
+    uint8_t command_offset = 1;
+    float value = atof(&command[command_offset]);
+    out.print(value);
+    animation.hue = value;
+    out.println();
+}
+
+void MyMenu::menu__set_saturation(Print &out, char *command) {
+    out.print(F("Set saturation "));
+    uint8_t command_offset = 1;
+    float value = atof(&command[command_offset]);
+    out.print(value);
+    animation.saturation = value;
+    out.println();
+}
+
+void MyMenu::menu__set_brightness(Print &out, char *command) {
+    out.print(F("Set brightness "));
+    uint8_t command_offset = 1;
+    float value = atof(&command[command_offset]);
+    out.print(value);
+    animation.brightness = value;
+    out.println();
+}
+
+
+
+
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Menu System
 
@@ -227,6 +324,7 @@ void MyMenu::menu__print_help(Print &out) {
     // out.println(F("\t 't': set buffer to test values 't'"));
     out.println(F("\t 'T': time_meassurements 'T'"));
     out.println(F("\t 'p': set pixel 'p0:65535'"));
+    out.println(F("\t 'P': set board_dotstar 'P255,255,255'"));
     // out.println(F("\t 'P': set all pixel 'P65535'"));
     out.println(F("\t 'z': set all pixel to black 'z'"));
     // out.println(F("\t 'Z': set all pixel to 21845 'z'"));
@@ -287,13 +385,13 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             out.println();
         } break;
         case 'h': {
-            animation.menu__set_hue(out, command);
+            menu__set_hue(out, command);
         } break;
         case 'c': {
-            animation.menu__set_saturation(out, command);
+            menu__set_saturation(out, command);
         } break;
         case 'b': {
-            animation.menu__set_brightness(out, command);
+            menu__set_brightness(out, command);
         } break;
         // ---------------------
         // case 'u': {
@@ -328,10 +426,13 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
         //     animation.menu__test_buffer(out);
         // } break;
         case 'T': {
-            animation.menu__time_meassurements(out);
+            menu__time_meassurements(out);
         } break;
         case 'p': {
-            animation.menu__set_pixel(out, command);
+            menu__set_pixel(out, command);
+        } break;
+        case 'P': {
+            menu__set_board_dotstar(out, command);
         } break;
         // case 'P': {
         //     out.print(F("Set all pixel to "));
