@@ -242,33 +242,33 @@ void MyMenu::menu__time_meassurements(Print &out) {
     out.println();
 }
 
-
-void MyMenu::menu__set_hue(Print &out, char *command) {
-    out.print(F("Set hue "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    animation.hue = value;
-    out.println();
-}
-
-void MyMenu::menu__set_saturation(Print &out, char *command) {
-    out.print(F("Set saturation "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    animation.saturation = value;
-    out.println();
-}
-
-void MyMenu::menu__set_brightness(Print &out, char *command) {
-    out.print(F("Set brightness "));
-    uint8_t command_offset = 1;
-    float value = atof(&command[command_offset]);
-    out.print(value);
-    animation.brightness = value;
-    out.println();
-}
+//
+// void MyMenu::menu__set_hue(Print &out, char *command) {
+//     out.print(F("Set hue "));
+//     uint8_t command_offset = 1;
+//     float value = atof(&command[command_offset]);
+//     out.print(value);
+//     animation.hue = value;
+//     out.println();
+// }
+//
+// void MyMenu::menu__set_saturation(Print &out, char *command) {
+//     out.print(F("Set saturation "));
+//     uint8_t command_offset = 1;
+//     float value = atof(&command[command_offset]);
+//     out.print(value);
+//     animation.saturation = value;
+//     out.println();
+// }
+//
+// void MyMenu::menu__set_brightness(Print &out, char *command) {
+//     out.print(F("Set brightness "));
+//     uint8_t command_offset = 1;
+//     float value = atof(&command[command_offset]);
+//     out.print(value);
+//     animation.brightness = value;
+//     out.println();
+// }
 
 
 
@@ -300,14 +300,17 @@ void MyMenu::menu__print_help(Print &out) {
     out.print(F("\t 'd': set effect_duration 'd1000' ("));
     out.print(animation.effect_duration);
     out.println(F("ms)"));
-    out.print(F("\t 'h': set hue 'h1.0' ("));
-    out.print(animation.hue, 4);
-    out.println(F(")"));
-    out.print(F("\t 'c': set saturation 'c1.0' ("));
-    out.print(animation.saturation, 4);
-    out.println(F(")"));
-    out.print(F("\t 'b': set brightness 'b1.0' ("));
-    out.print(animation.brightness, 4);
+    // out.print(F("\t 'h': set hue 'h1.0' ("));
+    // out.print(animation.hue, 4);
+    // out.println(F(")"));
+    // out.print(F("\t 'c': set saturation 'c1.0' ("));
+    // out.print(animation.saturation, 4);
+    // out.println(F(")"));
+    // out.print(F("\t 'b': set brightness 'b1.0' ("));
+    // out.print(animation.brightness, 4);
+    // out.println(F(")"));
+    out.print(F("\t 'b': set brightness 'b255' ("));
+    out.print(animation.getBrightness(), 4);
     out.println(F(")"));
     out.println();
     // // out.println(F("\t 'f': test fc 'f'"));
@@ -384,14 +387,22 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             animation.effect_duration = value;
             out.println();
         } break;
-        case 'h': {
-            menu__set_hue(out, command);
-        } break;
-        case 'c': {
-            menu__set_saturation(out, command);
-        } break;
+        // case 'h': {
+        //     menu__set_hue(out, command);
+        // } break;
+        // case 'c': {
+        //     menu__set_saturation(out, command);
+        // } break;
+        // case 'b': {
+        //     menu__set_brightness(out, command);
+        // } break;
         case 'b': {
-            menu__set_brightness(out, command);
+            out.print(F("Set brightness "));
+            uint8_t command_offset = 1;
+            uint8_t value = atoi(&command[command_offset]);
+            out.print(value);
+            animation.setBrightness(value);
+            out.println();
         } break;
         // ---------------------
         // case 'u': {

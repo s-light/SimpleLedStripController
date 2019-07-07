@@ -257,8 +257,11 @@ void SettingsUI::change_param(int16_t value) {
                     out.print(animation.effect_duration);
                 } break;
                 case RAINBOW_PARAM::BRIGHTNESS: {
-                    animation.rainbow_brightness += value;
-                    out.print(animation.rainbow_brightness);
+                    // animation.rainbow_brightness += value;
+                    // out.print(animation.rainbow_brightness);
+                    uint8_t temp = animation.getBrightness() + value;
+                    animation.setBrightness(temp);
+                    out.print(animation.getBrightness());
                 } break;
                 case RAINBOW_PARAM::SPREAD: {
                     animation.rainbow_spread += value * 0.01;

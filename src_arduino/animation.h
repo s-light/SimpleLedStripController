@@ -54,10 +54,13 @@ SOFTWARE.
 
 #include <slight_DebugMenu.h>
 
+#define min(a,b) ((a)<(b)?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
 // #define FASTLED_USE_GLOBAL_BRIGHTNESS 1
 // i can't test this  - it needs the min and max functions defined by Arduino.h
 // but the slight_* libs
 // that are using std:function are undef them so the std:: namespace works..
+#define FASTLED_USE_GLOBAL_BRIGHTNESS 1
 
 #include <FastLED.h>
 
@@ -114,7 +117,10 @@ public:
     void update();
     void end();
 
+    // FastLED helper
     void show();
+    void setBrightness(uint8_t value);
+    uint8_t getBrightness();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // helper
@@ -124,9 +130,9 @@ public:
     bool animation_run = true;
     uint32_t effect_duration = 30 * 1000; //ms
 
-    float hue = 0.55;
-    float saturation = 1.0;
-    float brightness = 0.1;
+    // float hue = 0.55;
+    // float saturation = 1.0;
+    // float brightness = 1.0;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // effects
@@ -146,7 +152,7 @@ public:
     // rainbow
     void effect__rainbow();
     float rainbow_spread = 0.5;
-    uint8_t rainbow_brightness = 50;
+    uint8_t rainbow_brightness = 255;
     // EffectRainbow rainbow_settings;
 
     void effect__static();

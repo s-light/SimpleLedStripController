@@ -94,12 +94,12 @@ void MyAnimation::begin(Stream &out) {
         out.print(F("  DATA_RATE "));
         out.print(DATA_RATE_MHZ);
         out.println(F(" MHZ"));
-        FastLED.addLeds<APA102, MOSI, SCK, RGB, DATA_RATE_MHZ(DATA_RATE_MHZ)>(
-            pixels, PIXEL_COUNT);
+        FastLED.addLeds<APA102, MOSI, SCK, RGB,
+            DATA_RATE_MHZ(DATA_RATE_MHZ)>(pixels, PIXEL_COUNT);
         // out.println(F("  setDither(0)"));
         // FastLED.setDither(0);
-        // out.println(F("  setBrightness(50)."));
-        // FastLED.setBrightness(50);
+        out.println(F("  setBrightness(10)."));
+        FastLED.setBrightness(10);
         out.println(F("  finished."));
 
         animation_init(out);
@@ -162,6 +162,7 @@ void MyAnimation::output_on() {
         output_active = true;
     }
 }
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // animation
@@ -230,6 +231,14 @@ void MyAnimation::animation_update() {
 void MyAnimation::show() {
     // write data to chips
     FastLED.show();
+}
+
+void MyAnimation::setBrightness(uint8_t value) {
+    FastLED.setBrightness(value);
+}
+
+uint8_t MyAnimation::getBrightness() {
+    return FastLED.getBrightness();
 }
 
 void MyAnimation::calculate_effect_position() {
