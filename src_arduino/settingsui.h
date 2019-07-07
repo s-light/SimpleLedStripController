@@ -213,8 +213,12 @@ class SettingsUI {
     // uint32_t light_loopcount = 0;
     // float effect_position = 0.0;
 
+    // power modes
     uint32_t board_dotstar_standby_color = Adafruit_DotStar::Color(0, 0, 10);
     uint32_t board_dotstar_active_color = Adafruit_DotStar::Color(0, 40, 0);
+
+    void sleepmode_init();
+    void go_to_sleep();
 
 };  // class SettingsUI
 

@@ -297,38 +297,38 @@ void MyAnimation::overwrite_set_relative(int16_t value) {
     int16_t end_new = overwrite_end + value;
 
     if (overwrite_start == 0) {
-        Serial.printf(" <E%+3d", end_new);
+        // Serial.printf(" <E%+3d", end_new);
         if (end_new >= 0 && end_new <= PIXEL_COUNT-1) {
             overwrite_end = end_new;
         } else {
             if (end_new > 0) {
-                Serial.printf(" |+ %+4d", end_new - (PIXEL_COUNT-1));
+                // Serial.printf(" |+ %+4d", end_new - (PIXEL_COUNT-1));
                 overwrite_start = end_new - (PIXEL_COUNT-1);
                 overwrite_end = PIXEL_COUNT-1;
             } else {
                 // we need + (because end_new is already negative!!)
-                Serial.printf(" |- %+4d", (PIXEL_COUNT-1) + end_new);
+                // Serial.printf(" |- %+4d", (PIXEL_COUNT-1) + end_new);
                 overwrite_start = (PIXEL_COUNT-1) + end_new;
                 overwrite_end = PIXEL_COUNT-1;
             }
         }
-        Serial.print("> ");
+        // Serial.print("> ");
     } else if (overwrite_end == PIXEL_COUNT-1) {
-        Serial.printf(" <S%+3d", start_new);
+        // Serial.printf(" <S%+3d", start_new);
         if (start_new >= 0 && start_new <= PIXEL_COUNT-1) {
             overwrite_start = start_new;
         } else {
             if (start_new > 0) {
-                Serial.printf(" |+ %+4d", start_new - (PIXEL_COUNT-1));
+                // Serial.printf(" |+ %+4d", start_new - (PIXEL_COUNT-1));
                 overwrite_start = 0;
                 overwrite_end = start_new - (PIXEL_COUNT-1);
             } else {
-                Serial.printf(" |- %+4d", start_new + (PIXEL_COUNT-1));
+                // Serial.printf(" |- %+4d", start_new + (PIXEL_COUNT-1));
                 overwrite_start = 0;
                 overwrite_end = start_new + (PIXEL_COUNT-1);
             }
         }
-        Serial.print("> ");
+        // Serial.print("> ");
         // overwrite_start = limit(
             //     static_cast<uint16_t>(start_new), PIXEL_COUNT);
     } else {

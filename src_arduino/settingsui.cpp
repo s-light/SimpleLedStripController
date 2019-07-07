@@ -274,14 +274,14 @@ void SettingsUI::change_param(int16_t value) {
                     out.print(animation.rainbow_spread);
                 } break;
                 case RAINBOW_PARAM::OVERWRITE: {
-                    out.printf(
-                        "%+3d (%3d, %3d) --> ",
-                        value,
-                        animation.overwrite_start_get(),
-                        animation.overwrite_end_get());
+                    // out.printf(
+                    //     "%+3d (%3d, %3d) --> ",
+                    //     value,
+                    //     animation.overwrite_start_get(),
+                    //     animation.overwrite_end_get());
                     animation.overwrite_set_relative(value);
                     out.printf(
-                        " (%3d, %3d)",
+                        "(%3d, %3d)",
                         animation.overwrite_start_get(),
                         animation.overwrite_end_get());
                 } break;
@@ -376,17 +376,38 @@ void SettingsUI::switch_param() {
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ambientlight sensor
+// power modes
 
-// void SettingsUI::light_init(Stream &out) {
-//     out.println(F("setup light sensor:"));
-//     // TODO(s-light): implement
-//     out.println(F("  finished."));
-// }
-//
-// void SettingsUI::light_update() {
-//     // TODO(s-light): implement
-// }
+// based on MartinL post at
+// https://forum.arduino.cc/index.php?topic=600359.msg4079526#msg4079526
+
+void SettingsUI::sleepmode_init(Stream &out) {
+    out.println(F("prepare sleepmode:"));
+    // Set up SAMD51 to enter low power STANDBY mode
+    PM->SLEEPCFG.bit.SLEEPMODE = 0x4;
+    while (PM->SLEEPCFG.bit.SLEEPMODE != 0x4) {}
+    out.println(F("  finished."));
+}
+
+void SettingsUI::go_to_sleep() {
+    USBDevice.detach();
+    USBDevice.end();
+    USBDevice.standby();
+    // Complete data memory operations
+    __DSB();
+    // Put the SAMDx1 into deep sleep Zzzzzzz....
+    __WFI();
+
+    // HERE THE CODE RETURNS AFTER SLEEP!
+
+    USBDevice.init();
+    USBDevice.attach();
+}
+
+void wakeup_isr() {
+    // nothing to do here..
+}
+
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // button
@@ -396,6 +417,8 @@ void SettingsUI::button_init(Stream &out) {
 
     out.println(F("  set pinMode INPUT_PULLUP"));
     pinMode(mybutton.pin, INPUT_PULLUP);
+    out.println(F("  attachInterrupt for wakeup after sleep"));
+    attachInterrupt(mybutton.pin, wakeup_isr, LOW);
     out.println(F("  mybutton.begin()"));
     mybutton.begin();
     out.println(F("  flag_filter_multi_click_events true"));
