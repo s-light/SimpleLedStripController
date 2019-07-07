@@ -223,22 +223,10 @@ void MyAnimation::animation_update() {
                 effect__rainbow();
             } break;
         }
+        overwrite_black();
     }
     // write data to chips
     FastLED.show();
-}
-
-void MyAnimation::show() {
-    // write data to chips
-    FastLED.show();
-}
-
-void MyAnimation::setBrightness(uint8_t value) {
-    FastLED.setBrightness(value);
-}
-
-uint8_t MyAnimation::getBrightness() {
-    return FastLED.getBrightness();
 }
 
 void MyAnimation::calculate_effect_position() {
@@ -272,6 +260,29 @@ void MyAnimation::fps_update() {
     }
 }
 
+
+void MyAnimation::show() {
+    // write data to chips
+    FastLED.show();
+}
+
+void MyAnimation::setBrightness(uint8_t value) {
+    FastLED.setBrightness(value);
+}
+
+uint8_t MyAnimation::getBrightness() {
+    return FastLED.getBrightness();
+}
+
+
+void MyAnimation::overwrite_black() {
+    pixels(overwrite_start, overwrite_end) = CRGB::Black;
+}
+
+void MyAnimation::overwrite_set(uin16_t start, uin16_t end) {
+    overwrite_start = limit(start, PIXEL_COUNT);
+    overwrite_end = clamp(end, overwrite_start, PIXEL_COUNT);
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // effects

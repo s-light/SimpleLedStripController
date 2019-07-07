@@ -105,7 +105,9 @@ public:
     // pixels
 
     static const uint16_t PIXEL_COUNT = 144*3;
-    CRGB pixels[PIXEL_COUNT];
+    // CRGB pixels[PIXEL_COUNT];
+    CRGBArray<PIXEL_COUNT> pixels;
+    // CRGBSet overlay(pixels, PIXEL_COUNT);
 
     const CHSV warm_white = CHSV(142, 100, 240);
 
@@ -133,6 +135,8 @@ public:
     // float hue = 0.55;
     // float saturation = 1.0;
     // float brightness = 1.0;
+
+    void overwrite_set(uin16_t start, uin16_t end);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // effects
@@ -176,6 +180,7 @@ private:
     void animation_update();
     void fps_update();
     void calculate_effect_position();
+    void overwrite_black();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes
@@ -193,6 +198,9 @@ private:
     uint32_t fps_start = 0;
     uint32_t fps_duration = 10 * 1000;  // ms
     uint32_t fps_loopcount = 0;
+
+    uin16_t overwrite_start = 0;
+    uin16_t overwrite_end = 0;
 
 };  // class MyAnimation
 
