@@ -328,6 +328,7 @@ void MyMenu::menu__print_help(Print &out) {
     out.println(F("\t 'Y': toggle DebugOut livesign LED"));
     out.println(F("\t 'x': tests"));
     out.println();
+    out.println(F("\t 'Q': system power off 'Q'"));
     out.print(F("\t 'o': toggle animation.output 'o' ("));
     out.print(animation.output_get());
     out.println(F(")"));
@@ -416,6 +417,19 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             out.println(F("__________"));
         } break;
         // ---------------------
+        case 'Q': {
+            out.println(F("system power off"));
+            out.println(F(
+                " --> this currently detaches the USB-Serial connection."));
+            out.println(F(
+                "     but it does not reattach correctly. "
+                "so after the sleep this debug menu "
+                "is not available anymore."));
+            out.println(F(
+                "     you can reconnect only by hitting the reset button."));
+            out.flush();
+            settingsui.system_power_off();
+        } break;
         case 'o': {
             out.println(F("toggle animation.output"));
             animation.output_toggle();

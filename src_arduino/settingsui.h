@@ -118,7 +118,7 @@ class SettingsUI {
         // const uint16_t duration_holddown_new = 1000,
         1000,
         // const uint16_t duration_click_long_new =   3000,
-        700,
+        3000,
         // const uint16_t duration_click_double_new = 250
         250
     );
@@ -141,7 +141,8 @@ class SettingsUI {
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // public functions
+    // power modes
+    void system_power_off();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
@@ -213,13 +214,13 @@ class SettingsUI {
     // uint32_t light_loopcount = 0;
     // float effect_position = 0.0;
 
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // power modes
     uint32_t board_dotstar_standby_color = Adafruit_DotStar::Color(0, 0, 10);
     uint32_t board_dotstar_active_color = Adafruit_DotStar::Color(0, 40, 0);
 
-    void sleepmode_init();
+    void sleepmode_init(Stream &out);
     void go_to_sleep();
-
 };  // class SettingsUI
 
 #endif  // SRC_ARDUINO_SETTINGSUI_H_

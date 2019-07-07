@@ -96,6 +96,8 @@ void SettingsUI::begin(
     if (ready == false) {
         // setup
         out.println("SettingsUI begin:");
+        sleepmode_init(out);
+        out.println("  board_dotstar");
         board_dotstar.begin();
         // board_dotstar.setPixelColor(0, 0, 255, 255);
         // delay(1);
@@ -389,10 +391,17 @@ void SettingsUI::sleepmode_init(Stream &out) {
     out.println(F("  finished."));
 }
 
+void wakeup_isr() {
+    // nothing to do here..
+}
+
 void SettingsUI::go_to_sleep() {
     USBDevice.detach();
     USBDevice.end();
     USBDevice.standby();
+
+    attachInterrupt(mybutton.pin, wakeup_isr, LOW);
+
     // Complete data memory operations
     __DSB();
     // Put the SAMDx1 into deep sleep Zzzzzzz....
@@ -400,30 +409,36 @@ void SettingsUI::go_to_sleep() {
 
     // HERE THE CODE RETURNS AFTER SLEEP!
 
+    detachInterrupt(mybutton.pin);
+
     USBDevice.init();
     USBDevice.attach();
 }
 
-void wakeup_isr() {
-    // nothing to do here..
-}
 
+void SettingsUI::system_power_off() {
+    animation.output_off();
+    board_dotstar.setPixelColor(0, board_dotstar_standby_color);
+    board_dotstar.show();
+
+    go_to_sleep();
+
+    animation.output_on();
+    board_dotstar.setPixelColor(0, board_dotstar_active_color);
+    board_dotstar.show();
+}
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // button
 
 void SettingsUI::button_init(Stream &out) {
     out.println(F("setup button input:"));
-
     out.println(F("  set pinMode INPUT_PULLUP"));
     pinMode(mybutton.pin, INPUT_PULLUP);
-    out.println(F("  attachInterrupt for wakeup after sleep"));
-    attachInterrupt(mybutton.pin, wakeup_isr, LOW);
     out.println(F("  mybutton.begin()"));
     mybutton.begin();
     out.println(F("  flag_filter_multi_click_events true"));
     mybutton.flag_filter_multi_click_events = true;
-
     out.println(F("  finished."));
 }
 
@@ -449,31 +464,30 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
         case slight_ButtonInput::event_holddown : {
             Serial.print(F("duration active: "));
             Serial.println((*instance).getDurationActive());
-            if ((*instance).getDurationActive() <= 5000) {
-                animation.output_off();
-                // board_dotstar.setPixelColor(0, 0, 255, 0);
-                // board_dotstar.show();
-            }
+            // if ((*instance).getDurationActive() <= 5000) {
+            //     animation.output_off();
+            //     board_dotstar.setPixelColor(0, 50, 50, 0);
+            //     board_dotstar.show();
+            // }
         } break;
         case slight_ButtonInput::event_up : {
-            // Serial.println(F("up"));
+            Serial.println(F("up"));
         } break;
         case slight_ButtonInput::event_click : {
             Serial.println(F("click"));
-            if (animation.output_get()) {
-                switch_param();
-            } else {
-                animation.output_on();
-                board_dotstar.setPixelColor(0, board_dotstar_active_color);
-                board_dotstar.show();
-            }
+            switch_param();
+            // if (animation.output_get()) {
+            //     switch_param();
+            // } else {
+            //     animation.output_on();
+            //     board_dotstar.setPixelColor(0, board_dotstar_active_color);
+            //     board_dotstar.show();
+            // }
         } break;
         case slight_ButtonInput::event_click_long : {
             Serial.print(F("click long "));
             Serial.println((*instance).getDurationActive());
-            animation.output_off();
-            board_dotstar.setPixelColor(0, board_dotstar_standby_color);
-            board_dotstar.show();
+            system_power_off();
         } break;
         case slight_ButtonInput::event_click_double : {
             Serial.println(F("click double"));
