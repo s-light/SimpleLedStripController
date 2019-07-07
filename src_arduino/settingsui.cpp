@@ -272,8 +272,8 @@ void SettingsUI::change_param(int16_t value) {
                     out.print(animation.getBrightness());
                 } break;
                 case RAINBOW_PARAM::SPREAD: {
-                    float temp = animation.rainbow_spread + value * 0.01;
-                    temp = clamp(temp, -1.0, 10.0)
+                    double temp = animation.rainbow_spread + value * 0.01;
+                    temp = clamp(temp, -1.0, 10.0);
                     animation.rainbow_spread = temp;
                     out.print(animation.rainbow_spread);
                 } break;

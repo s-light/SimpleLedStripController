@@ -205,8 +205,8 @@ void setup() {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // go
 
-        Serial.println(F("wait 1s."));
-        delay(1000);
+        // Serial.println(F("wait 1s."));
+        // delay(1000);
         Serial.println(F("Loop:"));
 
 } /** setup **/
