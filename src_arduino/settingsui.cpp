@@ -99,10 +99,7 @@ void SettingsUI::begin(
         sleepmode_init(out);
         out.println("  board_dotstar");
         board_dotstar.begin();
-        // board_dotstar.setPixelColor(0, 0, 255, 255);
-        // delay(1);
-        // board_dotstar.setPixelColor(0, 0, 0, 0);
-        board_dotstar.setPixelColor(0, board_dotstar_standby_color);
+        board_dotstar.setPixelColor(0, board_dotstar_active_color);
         board_dotstar.show();
         // light_init(out);
         button_init(out);

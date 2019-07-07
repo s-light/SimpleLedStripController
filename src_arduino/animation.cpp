@@ -83,8 +83,8 @@ void MyAnimation::begin(Stream &out) {
         pinMode(psu_off_pin, OUTPUT);
         out.println(F("  psu_on_pin"));
         pinMode(psu_on_pin, OUTPUT);
-        out.println(F("  output_off()"));
-        output_off();
+        out.println(F("  output_on()"));
+        output_on();
 
         // setup
         out.println(F("setup pixels:"));
