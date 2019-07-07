@@ -259,6 +259,25 @@ void MyMenu::menu__set_overwrite_black(Print &out, char *command) {
     out.println();
 }
 
+void MyMenu::menu__set_overwrite_black_relative(Print &out, char *command) {
+    out.print(F("set overwrite_black_relative: "));
+    char *command_offset = command +1;
+    int16_t value = atoi(command_offset);
+    out.print(value);
+    // out.println();
+    out.printf(
+        " (%3d, %3d) --> ",
+        animation.overwrite_start_get(),
+        animation.overwrite_end_get());
+    animation.overwrite_set_relative(value);
+    out.printf(
+        " (%3d, %3d)",
+        animation.overwrite_start_get(),
+        animation.overwrite_end_get());
+    out.println();
+    out.println();
+}
+
 
 //
 // void MyMenu::menu__set_hue(Print &out, char *command) {
@@ -337,6 +356,7 @@ void MyMenu::menu__print_help(Print &out) {
         animation.overwrite_start_get(),
         animation.overwrite_end_get());
     out.println();
+    out.println(F("\t 'q': set overwrite relative 'q-5'"));
     // // out.println(F("\t 'f': test fc 'f'"));
     // out.println(F("\t 'u': tlc.show() 'u'"));
     // out.print(F("\t 'e': toggle ESPWM 'e' ("));
@@ -430,6 +450,9 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
         } break;
         case 'O': {
             menu__set_overwrite_black(out, command);
+        } break;
+        case 'q': {
+            menu__set_overwrite_black_relative(out, command);
         } break;
         // ---------------------
         // case 'u': {

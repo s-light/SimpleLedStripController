@@ -67,6 +67,7 @@ class SettingsUI {
         HUE,
         SATURATION,
         VALUE,
+        OVERWRITE,
     };
 
     enum class RAINBOW_PARAM {
@@ -75,6 +76,7 @@ class SettingsUI {
         // VALUE,
         BRIGHTNESS,
         SPREAD,
+        OVERWRITE,
     };
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

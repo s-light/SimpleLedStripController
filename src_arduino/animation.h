@@ -104,7 +104,7 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // pixels
 
-    static const uint16_t PIXEL_COUNT = 144*3;
+    static const uint16_t PIXEL_COUNT = 144*1;
     // CRGB pixels[PIXEL_COUNT];
     CRGBArray<PIXEL_COUNT> pixels;
     // CRGBSet overlay(pixels, PIXEL_COUNT);
@@ -137,6 +137,7 @@ public:
     // float brightness = 1.0;
 
     void overwrite_set(uint16_t start, uint16_t end);
+    void overwrite_set_relative(int16_t value);
     uint16_t overwrite_start_get();
     uint16_t overwrite_end_get();
 

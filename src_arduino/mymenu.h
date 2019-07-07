@@ -119,6 +119,7 @@ class MyMenu {
     void menu__time_meassurements(Print &out);
 
     void menu__set_overwrite_black(Print &out, char *command);
+    void menu__set_overwrite_black_relative(Print &out, char *command);
     // void menu__set_hue(Print &out, char *command);
     // void menu__set_saturation(Print &out, char *command);
     // void menu__set_brightness(Print &out, char *command);

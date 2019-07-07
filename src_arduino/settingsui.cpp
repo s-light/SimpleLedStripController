@@ -224,6 +224,9 @@ void SettingsUI::change_param(int16_t value) {
                     animation.setBrightness(temp);
                     out.print(animation.getBrightness());
                 } break;
+                case STATIC_PARAM::OVERWRITE: {
+                    animation.overwrite_set_relative(value);
+                } break;
             }
         } break;
         case MyAnimation::EFFECT::RAINBOW: {
@@ -270,6 +273,18 @@ void SettingsUI::change_param(int16_t value) {
                     animation.rainbow_spread += value * 0.01;
                     out.print(animation.rainbow_spread);
                 } break;
+                case RAINBOW_PARAM::OVERWRITE: {
+                    out.printf(
+                        "%+3d (%3d, %3d) --> ",
+                        value,
+                        animation.overwrite_start_get(),
+                        animation.overwrite_end_get());
+                    animation.overwrite_set_relative(value);
+                    out.printf(
+                        " (%3d, %3d)",
+                        animation.overwrite_start_get(),
+                        animation.overwrite_end_get());
+                } break;
             }
         } break;
     }
@@ -292,6 +307,9 @@ void SettingsUI::print_param(Print &out) {
                 case STATIC_PARAM::VALUE: {
                     out.print(F("VALUE"));
                 } break;
+                case STATIC_PARAM::OVERWRITE: {
+                    out.print(F("OVERWRITE"));
+                } break;
             }
         } break;
         case MyAnimation::EFFECT::RAINBOW: {
@@ -304,6 +322,9 @@ void SettingsUI::print_param(Print &out) {
                 } break;
                 case RAINBOW_PARAM::SPREAD: {
                     out.print(F("SPREAD"));
+                } break;
+                case RAINBOW_PARAM::OVERWRITE: {
+                    out.print(F("OVERWRITE"));
                 } break;
             }
         } break;
@@ -324,6 +345,9 @@ void SettingsUI::switch_param() {
                     static_current = STATIC_PARAM::VALUE;
                 } break;
                 case STATIC_PARAM::VALUE: {
+                    static_current = STATIC_PARAM::OVERWRITE;
+                } break;
+                case STATIC_PARAM::OVERWRITE: {
                     static_current = STATIC_PARAM::HUE;
                 } break;
             }
@@ -337,6 +361,9 @@ void SettingsUI::switch_param() {
                     rainbow_current = RAINBOW_PARAM::SPREAD;
                 } break;
                 case RAINBOW_PARAM::SPREAD: {
+                    rainbow_current = RAINBOW_PARAM::OVERWRITE;
+                } break;
+                case RAINBOW_PARAM::OVERWRITE: {
                     rainbow_current = RAINBOW_PARAM::DURATION;
                 } break;
             }
