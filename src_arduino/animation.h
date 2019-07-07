@@ -67,7 +67,7 @@ SOFTWARE.
 // #include "./color.h"
 // ^ color.h is my own minimal FastLED compatible thing...
 
-// #include "./mapping.h"
+#include "./mapping.h"
 
 
 class MyAnimation {
@@ -136,7 +136,9 @@ public:
     // float saturation = 1.0;
     // float brightness = 1.0;
 
-    void overwrite_set(uin16_t start, uin16_t end);
+    void overwrite_set(uint16_t start, uint16_t end);
+    uint16_t overwrite_start_get();
+    uint16_t overwrite_end_get();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // effects
@@ -199,8 +201,8 @@ private:
     uint32_t fps_duration = 10 * 1000;  // ms
     uint32_t fps_loopcount = 0;
 
-    uin16_t overwrite_start = 0;
-    uin16_t overwrite_end = 0;
+    uint16_t overwrite_start = 0;
+    uint16_t overwrite_end = 0;
 
 };  // class MyAnimation
 

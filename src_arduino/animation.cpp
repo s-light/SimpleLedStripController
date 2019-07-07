@@ -261,6 +261,9 @@ void MyAnimation::fps_update() {
 }
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// FastLED helper
+
 void MyAnimation::show() {
     // write data to chips
     FastLED.show();
@@ -275,13 +278,26 @@ uint8_t MyAnimation::getBrightness() {
 }
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// overwrite
+
 void MyAnimation::overwrite_black() {
-    pixels(overwrite_start, overwrite_end) = CRGB::Black;
+    if (overwrite_end- overwrite_start > 0) {
+        pixels(overwrite_start, overwrite_end) = CRGB::Black;
+    }
 }
 
-void MyAnimation::overwrite_set(uin16_t start, uin16_t end) {
+void MyAnimation::overwrite_set(uint16_t start, uint16_t end) {
     overwrite_start = limit(start, PIXEL_COUNT);
     overwrite_end = clamp(end, overwrite_start, PIXEL_COUNT);
+}
+
+uint16_t MyAnimation::overwrite_start_get() {
+    return overwrite_start;
+}
+
+uint16_t MyAnimation::overwrite_end_get() {
+    return overwrite_end;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

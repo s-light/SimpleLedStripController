@@ -245,12 +245,17 @@ void MyMenu::menu__time_meassurements(Print &out) {
 
 void MyMenu::menu__set_overwrite_black(Print &out, char *command) {
     out.print(F("set overwrite_black: "));
-    char *command_offset = command;
+    char *command_offset = command +1;
     uint16_t start = atoi(command_offset);
     command_offset = strchr(command_offset, ',');
     uint16_t end = atoi(command_offset+1);
-    out.printf("%03d -%03d", start, end);
+    out.printf("(%3d, %3d) >", start, end);
     animation.overwrite_set(start, end);
+    out.printf(
+        " (%3d, %3d)",
+        animation.overwrite_start_get(),
+        animation.overwrite_end_get());
+    out.println();
     out.println();
 }
 
@@ -326,6 +331,12 @@ void MyMenu::menu__print_help(Print &out) {
     out.print(animation.getBrightness(), 4);
     out.println(F(")"));
     out.println();
+    out.print(F("\t 'O': set overwrite 'O432,432'"));
+    out.printf(
+        " (%3d, %3d)",
+        animation.overwrite_start_get(),
+        animation.overwrite_end_get());
+    out.println();
     // // out.println(F("\t 'f': test fc 'f'"));
     // out.println(F("\t 'u': tlc.show() 'u'"));
     // out.print(F("\t 'e': toggle ESPWM 'e' ("));
@@ -342,7 +353,6 @@ void MyMenu::menu__print_help(Print &out) {
     out.println(F("\t 'p': set pixel 'p0:65535'"));
     out.println(F("\t 'P': set board_dotstar 'P255,255,255'"));
     // out.println(F("\t 'P': set all pixel 'P65535'"));
-    out.println(F("\t 'o': set overwrite 'o432,432'"));
     out.println(F("\t 'z': set all pixel to black 'z'"));
     // out.println(F("\t 'Z': set all pixel to 21845 'z'"));
     // out.println(F("\t 'B': print Buffer 'B'"));
@@ -418,7 +428,7 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             animation.setBrightness(value);
             out.println();
         } break;
-        case 'o': {
+        case 'O': {
             menu__set_overwrite_black(out, command);
         } break;
         // ---------------------
