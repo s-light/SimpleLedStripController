@@ -218,8 +218,11 @@ void SettingsUI::change_param(int16_t value) {
                     out.print(animation.color_hsv.saturation);
                 } break;
                 case STATIC_PARAM::VALUE: {
-                    animation.color_hsv.value += value;
-                    out.print(animation.color_hsv.value);
+                    // animation.color_hsv.value += value;
+                    // out.print(animation.color_hsv.value);
+                    uint8_t temp = animation.getBrightness() + value;
+                    animation.setBrightness(temp);
+                    out.print(animation.getBrightness());
                 } break;
             }
         } break;
