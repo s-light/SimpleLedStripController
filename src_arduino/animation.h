@@ -104,7 +104,7 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // pixels
 
-    static const uint16_t PIXEL_COUNT = 144*1;
+    static const uint16_t PIXEL_COUNT = 144*3;
     // CRGB pixels[PIXEL_COUNT];
     CRGBArray<PIXEL_COUNT> pixels;
     // CRGBSet overlay(pixels, PIXEL_COUNT);
@@ -189,8 +189,8 @@ private:
     // attributes
     bool ready;
 
-    uint8_t psu_on_pin = 7;
-    uint8_t psu_off_pin = 9;
+    uint8_t psu_off_pin = 7;
+    uint8_t psu_on_pin = 9;
     uint8_t output_active_pin = 2;
     bool output_active = false;
 
