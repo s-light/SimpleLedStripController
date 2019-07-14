@@ -90,7 +90,7 @@ void MyAnimation::begin(Stream &out) {
         out.println(F("setup pixels:"));
         // FastLED.addLeds<APA102>(pixels, PIXEL_COUNT);
         // https://github.com/FastLED/FastLED/wiki/Frequently-Asked-Questions#5-with-apa102-leds-my-wiring-is-right-but-my-leds-are-flickering--or-my-leds-start-flickering-somewhere-down-the-line
-        const uint8_t DATA_RATE_MHZ  = 6;
+        const uint8_t DATA_RATE_MHZ  = 2;
         out.print(F("  DATA_RATE "));
         out.print(DATA_RATE_MHZ);
         out.println(F(" MHZ"));
