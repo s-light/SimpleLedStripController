@@ -75,7 +75,7 @@ public:
     CRGBArray<PIXEL_COUNT> pixels;
 
 
-    const uint32_t duration_min =     300;
+    uint32_t duration_min =     300;
     const uint32_t duration_max = 1800000;
     // duration mapping:
     // ms               = step_size (factor)
@@ -159,13 +159,13 @@ public:
         // Serial.println((temp / factor) * factor);
         if (temp > duration_max) {
             if (value_wf > 0) {
-                temp = 300;
+                temp = duration_min;
             } else {
                 temp = duration_max;
             }
         } else if (temp < duration_min) {
             if (value_wf > 0) {
-                temp = 300;
+                temp = duration_min;
             } else {
                 temp = duration_max;
             }

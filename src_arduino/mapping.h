@@ -155,13 +155,17 @@ class MultiMap {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // map_range
-//
-// float map_range(
-//     float x, float in_min, float in_max, float out_min, float out_max
-// ) {
-//     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-// }
-//
+
+template<class T>
+T map_range(T x, T in_min, T in_max, T out_min, T out_max) {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+template<class T>
+T map_range_11_to(T x, T out_min, T out_max) {
+    return (x - -1.0) * (out_max - out_min) / (1.0 - -1.0) + out_min;
+}
+
 // double map_range__double(
 //     double x, double in_min, double in_max, double out_min, double out_max
 // ) {
@@ -185,12 +189,10 @@ class MultiMap {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // map_range_01_to
 
-
-// float map_range_01_to(
-//     float x, float out_min, float out_max
-// ) {
-//     return x * (out_max - out_min) / 1.0 + out_min;
-// }
+template<class T>
+T map_range_01_to(T x, T out_min, T out_max) {
+    return x * (out_max - out_min) / 1.0 + out_min;
+}
 
 // double map_range_01_to__double(
 //     double x, double out_min, double out_max

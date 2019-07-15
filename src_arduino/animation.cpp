@@ -332,10 +332,9 @@ void MyAnimation::select_next_effect() {
     } else if (fx_current == &fx_static) {
         fx_current = &fx_rainbow;
     } else if (fx_current == &fx_rainbow) {
+        fx_current = &fx_plasma;
+    } else if (fx_current == &fx_plasma) {
         fx_current = &fx_static;
-        // fx_current = &fx_plasma;
-    // } else if (fx_current == &fx_plasma) {
-    //     fx_current = &fx_static;
     } else {
         fx_current = &fx_static;
     }

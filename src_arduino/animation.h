@@ -152,7 +152,7 @@ public:
     EffectBlack<PIXEL_COUNT> fx_black {};
     EffectStatic<PIXEL_COUNT> fx_static {};
     EffectRainbow<PIXEL_COUNT> fx_rainbow {};
-    // EffectPlasma<PIXEL_COUNT> fx_plasma {};
+    EffectPlasma<PIXEL_COUNT> fx_plasma {};
 
 
     EffectBase<PIXEL_COUNT> * fx_last = &fx_static;
