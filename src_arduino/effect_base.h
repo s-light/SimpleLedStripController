@@ -1,13 +1,6 @@
-// NOLINT(legal/copyright)
 /******************************************************************************
 
-    some description...
-
-    libraries used:
-        ~ slight_DebugMenu
-            written by stefan krueger (s-light),
-                git@s-light.eu, http://s-light.eu, https://github.com/s-light/
-            license: MIT
+    for more information have a look at effect.cpp
 
     written by stefan krueger (s-light),
         git@s-light.eu, http://s-light.eu, https://github.com/s-light/
@@ -39,53 +32,48 @@ SOFTWARE.
 
 
 
+#ifndef effect_base_H_
+#define effect_base_H_
+
 // include Core Arduino functionality
 #include <Arduino.h>
 
-#include <slight_DebugMenu.h>
-
-// include own headerfile
-// NOLINTNEXTLINE(build/include)
-#include "./minimal.h"
+#include <FastLED.h>
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// functions
+class EffectBase {
+public:
 
-SysInput::SysInput() {
-    ready = false;
-}
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // constructor
 
-SysInput::~SysInput() {
-    end();
-}
+    EffectBase();
+    ~EffectBase();
 
-void SysInput::begin(Stream &out) {
-    // clean up..
-    end();
-    // start up...
-    if (ready == false) {
-        // setup
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // basic library api
+    // void begin(Stream &out);
+    void update();
+    // void end();
 
-        // enable
-        ready = true;
-    }
-}
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // helper
 
-void SysInput::end() {
-    if (ready) {
-        // nothing to do..
-    }
-}
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // configurations
 
-void SysInput::update() {
-    if (ready) {
-        // do it :-)
-    }
-}
+    CRGBArray<PIXEL_COUNT> pixels;
+
+private:
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // private functions
 
 
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // attributes
+    // bool ready;
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// THE END
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+};  // class EffectBase
+
+#endif  // effect_base_H_

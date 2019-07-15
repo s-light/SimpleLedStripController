@@ -1,13 +1,7 @@
 // NOLINT(legal/copyright)
 /******************************************************************************
 
-    some description...
-
-    libraries used:
-        ~ slight_DebugMenu
-            written by stefan krueger (s-light),
-                git@s-light.eu, http://s-light.eu, https://github.com/s-light/
-            license: MIT
+    base class for Effect
 
     written by stefan krueger (s-light),
         git@s-light.eu, http://s-light.eu, https://github.com/s-light/
@@ -42,11 +36,9 @@ SOFTWARE.
 // include Core Arduino functionality
 #include <Arduino.h>
 
-#include <slight_DebugMenu.h>
-
 // include own headerfile
 // NOLINTNEXTLINE(build/include)
-#include "./minimal.h"
+#include "./animation.h"
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,31 +49,32 @@ SysInput::SysInput() {
 }
 
 SysInput::~SysInput() {
-    end();
+    // end();
 }
 
-void SysInput::begin(Stream &out) {
-    // clean up..
-    end();
-    // start up...
-    if (ready == false) {
-        // setup
+// void SysInput::begin(Stream &out) {
+//     // clean up..
+//     end();
+//     // start up...
+//     if (ready == false) {
+//         // setup
+//
+//         // enable
+//         ready = true;
+//     }
+// }
 
-        // enable
-        ready = true;
-    }
-}
-
-void SysInput::end() {
-    if (ready) {
-        // nothing to do..
-    }
-}
+// void SysInput::end() {
+//     if (ready) {
+//         // nothing to do..
+//     }
+// }
 
 void SysInput::update() {
-    if (ready) {
-        // do it :-)
-    }
+    // if (ready) {
+    //     // do it :-)
+    // }
+    // do it :-)
 }
 
 

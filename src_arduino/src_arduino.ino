@@ -174,7 +174,6 @@ void setup() {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // initialise serial
-
         // wait for arduino IDE to release all serial ports after upload.
         delay(1000);
         // initialise serial
@@ -192,21 +191,16 @@ void setup() {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // print welcome
-
         sketchinfo_print(Serial);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // setup sub-Parts
-
         animation.begin(Serial);
         settingsui.begin(Serial, settingsui_encoder_ISR);
         mymenu.begin(Serial);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // go
-
-        // Serial.println(F("wait 1s."));
-        // delay(1000);
+    // loop
         Serial.println(F("Loop:"));
 
 } /** setup **/

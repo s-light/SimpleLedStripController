@@ -1,13 +1,7 @@
 // NOLINT(legal/copyright)
 /******************************************************************************
 
-    some description...
-
-    libraries used:
-        ~ slight_DebugMenu
-            written by stefan krueger (s-light),
-                git@s-light.eu, http://s-light.eu, https://github.com/s-light/
-            license: MIT
+    base class for Effect
 
     written by stefan krueger (s-light),
         git@s-light.eu, http://s-light.eu, https://github.com/s-light/
@@ -42,46 +36,45 @@ SOFTWARE.
 // include Core Arduino functionality
 #include <Arduino.h>
 
-#include <slight_DebugMenu.h>
-
 // include own headerfile
 // NOLINTNEXTLINE(build/include)
-#include "./minimal.h"
+#include "./effect_static.h"
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // functions
 
-SysInput::SysInput() {
+EffectStatic::EffectStatic() {
     ready = false;
 }
 
-SysInput::~SysInput() {
-    end();
+EffectStatic::~EffectStatic() {
+    // end();
 }
 
-void SysInput::begin(Stream &out) {
-    // clean up..
-    end();
-    // start up...
-    if (ready == false) {
-        // setup
+// void EffectStatic::begin(Stream &out) {
+//     // clean up..
+//     end();
+//     // start up...
+//     if (ready == false) {
+//         // setup
+//
+//         // enable
+//         ready = true;
+//     }
+// }
 
-        // enable
-        ready = true;
-    }
-}
+// void EffectStatic::end() {
+//     if (ready) {
+//         // nothing to do..
+//     }
+// }
 
-void SysInput::end() {
-    if (ready) {
-        // nothing to do..
-    }
-}
-
-void SysInput::update() {
-    if (ready) {
-        // do it :-)
-    }
+void EffectStatic::update() {
+    // if (ready) {
+    //     // do it :-)
+    // }
+    // do it :-)
 }
 
 
