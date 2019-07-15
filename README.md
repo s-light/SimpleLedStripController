@@ -53,7 +53,10 @@ but the LEDs could go up to 20MHz according to some references..
 this would give some more space for effect calculations...
 (its also fine as is - the classic rainbow gives us 100fps currently...)
 the other advantage of the SN74LVC2T45 is its *VCC Isolation Feature* -
-currently i have to disable the outputs of the levelshifter to High-Z manually - otherwise
+currently i have to disable the outputs of the levelshifter to High-Z manually -
+otherwise the leds try to power up from the 5V coming over the data-lines :-(
+this isolation feature just does exactly this: if on of the VCC's is off the output is HIGH-Z :-)
+one thing less to care about in software ;-)
 
 currently the off-state current consumption is about 4mA@12V
 1,5mA are alone for the standby of the small 5V DC/DC converter that powers the uC...
