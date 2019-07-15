@@ -149,11 +149,12 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // effects
 
-    EffectStatic<PIXEL_COUNT> fx_static {};
+    // EffectStatic<PIXEL_COUNT> fx_static = EffectStatic<PIXEL_COUNT>();
+    EffectStatic<PIXEL_COUNT> fx_static = {};
     EffectRainbow<PIXEL_COUNT> fx_rainbow {};
 
     EffectBase<PIXEL_COUNT> * fx_current = &fx_static;
-    EffectBase<PIXEL_COUNT> * fx_next = &fx_static;
+    EffectBase<PIXEL_COUNT> * fx_next = &fx_rainbow;
 
 
 

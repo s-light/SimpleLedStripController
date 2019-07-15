@@ -46,8 +46,8 @@ template <uint16_t PIXEL_COUNT>
 class EffectStatic: public EffectBase<PIXEL_COUNT> {
 public:
     // constructor
-    EffectStatic();
-    // ~EffectStatic();
+    // EffectStatic() {};
+    // ~EffectStatic() {};
 
     virtual void print_name(Print &out) {
         out.print("Static");

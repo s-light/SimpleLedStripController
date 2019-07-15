@@ -46,8 +46,8 @@ template <uint16_t PIXEL_COUNT>
 class EffectRainbow: public EffectBase<PIXEL_COUNT> {
 public:
     // constructor
-    EffectRainbow();
-    // ~EffectRainbow();
+    // EffectRainbow() {};
+    // ~EffectRainbow() {};
 
     virtual void print_name(Print &out) {
         out.print("Rainbow");
