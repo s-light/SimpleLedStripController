@@ -49,43 +49,82 @@ public:
     EffectBase() {};
     ~EffectBase() {};
 
-    // basic library api
-    void update() {
-        fill_solid(pixels, PIXEL_COUNT, CHSV(142, 100, brightness));
+    virtual void print_name(Print &out) {
+        out.print("BASE");
     }
+
+    // basic library api
+    virtual void update() {
+        fill_solid(pixels, PIXEL_COUNT, CHSV(142, 100, 240));
+    }
+
+    virtual void calculate_effect_position() {
+        // effect_position = normalize_to_01(millis(), effect_start, effect_end);
+        end = start + duration;
+        position = (
+            ((millis() - start) * 1.0) / (end - start)
+        );  // NOLINT(whitespace/parens)
+        if (position >  1.0) {
+            position = 0;
+            start = millis();
+        }
+    }
+
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
     CRGBArray<PIXEL_COUNT> pixels;
 
+    uint32_t duration = 30 * 1000; //ms
+    uint32_t start = 0;
+    uint32_t end = 0;
+    float position = 0.0;
+
     // parameter handling
-    enum class PARAM {
-        BRIGHTNESS,
+    // enum class PARAM {
+    //     // HUE,
+    //     // SATURATION,
+    //     // BRIGHTNESS,
+    //     // DURATION,
+    //     // DURATION,
+    // };
+
+    // virtual void parameter_set_current(PARAM parameter) {
+    //     parameter_current = parameter;
+    // };
+
+    virtual void parameter_next() {
+        // switch (parameter_current) {
+        //     case PARAM::BRIGHTNESS: {
+        //         parameter_current = PARAM::BRIGHTNESS;
+        //     } break;
+        // }
     };
 
-    void parameter_set_current(PARAM parameter) {
-        parameter_current = parameter;
+    virtual void change_parameter(__attribute__((unused)) int16_t value) {
+        // switch (parameter_current) {
+        //     case PARAM::BRIGHTNESS: {
+        //         brightness = value;
+        //     } break;
+        // }
     };
 
-    void parameter_next() {
-        switch (parameter_current) {
-            case PARAM::BRIGHTNESS: {
-                parameter_current = PARAM::BRIGHTNESS;
-            } break;
-        }
-    };
+    // virtual void parameter_print(Print &out, PARAM parameter) {
+    //     switch (parameter) {
+    //         // case STATIC_PARAM::BRIGHTNESS: {
+    //         //     out.print(F("BRIGHTNESS"));
+    //         // } break;
+    //     }
+    // };
 
-    void change_parameter(uint8_t value) {
-        switch (parameter_current) {
-            case PARAM::BRIGHTNESS: {
-                brightness = value;
-            } break;
-        }
+    // virtual void parameter_current_print(Print &out) {
+    // NOLINTNEXTLINE(unused-parameter)
+    virtual void parameter_print_name(__attribute__((unused)) Print &out) {
+        // this->parameter_print(out, parameter_current);
     };
 
 protected:
-    PARAM parameter_current = PARAM::BRIGHTNESS;
-    uint8_t brightness = 255;
+    // PARAM parameter_current;
 
 };  // class EffectBase
 

@@ -70,6 +70,11 @@ SOFTWARE.
 #include "./mapping.h"
 
 
+#include "./effect_base.h"
+#include "./effect_static.h"
+#include "./effect_rainbow.h"
+
+
 class MyAnimation {
 public:
 
@@ -143,6 +148,15 @@ public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // effects
+
+    EffectStatic<PIXEL_COUNT> fx_static {};
+    EffectRainbow<PIXEL_COUNT> fx_rainbow {};
+
+    EffectBase<PIXEL_COUNT> * fx_current = &fx_static;
+    EffectBase<PIXEL_COUNT> * fx_next = &fx_static;
+
+
+
     enum class EFFECT {
         OFF,
         STATIC,

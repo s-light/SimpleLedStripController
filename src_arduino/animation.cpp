@@ -58,7 +58,6 @@ SOFTWARE.
 #include "./animation.h"
 
 // #include "./color.h"
-#include "./effect_base.h"
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // functions

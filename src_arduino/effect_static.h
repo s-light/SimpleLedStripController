@@ -49,29 +49,75 @@ public:
     EffectStatic();
     // ~EffectStatic();
 
+    virtual void print_name(Print &out) {
+        out.print("Static");
+    }
+
     // basic library api
-    void update();
+    void update() {
+        fill_solid(this->pixels, PIXEL_COUNT, color_hsv);
+    }
+
+
+    // parameter handling
+    enum class PARAM {
+        HUE,
+        SATURATION,
+        // BRIGHTNESS,
+    };
+
+    void parameter_next() {
+        switch (this->parameter_current) {
+            case PARAM::HUE: {
+                this->parameter_current = PARAM::SATURATION;
+            } break;
+            case PARAM::SATURATION: {
+                this->parameter_current = PARAM::HUE;
+                // parameter_current = PARAM::BRIGHTNESS;
+            } break;
+            // case PARAM::BRIGHTNESS: {
+            //     parameter_current = PARAM::HUE;
+            // } break;
+        }
+    };
+
+    virtual void change_parameter(int16_t value) {
+        switch (this->parameter_current) {
+            case PARAM::HUE: {
+                this->color_hsv.hue = value;
+            } break;
+            case PARAM::SATURATION: {
+                this->color_hsv.saturation = value;
+            } break;
+            // case PARAM::BRIGHTNESS: {
+            //     this->color_hsv.value = value;
+            // } break;
+        }
+    };
+
+    void parameter_print(Print &out) {
+        switch (this->parameter_current) {
+            case PARAM::HUE: {
+                out.print(F("HUE"));
+            } break;
+            case PARAM::SATURATION: {
+                out.print(F("SATURATION"));
+            } break;
+            // case PARAM::BRIGHTNESS: {
+            //     out.print(F("BRIGHTNESS"));
+            // } break;
+        }
+    };
+
 
     // configurations
+    // const CHSV warm_white = CHSV(142, 100, 255);
     const CHSV warm_white = CHSV(142, 100, 240);
     CHSV color_hsv = warm_white;
 
 private:
+    PARAM parameter_current;
 
 };  // class EffectStatic
-
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// implementation
-
-template <uint16_t PIXEL_COUNT>
-EffectStatic<PIXEL_COUNT>::EffectStatic() {
-    // ready = false;
-}
-
-template <uint16_t PIXEL_COUNT>
-void EffectStatic<PIXEL_COUNT>::update() {
-    fill_solid(pixels, PIXEL_COUNT, color_hsv);
-}
 
 #endif  // effect_static_H_

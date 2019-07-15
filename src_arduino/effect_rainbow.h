@@ -32,8 +32,8 @@ SOFTWARE.
 
 
 
-#ifndef effect_static_H_
-#define effect_static_H_
+#ifndef effect_rainbow_H_
+#define effect_rainbow_H_
 
 // include Core Arduino functionality
 #include <Arduino.h>
@@ -45,68 +45,85 @@ SOFTWARE.
 template <uint16_t PIXEL_COUNT>
 class EffectRainbow: public EffectBase<PIXEL_COUNT> {
 public:
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
     EffectRainbow();
-    ~EffectRainbow();
+    // ~EffectRainbow();
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    virtual void print_name(Print &out) {
+        out.print("Rainbow");
+    }
+
     // basic library api
-    // void begin(Stream &out);
-    void update();
-    // void end();
+    void update() {
+        for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
+            float pixel_offset = pixel_i * 1.0 / PIXEL_COUNT;
+            float offset = this->position + (pixel_offset * spread);
+            uint8_t offset_int = offset * 255;
+            uint8_t hue = offset_int;
+            this->pixels[pixel_i] = CHSV(hue, saturation, brightness);
+        }
+        // fill_rainbow(pixels, PIXEL_COUNT, position_int);
+    }
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // parameter handling
+    enum class PARAM {
+        DURATION,
+        SPREAD,
+        // BRIGHTNESS,
+    };
+
+    void parameter_next() {
+        switch (this->parameter_current) {
+            case PARAM::DURATION: {
+                this->parameter_current = PARAM::SPREAD;
+            } break;
+            case PARAM::SPREAD: {
+                this->parameter_current = PARAM::DURATION;
+                // this->parameter_current = PARAM::BRIGHTNESS;
+            } break;
+            // case PARAM::BRIGHTNESS: {
+            //     this->parameter_current = PARAM::DURATION;
+            // } break;
+        }
+    };
+
+    virtual void change_parameter(int16_t value) {
+        switch (this->parameter_current) {
+            case PARAM::DURATION: {
+                this->duration = value;
+            } break;
+            case PARAM::SPREAD: {
+                spread = value;
+            } break;
+            // case PARAM::BRIGHTNESS: {
+            //     color_hsv.value = value;
+            // } break;
+        }
+    };
+
+    void parameter_print(Print &out, PARAM parameter) {
+        switch (this->parameter_current) {
+            case PARAM::DURATION: {
+                out.print(F("DURATION"));
+            } break;
+            case PARAM::SPREAD: {
+                out.print(F("SPREAD"));
+            } break;
+            // case PARAM::BRIGHTNESS: {
+            //     out.print(F("BRIGHTNESS"));
+            // } break;
+        }
+    };
+
+
     // configurations
-    const CHSV warm_white = CHSV(142, 100, 240);
-    CHSV color_hsv = warm_white;
+    float spread = 0.5;
+    uint8_t saturation = 255;
+    uint8_t brightness = 255;
 
 private:
-
+    PARAM parameter_current;
 };  // class EffectRainbow
 
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// implementation
-
-template <uint16_t PIXEL_COUNT>
-EffectRainbow<PIXEL_COUNT>::EffectRainbow() {
-    // ready = false;
-}
-
-template <uint16_t PIXEL_COUNT>
-EffectRainbow<PIXEL_COUNT>::~EffectRainbow() {
-    // end();
-}
-
-// template <uint16_t PIXEL_COUNT>
-// void EffectRainbow<PIXEL_COUNT>::begin(Stream &out) {
-//     // clean up..
-//     end();
-//     // start up...
-//     if (ready == false) {
-//         // setup
-//
-//         // enable
-//         ready = true;
-//     }
-// }
-
-// template <uint16_t PIXEL_COUNT>
-// void EffectRainbow<PIXEL_COUNT>::end() {
-//     if (ready) {
-//         // nothing to do..
-//     }
-// }
-
-template <uint16_t PIXEL_COUNT>
-void EffectRainbow<PIXEL_COUNT>::update() {
-    Serial.println(test);
-    // Serial.println(pixels);
-    Serial.println(PIXEL_COUNT);
-    Serial.println(color_hsv.hue);
-    // fill_solid(pixels, PIXEL_COUNT, color_hsv);
-}
-
-#endif  // effect_static_H_
+#endif  // effect_rainbow_H_
