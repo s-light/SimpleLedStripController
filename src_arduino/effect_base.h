@@ -46,65 +46,47 @@ public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
-    EffectBase();
-    ~EffectBase();
+    EffectBase() {};
+    ~EffectBase() {};
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // basic library api
-    // void begin(Stream &out);
-    void update();
-    // void end();
+    void update() {
+        fill_solid(pixels, PIXEL_COUNT, CHSV(142, 100, brightness));
+    }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
     CRGBArray<PIXEL_COUNT> pixels;
 
+    // parameter handling
+    enum class PARAM {
+        BRIGHTNESS,
+    };
+
+    void parameter_set_current(PARAM parameter) {
+        parameter_current = parameter;
+    };
+
+    void parameter_next() {
+        switch (parameter_current) {
+            case PARAM::BRIGHTNESS: {
+                parameter_current = PARAM::BRIGHTNESS;
+            } break;
+        }
+    };
+
+    void change_parameter(uint8_t value) {
+        switch (parameter_current) {
+            case PARAM::BRIGHTNESS: {
+                brightness = value;
+            } break;
+        }
+    };
+
 protected:
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // internals
-    // bool ready;
-    uint8_t test;
+    PARAM parameter_current = PARAM::BRIGHTNESS;
+    uint8_t brightness = 255;
 
 };  // class EffectBase
-
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// implementation
-
-
-template <uint16_t PIXEL_COUNT>
-EffectBase<PIXEL_COUNT>::EffectBase() {
-    // ready = false;
-}
-
-template <uint16_t PIXEL_COUNT>
-EffectBase<PIXEL_COUNT>::~EffectBase() {
-    // end();
-}
-
-// void EffectBase::begin(Stream &out) {
-//     // clean up..
-//     end();
-//     // start up...
-//     if (ready == false) {
-//         // setup
-//
-//         // enable
-//         ready = true;
-//     }
-// }
-
-// void EffectBase::end() {
-//     if (ready) {
-//         // nothing to do..
-//     }
-// }
-
-template <uint16_t PIXEL_COUNT>
-void EffectBase<PIXEL_COUNT>::update() {
-    test += 1;
-    Serial.println(test);
-}
-
 
 #endif  // effect_base_H_

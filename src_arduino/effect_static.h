@@ -45,19 +45,13 @@ SOFTWARE.
 template <uint16_t PIXEL_COUNT>
 class EffectStatic: public EffectBase<PIXEL_COUNT> {
 public:
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
     EffectStatic();
-    ~EffectStatic();
+    // ~EffectStatic();
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // basic library api
-    // void begin(Stream &out);
     void update();
-    // void end();
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
     const CHSV warm_white = CHSV(142, 100, 240);
     CHSV color_hsv = warm_white;
@@ -76,37 +70,8 @@ EffectStatic<PIXEL_COUNT>::EffectStatic() {
 }
 
 template <uint16_t PIXEL_COUNT>
-EffectStatic<PIXEL_COUNT>::~EffectStatic() {
-    // end();
-}
-
-// template <uint16_t PIXEL_COUNT>
-// void EffectStatic<PIXEL_COUNT>::begin(Stream &out) {
-//     // clean up..
-//     end();
-//     // start up...
-//     if (ready == false) {
-//         // setup
-//
-//         // enable
-//         ready = true;
-//     }
-// }
-
-// template <uint16_t PIXEL_COUNT>
-// void EffectStatic<PIXEL_COUNT>::end() {
-//     if (ready) {
-//         // nothing to do..
-//     }
-// }
-
-template <uint16_t PIXEL_COUNT>
 void EffectStatic<PIXEL_COUNT>::update() {
-    Serial.println(test);
-    // Serial.println(pixels);
-    Serial.println(PIXEL_COUNT);
-    Serial.println(color_hsv.hue);
-    // fill_solid(pixels, PIXEL_COUNT, color_hsv);
+    fill_solid(pixels, PIXEL_COUNT, color_hsv);
 }
 
 #endif  // effect_static_H_

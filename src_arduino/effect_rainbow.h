@@ -43,13 +43,13 @@ SOFTWARE.
 #include "effect_base.h"
 
 template <uint16_t PIXEL_COUNT>
-class EffectStatic: public EffectBase<PIXEL_COUNT> {
+class EffectRainbow: public EffectBase<PIXEL_COUNT> {
 public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
-    EffectStatic();
-    ~EffectStatic();
+    EffectRainbow();
+    ~EffectRainbow();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // basic library api
@@ -64,24 +64,24 @@ public:
 
 private:
 
-};  // class EffectStatic
+};  // class EffectRainbow
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // implementation
 
 template <uint16_t PIXEL_COUNT>
-EffectStatic<PIXEL_COUNT>::EffectStatic() {
+EffectRainbow<PIXEL_COUNT>::EffectRainbow() {
     // ready = false;
 }
 
 template <uint16_t PIXEL_COUNT>
-EffectStatic<PIXEL_COUNT>::~EffectStatic() {
+EffectRainbow<PIXEL_COUNT>::~EffectRainbow() {
     // end();
 }
 
 // template <uint16_t PIXEL_COUNT>
-// void EffectStatic<PIXEL_COUNT>::begin(Stream &out) {
+// void EffectRainbow<PIXEL_COUNT>::begin(Stream &out) {
 //     // clean up..
 //     end();
 //     // start up...
@@ -94,14 +94,14 @@ EffectStatic<PIXEL_COUNT>::~EffectStatic() {
 // }
 
 // template <uint16_t PIXEL_COUNT>
-// void EffectStatic<PIXEL_COUNT>::end() {
+// void EffectRainbow<PIXEL_COUNT>::end() {
 //     if (ready) {
 //         // nothing to do..
 //     }
 // }
 
 template <uint16_t PIXEL_COUNT>
-void EffectStatic<PIXEL_COUNT>::update() {
+void EffectRainbow<PIXEL_COUNT>::update() {
     Serial.println(test);
     // Serial.println(pixels);
     Serial.println(PIXEL_COUNT);
