@@ -138,9 +138,10 @@ void MyAnimation::output_toggle() {
 }
 
 void MyAnimation::output_off() {
-    animation_run = false;
+    fx_last = fx_current;
     fx_current = &fx_black;
     update();
+    animation_run = false;
     // deactivate level-shifter output
     digitalWrite(output_active_pin, HIGH);
     // deactivate power supply
@@ -158,6 +159,8 @@ void MyAnimation::output_on() {
         digitalWrite(psu_on_pin, LOW);
         // activate level-shifter output
         digitalWrite(output_active_pin, LOW);
+        // reactivate fx that was active before black
+        fx_current = fx_last;
         animation_run = true;
         output_active = true;
     }
@@ -330,6 +333,9 @@ void MyAnimation::select_next_effect() {
         fx_current = &fx_rainbow;
     } else if (fx_current == &fx_rainbow) {
         fx_current = &fx_static;
+        // fx_current = &fx_plasma;
+    // } else if (fx_current == &fx_plasma) {
+    //     fx_current = &fx_static;
     } else {
         fx_current = &fx_static;
     }

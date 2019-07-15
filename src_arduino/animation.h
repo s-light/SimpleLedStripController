@@ -73,6 +73,7 @@ SOFTWARE.
 #include "./effect_base.h"
 #include "./effect_static.h"
 #include "./effect_rainbow.h"
+#include "./effect_plasma.h"
 
 
 class MyAnimation {
@@ -151,7 +152,10 @@ public:
     EffectBlack<PIXEL_COUNT> fx_black {};
     EffectStatic<PIXEL_COUNT> fx_static {};
     EffectRainbow<PIXEL_COUNT> fx_rainbow {};
+    // EffectPlasma<PIXEL_COUNT> fx_plasma {};
 
+
+    EffectBase<PIXEL_COUNT> * fx_last = &fx_static;
     EffectBase<PIXEL_COUNT> * fx_current = &fx_static;
     EffectBase<PIXEL_COUNT> * fx_next = &fx_rainbow;
 
