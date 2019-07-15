@@ -72,6 +72,7 @@ public:
     enum class PARAM {
         DURATION,
         SPREAD,
+        // SATURATION,
         // BRIGHTNESS,
     };
 
@@ -90,26 +91,27 @@ public:
         }
     };
 
-    virtual void change_parameter(int16_t value, Print &out) {
-        EffectBase<PIXEL_COUNT>::change_parameter(value, out);
+    virtual void change_parameter(int16_t value) {
+        // EffectBase<PIXEL_COUNT>::change_parameter(value);
         switch (this->parameter_current) {
             case PARAM::DURATION: {
                 this->parameter_set_duration_relative(value);
-                out.print(this->duration);
             } break;
             case PARAM::SPREAD: {
                 double temp = spread + value * 0.01;
                 temp = clamp(temp, 0.0, 10.0);
                 spread = temp;
-                out.print(spread);
             } break;
+            // case PARAM::SATURATION: {
+            //     color_hsv.saturation = value;
+            // } break;
             // case PARAM::BRIGHTNESS: {
             //     color_hsv.value = value;
             // } break;
         }
     };
 
-    void parameter_print(Print &out, PARAM parameter) {
+    void parameter_print_name(Print &out) {
         switch (this->parameter_current) {
             case PARAM::DURATION: {
                 out.print(F("DURATION"));
@@ -117,8 +119,28 @@ public:
             case PARAM::SPREAD: {
                 out.print(F("SPREAD"));
             } break;
+            // case PARAM::SATURATION: {
+            //     out.print(F("SATURATION"));
+            // } break;
             // case PARAM::BRIGHTNESS: {
             //     out.print(F("BRIGHTNESS"));
+            // } break;
+        }
+    };
+
+    void parameter_print_value(Print &out) {
+        switch (this->parameter_current) {
+            case PARAM::DURATION: {
+                out.print(this->duration);
+            } break;
+            case PARAM::SPREAD: {
+                out.print(spread);
+            } break;
+            // case PARAM::SATURATION: {
+            //     out.print(saturation);
+            // } break;
+            // case PARAM::BRIGHTNESS: {
+            //     out.print(brightness);
             // } break;
         }
     };

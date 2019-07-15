@@ -197,8 +197,12 @@ void SettingsUI::change_param(int16_t value) {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
             animation.fx_current->print_name(out);
+            out.print(" - ");
+            animation.fx_current->parameter_print_name(out);
             out.print(": ");
-            animation.fx_current->change_parameter(value, out);
+            animation.fx_current->change_parameter(value);
+            animation.fx_current->parameter_print_value(out);
+            out.print("; ");
             // Nothing to do..
         } break;
         case SETTINGS_MODE::GLOBAL: {

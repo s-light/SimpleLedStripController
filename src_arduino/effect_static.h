@@ -81,16 +81,14 @@ public:
         }
     };
 
-    virtual void change_parameter(int16_t value, Print &out) {
-        EffectBase<PIXEL_COUNT>::change_parameter(value, out);
+    virtual void change_parameter(int16_t value) {
+        // EffectBase<PIXEL_COUNT>::change_parameter(value);
         switch (this->parameter_current) {
             case PARAM::HUE: {
                 this->color_hsv.hue += value;
-                out.print(this->color_hsv.hue);
             } break;
             case PARAM::SATURATION: {
                 this->color_hsv.saturation += value;
-                out.print(this->color_hsv.saturation);
             } break;
             // case PARAM::BRIGHTNESS: {
             //     this->color_hsv.value = value;
@@ -98,7 +96,7 @@ public:
         }
     };
 
-    void parameter_print(Print &out) {
+    void parameter_print_name(Print &out) {
         switch (this->parameter_current) {
             case PARAM::HUE: {
                 out.print(F("HUE"));
@@ -112,6 +110,19 @@ public:
         }
     };
 
+    void parameter_print_value(Print &out) {
+        switch (this->parameter_current) {
+            case PARAM::HUE: {
+                out.print(this->color_hsv.hue);
+            } break;
+            case PARAM::SATURATION: {
+                out.print(this->color_hsv.saturation);
+            } break;
+            // case PARAM::BRIGHTNESS: {
+            //     out.print(this->color_hsv.brightness);
+            // } break;
+        }
+    };
 
     // configurations
     // const CHSV warm_white = CHSV(142, 100, 255);
@@ -151,7 +162,7 @@ public:
         out.print(F("-"));
     };
 
-    void parameter_print(Print &out) {
+    void parameter_print_name(Print &out) {
         out.print(F("-"));
     };
 

@@ -98,8 +98,8 @@ void MyAnimation::begin(Stream &out) {
             DATA_RATE_MHZ(DATA_RATE_MHZ)>(pixels, PIXEL_COUNT);
         // out.println(F("  setDither(0)"));
         // FastLED.setDither(0);
-        out.println(F("  setBrightness(10)."));
-        FastLED.setBrightness(10);
+        out.println(F("  setBrightness(2)."));
+        FastLED.setBrightness(2);
         out.println(F("  finished."));
 
         animation_init(out);

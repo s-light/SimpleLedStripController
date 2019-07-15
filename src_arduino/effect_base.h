@@ -117,12 +117,10 @@ public:
         // }
     };
 
-    virtual void change_parameter(
-        __attribute__((unused)) int16_t value, Print &out
-    ) {
-        out.print(F("Param: "));
-        this->parameter_print_name(out);
-        out.print(F(" = "));
+    virtual void change_parameter(__attribute__((unused)) int16_t value) {
+        // out.print(F("Param: "));
+        // this->parameter_print_name(out);
+        // out.print(F(" = "));
         // switch (parameter_current) {
         //     case PARAM::BRIGHTNESS: {
         //         brightness = value;
@@ -131,8 +129,18 @@ public:
     };
 
     virtual void parameter_print_name(__attribute__((unused)) Print &out) {
-        // this->parameter_print(out, parameter_current);
+        // this->parameter_print_name(out, parameter_current);
     };
+
+    virtual void parameter_print_value(__attribute__((unused)) Print &out) {
+        // switch (this->parameter_current) {
+        //     case PARAM::DURATION: {
+        //         out.print(this->duration);
+        //     } break;
+        // }
+    };
+
+
 
 
     virtual void parameter_set_duration_relative(int16_t value) {
