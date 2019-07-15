@@ -81,13 +81,16 @@ public:
         }
     };
 
-    virtual void change_parameter(int16_t value) {
+    virtual void change_parameter(int16_t value, Print &out) {
+        EffectBase<PIXEL_COUNT>::change_parameter(value, out);
         switch (this->parameter_current) {
             case PARAM::HUE: {
-                this->color_hsv.hue = value;
+                this->color_hsv.hue += value;
+                out.print(this->color_hsv.hue);
             } break;
             case PARAM::SATURATION: {
-                this->color_hsv.saturation = value;
+                this->color_hsv.saturation += value;
+                out.print(this->color_hsv.saturation);
             } break;
             // case PARAM::BRIGHTNESS: {
             //     this->color_hsv.value = value;
@@ -119,5 +122,39 @@ private:
     PARAM parameter_current;
 
 };  // class EffectStatic
+
+
+template <uint16_t PIXEL_COUNT>
+class EffectBlack: public EffectBase<PIXEL_COUNT> {
+public:
+    // constructor
+    // EffectBlack() {};
+    // ~EffectBlack() {};
+
+    virtual void print_name(Print &out) {
+        out.print("Black");
+    }
+
+    // basic library api
+    void update() {
+        fill_solid(this->pixels, PIXEL_COUNT, CHSV(0, 255, 0));
+    }
+
+
+    void parameter_next() {
+        // nothing here..
+    };
+
+    virtual void change_parameter(int16_t value, Print &out) {
+        // nothing here..
+    };
+
+    void parameter_print(Print &out) {
+        out.print(F("-"));
+    };
+
+private:
+
+};  // class EffectBlack
 
 #endif  // effect_static_H_

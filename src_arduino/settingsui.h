@@ -63,19 +63,14 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // defines
 
-    enum class STATIC_PARAM {
-        HUE,
-        SATURATION,
-        VALUE,
-        OVERWRITE,
+    enum class SETTINGS_MODE {
+        EFFECT,
+        GLOBAL,
     };
 
-    enum class RAINBOW_PARAM {
-        DURATION,
-        // SATTURATION,
-        // VALUE,
+    enum class GLOBAL_PARAM {
+        EFFECT,
         BRIGHTNESS,
-        SPREAD,
         OVERWRITE,
     };
 
@@ -204,8 +199,8 @@ class SettingsUI {
     void active_leave();
 
     void switch_mode();
-    STATIC_PARAM static_current = STATIC_PARAM::HUE;
-    RAINBOW_PARAM rainbow_current = RAINBOW_PARAM::DURATION;
+    SETTINGS_MODE settings_mode = SETTINGS_MODE::GLOBAL;
+    GLOBAL_PARAM global_current = GLOBAL_PARAM::EFFECT;
     void print_param(Print &out);
     void switch_param();
     void change_param(int16_t value);

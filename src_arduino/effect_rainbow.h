@@ -40,6 +40,8 @@ SOFTWARE.
 
 #include <FastLED.h>
 
+#include "./mapping.h"
+
 #include "effect_base.h"
 
 template <uint16_t PIXEL_COUNT>
@@ -88,13 +90,18 @@ public:
         }
     };
 
-    virtual void change_parameter(int16_t value) {
+    virtual void change_parameter(int16_t value, Print &out) {
+        EffectBase<PIXEL_COUNT>::change_parameter(value, out);
         switch (this->parameter_current) {
             case PARAM::DURATION: {
-                this->duration = value;
+                this->parameter_set_duration_relative(value);
+                out.print(duration);
             } break;
             case PARAM::SPREAD: {
-                spread = value;
+                double temp = spread + value * 0.01;
+                temp = clamp(temp, 0.0, 10.0);
+                spread = temp;
+                out.print(spread);
             } break;
             // case PARAM::BRIGHTNESS: {
             //     color_hsv.value = value;

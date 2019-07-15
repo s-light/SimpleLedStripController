@@ -162,7 +162,7 @@ void SettingsUI::active_leave() {
     Serial.println("active_leave()");
 
     Print &out = Serial;
-    animation.effect_print_current(out);
+    animation.fx_current.print_name(out);
     out.print(F(" - "));
     print_param(out);
     out.println();
@@ -179,102 +179,42 @@ void SettingsUI::active_leave() {
 // ~~~~~~~~~~~~~~~~~~~~~
 
 void SettingsUI::switch_mode() {
-    switch (animation.effect_current) {
-        case MyAnimation::EFFECT::OFF: {
-            // currently not in use.
-            animation.effect_current = MyAnimation::EFFECT::STATIC;
+    switch (settings_mode) {
+        case SETTINGS_MODE::EFFECT: {
+            settings_mode = SETTINGS_MODE::GLOBAL;
         } break;
-        case MyAnimation::EFFECT::STATIC: {
-            animation.effect_current = MyAnimation::EFFECT::RAINBOW;
-        } break;
-        case MyAnimation::EFFECT::RAINBOW: {
-            animation.effect_current = MyAnimation::EFFECT::STATIC;
-            // animation.effect_current = EFFECT::OFF;
+        case SETTINGS_MODE::GLOBAL: {
+            settings_mode = SETTINGS_MODE::EFFECT;
         } break;
     }
     Print &out = Serial;
-    animation.effect_print_current(out);
+    animation.print_settings_mode(out);
     out.println();
 }
 
 void SettingsUI::change_param(int16_t value) {
     Print &out = Serial;
-    out.print(F("Param: "));
-    print_param(out);
-    out.print(F(" = "));
     switch (animation.effect_current) {
-        case MyAnimation::EFFECT::OFF: {
+        case SETTINGS_MODE::EFFECT: {
+            animation.fx_current.print_name(out);
+            out.print(": ");
+            animation.fx_current.change_parameter(value, out);
             // Nothing to do..
         } break;
-        case MyAnimation::EFFECT::STATIC: {
-            switch (static_current) {
-                case STATIC_PARAM::HUE: {
-                    animation.color_hsv.hue += value;
-                    out.print(animation.color_hsv.hue);
-                } break;
-                case STATIC_PARAM::SATURATION: {
-                    animation.color_hsv.saturation += value;
-                    out.print(animation.color_hsv.saturation);
-                } break;
-                case STATIC_PARAM::VALUE: {
-                    // animation.color_hsv.value += value;
-                    // out.print(animation.color_hsv.value);
-                    uint8_t temp = animation.getBrightness() + value;
-                    animation.setBrightness(temp);
-                    out.print(animation.getBrightness());
-                } break;
-                case STATIC_PARAM::OVERWRITE: {
-                    animation.overwrite_set_relative(value);
-                } break;
-            }
-        } break;
-        case MyAnimation::EFFECT::RAINBOW: {
+        case SETTINGS_MODE::GLOBAL: {
             switch (rainbow_current) {
-                case RAINBOW_PARAM::DURATION: {
-                    uint32_t factor = duration_factor_map.mapit(
-                        animation.effect_duration);
-                    int32_t value_wf = (value * factor);
-                    uint32_t temp = animation.effect_duration + value_wf;
-                    // constrain to full step value..
-                    temp = (temp / factor) * factor;
-                    // Serial.print("temp ");
-                    // Serial.println(temp);
-                    // Serial.print("factor ");
-                    // Serial.println(factor);
-                    // Serial.print("temp / factor ");
-                    // Serial.println(temp / factor);
-                    // Serial.print("(temp / factor) * factor ");
-                    // Serial.println((temp / factor) * factor);
-                    if (temp > duration_max) {
-                        if (value_wf > 0) {
-                            temp = 300;
-                        } else {
-                            temp = duration_max;
-                        }
-                    } else if (temp < duration_min) {
-                        if (value_wf > 0) {
-                            temp = 300;
-                        } else {
-                            temp = duration_max;
-                        }
-                    }
-                    animation.effect_duration = temp;
-                    out.print(animation.effect_duration);
+                case GLOBAL_PARAM::EFFECT: {
+                    animation.select_next_effect();
+                    animation.fx_current.print_name(out);
                 } break;
-                case RAINBOW_PARAM::BRIGHTNESS: {
+                case GLOBAL_PARAM::BRIGHTNESS: {
                     // animation.rainbow_brightness += value;
                     // out.print(animation.rainbow_brightness);
                     uint8_t temp = animation.getBrightness() + value;
                     animation.setBrightness(temp);
                     out.print(animation.getBrightness());
                 } break;
-                case RAINBOW_PARAM::SPREAD: {
-                    double temp = animation.rainbow_spread + value * 0.01;
-                    temp = clamp(temp, 0.0, 10.0);
-                    animation.rainbow_spread = temp;
-                    out.print(animation.rainbow_spread);
-                } break;
-                case RAINBOW_PARAM::OVERWRITE: {
+                case GLOBAL_PARAM::OVERWRITE: {
                     // out.printf(
                     //     "%+3d (%3d, %3d) --> ",
                     //     value,
@@ -292,39 +232,33 @@ void SettingsUI::change_param(int16_t value) {
     out.println();
 }
 
+void SettingsUI::print_settings_mode(Print &out) {
+    switch (settings_mode) {
+        case SETTINGS_MODE::EFFECT: {
+            out.print(F("EFFECT"));
+        } break;
+        case SETTINGS_MODE::GLOBAL: {
+            out.print(F("GLOBAL"));
+        } break;
+    }
+}
+
 void SettingsUI::print_param(Print &out) {
-    switch (animation.effect_current) {
-        case MyAnimation::EFFECT::OFF: {
-            out.print(F("-"));
+    switch (settings_mode) {
+        case SETTINGS_MODE::EFFECT: {
+            animation.fx_current.print_name(out);
+            out.print(": ");
+            animation.fx_current.parameter_print_name(out);
         } break;
-        case MyAnimation::EFFECT::STATIC: {
-            switch (static_current) {
-                case STATIC_PARAM::HUE: {
-                    out.print(F("HUE"));
+        case SETTINGS_MODE::GLOBAL: {
+            switch (global_current) {
+                case GLOBAL_PARAM::EFFECT: {
+                    out.print(F("EFFECT"));
                 } break;
-                case STATIC_PARAM::SATURATION: {
-                    out.print(F("SATURATION"));
-                } break;
-                case STATIC_PARAM::VALUE: {
-                    out.print(F("VALUE"));
-                } break;
-                case STATIC_PARAM::OVERWRITE: {
-                    out.print(F("OVERWRITE"));
-                } break;
-            }
-        } break;
-        case MyAnimation::EFFECT::RAINBOW: {
-            switch (rainbow_current) {
-                case RAINBOW_PARAM::DURATION: {
-                    out.print(F("DURATION"));
-                } break;
-                case RAINBOW_PARAM::BRIGHTNESS: {
+                case GLOBAL_PARAM::BRIGHTNESS: {
                     out.print(F("BRIGHTNESS"));
                 } break;
-                case RAINBOW_PARAM::SPREAD: {
-                    out.print(F("SPREAD"));
-                } break;
-                case RAINBOW_PARAM::OVERWRITE: {
+                case GLOBAL_PARAM::OVERWRITE: {
                     out.print(F("OVERWRITE"));
                 } break;
             }
@@ -333,39 +267,22 @@ void SettingsUI::print_param(Print &out) {
 }
 
 void SettingsUI::switch_param() {
-    switch (animation.effect_current) {
-        case MyAnimation::EFFECT::OFF: {
-            // Nothing to do..
+    switch (settings_mode) {
+        case SETTINGS_MODE::EFFECT: {
+            animation.fx_current.print_name(out);
+            out.print(": ");
+            animation.fx_current.parameter_print_name(out);
         } break;
-        case MyAnimation::EFFECT::STATIC: {
-            switch (static_current) {
-                case STATIC_PARAM::HUE: {
-                    static_current = STATIC_PARAM::SATURATION;
+        case SETTINGS_MODE::GLOBAL: {
+            switch (global_current) {
+                case GLOBAL_PARAM::EFFECT: {
+                    out.print(F("EFFECT"));
                 } break;
-                case STATIC_PARAM::SATURATION: {
-                    static_current = STATIC_PARAM::VALUE;
+                case GLOBAL_PARAM::BRIGHTNESS: {
+                    out.print(F("BRIGHTNESS"));
                 } break;
-                case STATIC_PARAM::VALUE: {
-                    static_current = STATIC_PARAM::OVERWRITE;
-                } break;
-                case STATIC_PARAM::OVERWRITE: {
-                    static_current = STATIC_PARAM::HUE;
-                } break;
-            }
-        } break;
-        case MyAnimation::EFFECT::RAINBOW: {
-            switch (rainbow_current) {
-                case RAINBOW_PARAM::DURATION: {
-                    rainbow_current = RAINBOW_PARAM::BRIGHTNESS;
-                } break;
-                case RAINBOW_PARAM::BRIGHTNESS: {
-                    rainbow_current = RAINBOW_PARAM::SPREAD;
-                } break;
-                case RAINBOW_PARAM::SPREAD: {
-                    rainbow_current = RAINBOW_PARAM::OVERWRITE;
-                } break;
-                case RAINBOW_PARAM::OVERWRITE: {
-                    rainbow_current = RAINBOW_PARAM::DURATION;
+                case GLOBAL_PARAM::OVERWRITE: {
+                    out.print(F("OVERWRITE"));
                 } break;
             }
         } break;

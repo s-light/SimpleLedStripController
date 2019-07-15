@@ -168,25 +168,6 @@ void MyAnimation::output_on() {
 // animation
 
 
-void MyAnimation::effect_print(Print &out, EFFECT fx) {
-    switch (fx) {
-        case EFFECT::OFF: {
-            out.print(F("OFF"));
-        } break;
-        case EFFECT::STATIC: {
-            out.print(F("STATIC"));
-        } break;
-        case EFFECT::RAINBOW: {
-            out.print(F("RAINBOW"));
-        } break;
-    }
-}
-
-void MyAnimation::effect_print_current(Print &out) {
-    effect_print(out, effect_current);
-}
-
-
 void MyAnimation::animation_init(Stream &out) {
     out.println(F("init animation:")); {
         out.print(F("  effect_duration: "));
@@ -208,40 +189,14 @@ void MyAnimation::animation_init(Stream &out) {
 void MyAnimation::animation_update() {
     fps_update();
     if (animation_run) {
-        calculate_effect_position();
-        switch (effect_current) {
-            case EFFECT::OFF: {
-                fill_black();
-            } break;
-            // case EFFECT::PIXEL_CHECKER: {
-            //     effect__pixel_checker();
-            // } break;
-            case EFFECT::STATIC: {
-                effect__static();
-            } break;
-            case EFFECT::RAINBOW: {
-                effect__rainbow();
-            } break;
-        }
+        fx_current.calculate_effect_position();
+        fx_current.update()
+        // for now just copy pixel data from effect to master
+        pixels = fx_current.pixels;
         overwrite_black();
     }
     // write data to chips
     FastLED.show();
-}
-
-void MyAnimation::calculate_effect_position() {
-    // effect_position = normalize_to_01(millis(), effect_start, effect_end);
-    effect_end = effect_start + effect_duration;
-    effect_position = (
-        ((millis() - effect_start) * 1.0) / (effect_end - effect_start)
-    );  // NOLINT(whitespace/parens)
-    if (effect_position >  1.0) {
-        effect_position = 0;
-        effect_start = millis();
-        if (animation_run) {
-            // Serial.println("effect_position loop restart.");
-        }
-    }
 }
 
 void MyAnimation::fps_update() {
@@ -371,33 +326,6 @@ uint16_t MyAnimation::overwrite_end_get() {
 void MyAnimation::fill_black() {
     fill_solid(pixels, PIXEL_COUNT, CHSV(0, 255, 0));
 }
-
-void MyAnimation::effect__pixel_checker() {
-    // uint8_t step = map_range_01_to__uint8(
-    //     effect_position, 0, PIXEL_COUNT);
-    // tlc.set_pixel_all_16bit_value(0, 0, 0);
-    // tlc.set_pixel_16bit_value(step, 0, 0, 500);
-    // pixels[step]
-}
-
-void MyAnimation::effect__rainbow() {
-    for (size_t pixel_i = 0; pixel_i < PIXEL_COUNT; pixel_i++) {
-        float pixel_offset = pixel_i * 1.0 / PIXEL_COUNT;
-        float offset = effect_position + (pixel_offset * rainbow_spread);
-        uint8_t offset_int = offset * 255;
-        uint8_t hue = offset_int;
-        pixels[pixel_i] = CHSV(hue, 255, rainbow_brightness);
-    }
-    // fill_rainbow(pixels, PIXEL_COUNT, effect_position_int);
-}
-
-void MyAnimation::effect__static() {
-    fill_solid(pixels, PIXEL_COUNT, color_hsv);
-}
-
-
-
-
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // xx

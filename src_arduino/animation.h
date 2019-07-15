@@ -114,8 +114,6 @@ public:
     CRGBArray<PIXEL_COUNT> pixels;
     // CRGBSet overlay(pixels, PIXEL_COUNT);
 
-    const CHSV warm_white = CHSV(142, 100, 240);
-
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
 
@@ -150,35 +148,14 @@ public:
     // effects
 
     // EffectStatic<PIXEL_COUNT> fx_static = EffectStatic<PIXEL_COUNT>();
+    EffectBlack<PIXEL_COUNT> fx_black {};
     EffectStatic<PIXEL_COUNT> fx_static = {};
     EffectRainbow<PIXEL_COUNT> fx_rainbow {};
 
     EffectBase<PIXEL_COUNT> * fx_current = &fx_static;
     EffectBase<PIXEL_COUNT> * fx_next = &fx_rainbow;
 
-
-
-    enum class EFFECT {
-        OFF,
-        STATIC,
-        RAINBOW,
-    };
-    EFFECT effect_current = EFFECT::RAINBOW;
-    void effect_print(Print &out, EFFECT fx);
-    void effect_print_current(Print &out);
-
     void fill_black();
-
-    void effect__pixel_checker();
-
-    // rainbow
-    void effect__rainbow();
-    float rainbow_spread = 0.5;
-    uint8_t rainbow_brightness = 255;
-    // EffectRainbow rainbow_settings;
-
-    void effect__static();
-    CHSV color_hsv = warm_white;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // output

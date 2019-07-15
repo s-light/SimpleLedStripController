@@ -70,7 +70,6 @@ public:
         }
     }
 
-
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
     CRGBArray<PIXEL_COUNT> pixels;
@@ -80,19 +79,6 @@ public:
     uint32_t end = 0;
     float position = 0.0;
 
-    // parameter handling
-    // enum class PARAM {
-    //     // HUE,
-    //     // SATURATION,
-    //     // BRIGHTNESS,
-    //     // DURATION,
-    //     // DURATION,
-    // };
-
-    // virtual void parameter_set_current(PARAM parameter) {
-    //     parameter_current = parameter;
-    // };
-
     virtual void parameter_next() {
         // switch (parameter_current) {
         //     case PARAM::BRIGHTNESS: {
@@ -101,7 +87,12 @@ public:
         // }
     };
 
-    virtual void change_parameter(__attribute__((unused)) int16_t value) {
+    virtual void change_parameter(
+        __attribute__((unused)) int16_t value, Print &out
+    ) {
+        out.print(F("Param: "));
+        this->parameter_print_name(out);
+        out.print(F(" = "));
         // switch (parameter_current) {
         //     case PARAM::BRIGHTNESS: {
         //         brightness = value;
@@ -109,19 +100,40 @@ public:
         // }
     };
 
-    // virtual void parameter_print(Print &out, PARAM parameter) {
-    //     switch (parameter) {
-    //         // case STATIC_PARAM::BRIGHTNESS: {
-    //         //     out.print(F("BRIGHTNESS"));
-    //         // } break;
-    //     }
-    // };
-
-    // virtual void parameter_current_print(Print &out) {
-    // NOLINTNEXTLINE(unused-parameter)
     virtual void parameter_print_name(__attribute__((unused)) Print &out) {
         // this->parameter_print(out, parameter_current);
     };
+
+
+    virtual void parameter_set_duration_relative(int16_t value) {
+        uint32_t factor = duration_factor_map.mapit(duration);
+        int32_t value_wf = (value * factor);
+        uint32_t temp = duration + value_wf;
+        // constrain to full step value..
+        temp = (temp / factor) * factor;
+        // Serial.print("temp ");
+        // Serial.println(temp);
+        // Serial.print("factor ");
+        // Serial.println(factor);
+        // Serial.print("temp / factor ");
+        // Serial.println(temp / factor);
+        // Serial.print("(temp / factor) * factor ");
+        // Serial.println((temp / factor) * factor);
+        if (temp > duration_max) {
+            if (value_wf > 0) {
+                temp = 300;
+            } else {
+                temp = duration_max;
+            }
+        } else if (temp < duration_min) {
+            if (value_wf > 0) {
+                temp = 300;
+            } else {
+                temp = duration_max;
+            }
+        }
+        duration = temp;
+    }
 
 protected:
     // PARAM parameter_current;
