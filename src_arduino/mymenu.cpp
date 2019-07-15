@@ -229,10 +229,18 @@ void MyMenu::menu__time_meassurements(Print &out) {
     uint32_t tm_duration = 0;
     uint32_t tm_loop_count = 10;
 
+    animation.animation_run = true;
+    animation.fx_current = &animation.fx_rainbow;
     for (size_t i = 0; i < tm_loop_count; i++) {
         tm_start = millis();
-        animation.effect__rainbow();
-        animation.show();
+        // fx_current.calculate_effect_position();
+        // fx_current.update()
+        // // for now just copy pixel data from effect to master
+        // pixels = fx_current.pixels;
+        // overwrite_black();
+        // animation.show();
+        animation.update();
+
         tm_end = millis();
         tm_duration += (tm_end - tm_start);
     }
@@ -374,7 +382,7 @@ void MyMenu::menu__print_help(Print &out) {
     out.println(F("\t 'p': set pixel 'p0:65535'"));
     out.println(F("\t 'P': set board_dotstar 'P255,255,255'"));
     // out.println(F("\t 'P': set all pixel 'P65535'"));
-    out.println(F("\t 'z': set all pixel to black 'z'"));
+    out.println(F("\t 'z': set fx_current to fx_black 'z'"));
     // out.println(F("\t 'Z': set all pixel to 21845 'z'"));
     // out.println(F("\t 'B': print Buffer 'B'"));
     // out.println(F("\t 'F': print buffer_fc 'F'"));
@@ -517,8 +525,8 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
         //     out.println();
         // } break;
         case 'z': {
-            out.println(F("Set all Pixel to black."));
-            animation.fill_black();
+            out.println(F("set fx_current to fx_black."));
+            animation.fx_current = &animation.fx_black;
             out.println();
         } break;
         // case 'Z': {

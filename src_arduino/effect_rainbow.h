@@ -95,7 +95,7 @@ public:
         switch (this->parameter_current) {
             case PARAM::DURATION: {
                 this->parameter_set_duration_relative(value);
-                out.print(duration);
+                out.print(this->duration);
             } break;
             case PARAM::SPREAD: {
                 double temp = spread + value * 0.01;

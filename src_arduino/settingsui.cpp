@@ -162,7 +162,7 @@ void SettingsUI::active_leave() {
     Serial.println("active_leave()");
 
     Print &out = Serial;
-    animation.fx_current.print_name(out);
+    animation.fx_current->print_name(out);
     out.print(F(" - "));
     print_param(out);
     out.println();
@@ -188,24 +188,24 @@ void SettingsUI::switch_mode() {
         } break;
     }
     Print &out = Serial;
-    animation.print_settings_mode(out);
+    print_settings_mode(out);
     out.println();
 }
 
 void SettingsUI::change_param(int16_t value) {
     Print &out = Serial;
-    switch (animation.effect_current) {
+    switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
-            animation.fx_current.print_name(out);
+            animation.fx_current->print_name(out);
             out.print(": ");
-            animation.fx_current.change_parameter(value, out);
+            animation.fx_current->change_parameter(value, out);
             // Nothing to do..
         } break;
         case SETTINGS_MODE::GLOBAL: {
-            switch (rainbow_current) {
+            switch (global_current) {
                 case GLOBAL_PARAM::EFFECT: {
                     animation.select_next_effect();
-                    animation.fx_current.print_name(out);
+                    animation.fx_current->print_name(out);
                 } break;
                 case GLOBAL_PARAM::BRIGHTNESS: {
                     // animation.rainbow_brightness += value;
@@ -246,9 +246,9 @@ void SettingsUI::print_settings_mode(Print &out) {
 void SettingsUI::print_param(Print &out) {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
-            animation.fx_current.print_name(out);
+            animation.fx_current->print_name(out);
             out.print(": ");
-            animation.fx_current.parameter_print_name(out);
+            animation.fx_current->parameter_print_name(out);
         } break;
         case SETTINGS_MODE::GLOBAL: {
             switch (global_current) {
@@ -269,20 +269,18 @@ void SettingsUI::print_param(Print &out) {
 void SettingsUI::switch_param() {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
-            animation.fx_current.print_name(out);
-            out.print(": ");
-            animation.fx_current.parameter_print_name(out);
+            animation.fx_current->parameter_next();
         } break;
         case SETTINGS_MODE::GLOBAL: {
             switch (global_current) {
                 case GLOBAL_PARAM::EFFECT: {
-                    out.print(F("EFFECT"));
+                    global_current = GLOBAL_PARAM::BRIGHTNESS;
                 } break;
                 case GLOBAL_PARAM::BRIGHTNESS: {
-                    out.print(F("BRIGHTNESS"));
+                    global_current = GLOBAL_PARAM::OVERWRITE;
                 } break;
                 case GLOBAL_PARAM::OVERWRITE: {
-                    out.print(F("OVERWRITE"));
+                    global_current = GLOBAL_PARAM::EFFECT;
                 } break;
             }
         } break;

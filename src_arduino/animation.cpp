@@ -139,8 +139,8 @@ void MyAnimation::output_toggle() {
 
 void MyAnimation::output_off() {
     animation_run = false;
-    fill_black();
-    FastLED.show();
+    fx_current = &fx_black;
+    update();
     // deactivate level-shifter output
     digitalWrite(output_active_pin, HIGH);
     // deactivate power supply
@@ -189,10 +189,10 @@ void MyAnimation::animation_init(Stream &out) {
 void MyAnimation::animation_update() {
     fps_update();
     if (animation_run) {
-        fx_current.calculate_effect_position();
-        fx_current.update()
+        fx_current->calculate_effect_position();
+        fx_current->update();
         // for now just copy pixel data from effect to master
-        pixels = fx_current.pixels;
+        pixels = fx_current->pixels;
         overwrite_black();
     }
     // write data to chips
@@ -323,8 +323,16 @@ uint16_t MyAnimation::overwrite_end_get() {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // effects
 
-void MyAnimation::fill_black() {
-    fill_solid(pixels, PIXEL_COUNT, CHSV(0, 255, 0));
+void MyAnimation::select_next_effect() {
+    if (fx_current == &fx_black) {
+        fx_current = &fx_static;
+    } else if (fx_current == &fx_static) {
+        fx_current = &fx_rainbow;
+    } else if (fx_current == &fx_rainbow) {
+        fx_current = &fx_static;
+    } else {
+        fx_current = &fx_static;
+    }
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

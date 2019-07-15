@@ -149,13 +149,13 @@ public:
 
     // EffectStatic<PIXEL_COUNT> fx_static = EffectStatic<PIXEL_COUNT>();
     EffectBlack<PIXEL_COUNT> fx_black {};
-    EffectStatic<PIXEL_COUNT> fx_static = {};
+    EffectStatic<PIXEL_COUNT> fx_static {};
     EffectRainbow<PIXEL_COUNT> fx_rainbow {};
 
     EffectBase<PIXEL_COUNT> * fx_current = &fx_static;
     EffectBase<PIXEL_COUNT> * fx_next = &fx_rainbow;
 
-    void fill_black();
+    void select_next_effect();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // output

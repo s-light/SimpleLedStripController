@@ -145,8 +145,10 @@ public:
         // nothing here..
     };
 
-    virtual void change_parameter(int16_t value, Print &out) {
-        // nothing here..
+    virtual void change_parameter(
+        __attribute__((unused)) int16_t value, Print &out
+    ) {
+        out.print(F("-"));
     };
 
     void parameter_print(Print &out) {
