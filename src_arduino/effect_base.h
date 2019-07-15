@@ -40,13 +40,12 @@ SOFTWARE.
 
 #include <FastLED.h>
 
-
+template <uint16_t PIXEL_COUNT>
 class EffectBase {
 public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
-
     EffectBase();
     ~EffectBase();
 
@@ -57,23 +56,55 @@ public:
     // void end();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // helper
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
-
     CRGBArray<PIXEL_COUNT> pixels;
 
-private:
-
+protected:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // private functions
-
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // attributes
+    // internals
     // bool ready;
+    uint8_t test;
 
 };  // class EffectBase
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// implementation
+
+
+template <uint16_t PIXEL_COUNT>
+EffectBase<PIXEL_COUNT>::EffectBase() {
+    // ready = false;
+}
+
+template <uint16_t PIXEL_COUNT>
+EffectBase<PIXEL_COUNT>::~EffectBase() {
+    // end();
+}
+
+// void EffectBase::begin(Stream &out) {
+//     // clean up..
+//     end();
+//     // start up...
+//     if (ready == false) {
+//         // setup
+//
+//         // enable
+//         ready = true;
+//     }
+// }
+
+// void EffectBase::end() {
+//     if (ready) {
+//         // nothing to do..
+//     }
+// }
+
+template <uint16_t PIXEL_COUNT>
+void EffectBase<PIXEL_COUNT>::update() {
+    test += 1;
+    Serial.println(test);
+}
+
 
 #endif  // effect_base_H_
