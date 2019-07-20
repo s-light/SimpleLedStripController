@@ -497,12 +497,14 @@ void SettingsUI::myencoder_event(slight_RotaryEncoder *instance) {
             // Serial.println(temp_stepsAccel);
             // counter += temp_stepsAccel;
 
-            if (power_mode == POWER_MODE::WAIT_FOR_POWER_ON_CLICK) {
-                system_power_on();
-            } else {
-                active_activate();
-                change_param(temp_stepsAccel);
-            }
+            // if (power_mode == POWER_MODE::WAIT_FOR_POWER_ON_CLICK) {
+            //     system_power_on();
+            // } else {
+            //     active_activate();
+            //     change_param(temp_stepsAccel);
+            // }
+            active_activate();
+            change_param(temp_stepsAccel);
         } break;
         // currently there are no other events fired.
     }  // end switch
