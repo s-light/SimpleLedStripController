@@ -344,7 +344,7 @@ void MyMenu::menu__print_help(Print &out) {
     out.print(animation.animation_run);
     out.println(F(")"));
     out.print(F("\t 'd': set effect_duration 'd1000' ("));
-    out.print(animation.effect_current->duration);
+    out.print(animation.fx_current->duration);
     out.println(F("ms)"));
     // out.print(F("\t 'h': set hue 'h1.0' ("));
     // out.print(animation.hue, 4);
@@ -450,7 +450,7 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             out.println(F("set effect_duration:"));
             uint16_t value = atoi(&command[1]);
             out.print(value);
-            animation.effect_current->duration = value;
+            animation.fx_current->duration = value;
             out.println();
         } break;
         // case 'h': {
