@@ -52,7 +52,13 @@ SOFTWARE.
 // include Core Arduino functionality
 #include <Arduino.h>
 
+#undef min
+#undef max
+#include <functional>
+
 #include <slight_DebugMenu.h>
+
+
 
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
@@ -74,6 +80,61 @@ SOFTWARE.
 #include "./effect_static.h"
 #include "./effect_rainbow.h"
 #include "./effect_plasma.h"
+
+
+
+
+
+
+
+
+
+template <uint16_t PIXEL_COUNT_OVERLAY>
+class ParameterGlobalBRIGHTNESS: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+public:
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            this->pixels_overlay[i] = CRGB::Black;
+        }
+        return this->pixels_overlay;
+    };
+};  // class ParameterGlobalBRIGHTNESS
+
+
+template <uint16_t PIXEL_COUNT_OVERLAY>
+class ParameterGlobalOVERWRITE: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+public:
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            this->pixels_overlay[i] = CRGB::Black;
+        }
+        return this->pixels_overlay;
+    };
+};  // class ParameterGlobalOVERWRITE
+
+
+template <uint16_t PIXEL_COUNT_OVERLAY>
+class ParameterGlobalEFFECT: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+public:
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            this->pixels_overlay[i] = CRGB::Black;
+        }
+        return this->pixels_overlay;
+    };
+};  // class ParameterGlobalEFFECT
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class MyAnimation {
@@ -129,7 +190,7 @@ public:
     CRGBArray<PIXEL_COUNT> pixels;
     // CRGBSet overlay(pixels, PIXEL_COUNT);
 
-    CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
+    // CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
@@ -177,8 +238,17 @@ public:
 
     void select_next_effect();
 
-    using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (*)(void);
+    // using parameter_overlay_func_t = void (*)();
+    // using parameter_overlay_func_t = std::function<void()>;
+    // using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (*)();
+    // using parameter_overlay_func_t = std::function<CRGBArray<PIXEL_COUNT_OVERLAY> ()>;
+    using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (ParameterBase<PIXEL_COUNT_OVERLAY>::*render_overlay)()>;
     parameter_overlay_func_t parameter_overlay_func = nullptr;
+
+    ParameterGlobalEFFECT<PIXEL_COUNT_OVERLAY>  param_effect {};
+    ParameterGlobalBRIGHTNESS<PIXEL_COUNT_OVERLAY>  param_brightness {};
+    ParameterGlobalOVERWRITE<PIXEL_COUNT_OVERLAY>  param_overwrite {};
+
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // output
@@ -201,24 +271,24 @@ private:
     void render_parameter_overlay();
     void parameter_activate_overlay();
 
-    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            pixels_overlay[i] = CRGB::Black;
-        }
-        return pixels_overlay;
-    };
-    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_BRIGHTNESS() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            pixels_overlay[i] = CRGB::Black;
-        }
-        return pixels_overlay;
-    };
-    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_OVERWRITE() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            pixels_overlay[i] = CRGB::Black;
-        }
-        return pixels_overlay;
-    };
+    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT() {
+    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         pixels_overlay[i] = CRGB::Black;
+    //     }
+    //     return pixels_overlay;
+    // };
+    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_BRIGHTNESS() {
+    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         pixels_overlay[i] = CRGB::Black;
+    //     }
+    //     return pixels_overlay;
+    // };
+    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_OVERWRITE() {
+    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         pixels_overlay[i] = CRGB::Black;
+    //     }
+    //     return pixels_overlay;
+    // };
 
     // // template <uint16_t PIXEL_COUNT_OVERLAY>
     // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT();
@@ -230,7 +300,7 @@ private:
     bool ready;
 
     uint8_t global_brightness = 255;
-    const uint8_t leave_every_n_pixel_on = 5;
+    const uint8_t leave_every_n_pixel_on = 15;
 
     uint8_t psu_off_pin = 7;
     uint8_t psu_on_pin = 9;

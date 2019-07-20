@@ -295,30 +295,28 @@ void SettingsUI::switch_param() {
 void SettingsUI::parameter_activate_overlay() {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
-            animation.fx_current->parameter_next();
-            animation.parameter_overlay_func =
-                animation.fx_current->render_overlay;
+            // animation.parameter_overlay_func =
+            //     animation.fx_current->render_overlay;
         } break;
         case SETTINGS_MODE::GLOBAL: {
             switch (global_current) {
                 case GLOBAL_PARAM::EFFECT: {
+                    // animation.parameter_overlay_func =
+                    //     animation.render_overlay_EFFECT;
                     animation.parameter_overlay_func =
-                        animation.render_overlay_EFFECT;
+                        animation.param_effect.render_overlay;
                 } break;
                 case GLOBAL_PARAM::BRIGHTNESS: {
-                    animation.parameter_overlay_func =
-                        animation.render_overlay_BRIGHTNESS;
+                    // animation.parameter_overlay_func =
+                    //     animation.render_overlay_BRIGHTNESS;
                 } break;
                 case GLOBAL_PARAM::OVERWRITE: {
-                    animation.parameter_overlay_func =
-                        animation.render_overlay_OVERWRITE;
+                    // animation.parameter_overlay_func =
+                    //     animation.render_overlay_OVERWRITE;
                 } break;
             }
         } break;
     }
-    Print &out = Serial;
-    print_param(out);
-    out.println();
 }
 
 

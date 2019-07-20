@@ -40,8 +40,36 @@ SOFTWARE.
 
 #include <FastLED.h>
 
+
+template <uint16_t PIXEL_COUNT_OVERLAY>
+class ParameterBase {
+public:
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // constructor
+    ParameterBase() {
+        fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
+    };
+    ~ParameterBase() {};
+
+    // virtual void print_name(Print &out) {
+    //     out.print("ParameterBase");
+    // }
+
+    CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
+
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            this->pixels_overlay[i] = CRGB::Black;
+        }
+        return this->pixels_overlay;
+    };
+
+};  // class ParameterBase
+
+
 template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
-class EffectBase {
+class EffectBase: public ParameterBase<PIXEL_COUNT_OVERLAY> {
 public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
