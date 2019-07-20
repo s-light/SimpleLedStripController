@@ -40,13 +40,15 @@ SOFTWARE.
 
 #include <FastLED.h>
 
-template <uint16_t PIXEL_COUNT>
+template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
 class EffectBase {
 public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
-    EffectBase() {};
+    EffectBase() {
+        fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
+    };
     ~EffectBase() {};
 
     virtual void print_name(Print &out) {
@@ -73,6 +75,7 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
     CRGBArray<PIXEL_COUNT> pixels;
+    CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
 
 
     uint32_t duration_min =     300;
@@ -140,8 +143,12 @@ public:
         // }
     };
 
-
-
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> parameter_render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            this->pixels_overlay[i] = CRGB::Black;
+        }
+        return this->pixels_overlay;
+    };
 
     virtual void parameter_set_duration_relative(int16_t value) {
         uint32_t factor = duration_factor_map.mapit(duration);

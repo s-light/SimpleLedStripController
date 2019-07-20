@@ -196,11 +196,20 @@ void MyAnimation::animation_update() {
         fx_current->calculate_effect_position();
         fx_current->update();
         // for now just copy pixel data from effect to master
+        // at this point we could implement transisions
+        // from one effect to the other..
         pixels = fx_current->pixels;
         overwrite_black();
     }
+    render_parameter_overlay();
     // write data to chips
     FastLED.show();
+}
+
+void MyAnimation::render_parameter_overlay() {
+    if (parameter_overlay_func) {
+        CRGBArray<PIXEL_COUNT_OVERLAY> overlay = parameter_overlay_func();
+    }
 }
 
 void MyAnimation::fps_update() {

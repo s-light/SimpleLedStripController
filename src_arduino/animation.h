@@ -119,6 +119,8 @@ public:
     // pixels
 
     static const uint16_t PIXEL_COUNT = 144*3;
+    // Parameter overlay is 50pixel == ~35cm
+    static const uint16_t PIXEL_COUNT_OVERLAY = 50;
     // CRGB pixels[PIXEL_COUNT];
     CRGBArray<PIXEL_COUNT> pixels;
     // CRGBSet overlay(pixels, PIXEL_COUNT);
@@ -157,17 +159,19 @@ public:
     // effects
 
     // EffectStatic<PIXEL_COUNT> fx_static = EffectStatic<PIXEL_COUNT>();
-    EffectBlack<PIXEL_COUNT> fx_black {};
-    EffectStatic<PIXEL_COUNT> fx_static {};
-    EffectRainbow<PIXEL_COUNT> fx_rainbow {};
-    EffectPlasma<PIXEL_COUNT> fx_plasma {};
+    EffectBlack<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_black {};
+    EffectStatic<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_static {};
+    EffectRainbow<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_rainbow {};
+    EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_plasma {};
 
 
-    EffectBase<PIXEL_COUNT> * fx_last = &fx_static;
-    EffectBase<PIXEL_COUNT> * fx_current = &fx_static;
-    EffectBase<PIXEL_COUNT> * fx_next = &fx_rainbow;
+    EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_last = &fx_static;
+    EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_current = &fx_static;
+    EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_next = &fx_rainbow;
 
     void select_next_effect();
+
+    bool show_current_param = false;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // output
@@ -187,6 +191,10 @@ private:
     void animation_update();
     void fps_update();
     void overwrite_black();
+
+    void render_parameter_overlay();
+    using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (*)(void);
+    parameter_overlay_func_t parameter_overlay_func = NULL;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes

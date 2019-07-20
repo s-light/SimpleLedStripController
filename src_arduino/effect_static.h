@@ -42,8 +42,8 @@ SOFTWARE.
 
 #include "effect_base.h"
 
-template <uint16_t PIXEL_COUNT>
-class EffectStatic: public EffectBase<PIXEL_COUNT> {
+template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
+class EffectStatic: public EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> {
 public:
     // constructor
     // EffectStatic() {};
@@ -124,6 +124,27 @@ public:
         }
     };
 
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> parameter_render_overlay() {
+        switch (this->parameter_current) {
+            case PARAM::HUE: {
+                for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+                    this->pixels_overlay[i] = CRGB::Black;
+                }
+            } break;
+            case PARAM::SATURATION: {
+                for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+                    this->pixels_overlay[i] = CRGB::Black;
+                }
+            } break;
+            // case PARAM::BRIGHTNESS: {
+            //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            //         this->pixels_overlay[i] = CRGB::Black;
+            //     }
+            // } break;
+        }
+        return this->pixels_overlay;
+    };
+
     // configurations
     // const CHSV warm_white = CHSV(142, 100, 255);
     const CHSV warm_white = CHSV(142, 100, 240);
@@ -135,8 +156,8 @@ private:
 };  // class EffectStatic
 
 
-template <uint16_t PIXEL_COUNT>
-class EffectBlack: public EffectBase<PIXEL_COUNT> {
+template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
+class EffectBlack: public EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> {
 public:
     // constructor
     // EffectBlack() {};
@@ -164,6 +185,13 @@ public:
 
     void parameter_print_name(Print &out) {
         out.print(F("-"));
+    };
+
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> parameter_render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            this->pixels_overlay[i] = CRGB::Black;
+        }
+        return this->pixels_overlay;
     };
 
 private:

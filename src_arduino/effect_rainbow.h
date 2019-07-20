@@ -44,8 +44,8 @@ SOFTWARE.
 
 #include "effect_base.h"
 
-template <uint16_t PIXEL_COUNT>
-class EffectRainbow: public EffectBase<PIXEL_COUNT> {
+template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
+class EffectRainbow: public EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> {
 public:
     // constructor
     // EffectRainbow() {};
@@ -145,6 +145,31 @@ public:
         }
     };
 
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> parameter_render_overlay() {
+        switch (this->parameter_current) {
+            case PARAM::DURATION: {
+                for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+                    this->pixels_overlay[i] = CRGB::Black;
+                }
+            } break;
+            case PARAM::SPREAD: {
+                for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+                    this->pixels_overlay[i] = CRGB::Black;
+                }
+            } break;
+            // case PARAM::SATURATION: {
+            //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            //         this->pixels_overlay[i] = CRGB::Black;
+            //     }
+            // } break;
+            // case PARAM::BRIGHTNESS: {
+            //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            //         this->pixels_overlay[i] = CRGB::Black;
+            //     }
+            // } break;
+        }
+        return this->pixels_overlay;
+    };
 
     // configurations
     float spread = 0.5;
