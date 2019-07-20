@@ -90,7 +90,18 @@ SOFTWARE.
 
 
 template <uint16_t PIXEL_COUNT_OVERLAY>
-class ParameterGlobalBRIGHTNESS: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+class ParameterGlobal: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+public:
+    ParameterGlobal() {
+        uint16_t temp = this->BORDER/2;
+        this->pixels_overlay[temp] = CHSV(200, 255, 200);
+        this->pixels_overlay[this->BORDER_END - temp] = CHSV(200, 255, 200);
+    };
+};  // class ParameterGlobal
+
+
+template <uint16_t PIXEL_COUNT_OVERLAY>
+class ParameterGlobalBRIGHTNESS: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
 public:
     // virtual void render_overlay() {
     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
@@ -108,15 +119,15 @@ public:
 
 
 template <uint16_t PIXEL_COUNT_OVERLAY>
-class ParameterGlobalOVERWRITE: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+class ParameterGlobalOVERWRITE: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
 public:
     // virtual void render_overlay() {
     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
         for (int i = this->BORDER; i < this->BORDER_END; i++) {
             if (i % this->BORDER != 0) {
-                this->pixels_overlay[i] = CRGB::White;
-            } else {
                 this->pixels_overlay[i] = CRGB::Black;
+            } else {
+                this->pixels_overlay[i] = CRGB::White;
             }
         }
         return this->pixels_overlay;
@@ -125,7 +136,7 @@ public:
 
 
 template <uint16_t PIXEL_COUNT_OVERLAY>
-class ParameterGlobalEFFECT: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+class ParameterGlobalEFFECT: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
 public:
     // virtual void render_overlay() {
     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
