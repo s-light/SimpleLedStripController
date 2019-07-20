@@ -164,7 +164,9 @@ void SettingsUI::active_leave() {
     out.println();
 
     flag_active = false;
-    animation.parameter_overlay_func = nullptr;
+    // animation.parameter_overlay_func = nullptr;
+    animation.render_overlay_global = false;
+    animation.render_overlay_effect = false;
     active_last = millis();
     if (flag_dirty) {
         // save changes
@@ -295,24 +297,32 @@ void SettingsUI::switch_param() {
 void SettingsUI::parameter_activate_overlay() {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
+            animation.render_overlay_global = true;
+            animation.render_overlay_effect = false;
             // animation.parameter_overlay_func =
             //     animation.fx_current->render_overlay;
         } break;
         case SETTINGS_MODE::GLOBAL: {
+            animation.render_overlay_global = false;
+            animation.render_overlay_effect = true;
             switch (global_current) {
                 case GLOBAL_PARAM::EFFECT: {
                     // animation.parameter_overlay_func =
                     //     animation.render_overlay_EFFECT;
-                    animation.parameter_overlay_func =
-                        animation.param_effect.render_overlay;
+                    animation.param_global_current =
+                        &animation.param_effect;
                 } break;
                 case GLOBAL_PARAM::BRIGHTNESS: {
                     // animation.parameter_overlay_func =
                     //     animation.render_overlay_BRIGHTNESS;
+                    animation.param_global_current =
+                        &animation.param_brightness;
                 } break;
                 case GLOBAL_PARAM::OVERWRITE: {
                     // animation.parameter_overlay_func =
                     //     animation.render_overlay_OVERWRITE;
+                    animation.param_global_current =
+                        &animation.param_overwrite;
                 } break;
             }
         } break;

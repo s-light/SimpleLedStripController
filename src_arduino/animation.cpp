@@ -216,10 +216,19 @@ void MyAnimation::animation_update() {
 }
 
 void MyAnimation::render_parameter_overlay() {
-    if (parameter_overlay_func != nullptr) {
-        // CRGBArray<PIXEL_COUNT_OVERLAY> overlay = parameter_overlay_func();
-        parameter_overlay_func();
-        // pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
+    // if (parameter_overlay_func != nullptr) {
+    //     // CRGBArray<PIXEL_COUNT_OVERLAY> overlay = parameter_overlay_func();
+    //     parameter_overlay_func();
+    //     // pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
+    // }
+    if (render_overlay_global) {
+        CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
+            param_global_current->render_overlay();
+        pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
+    } else if (render_overlay_effect) {
+        CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
+            param_global_current->render_overlay();
+        pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
     }
 }
 

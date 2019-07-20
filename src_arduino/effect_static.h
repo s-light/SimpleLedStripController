@@ -124,8 +124,8 @@ public:
         }
     };
 
-    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-    virtual void render_overlay() {
+    // virtual void render_overlay() {
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
         switch (this->parameter_current) {
             case PARAM::HUE: {
                 for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
@@ -143,7 +143,7 @@ public:
             //     }
             // } break;
         }
-        // return this->pixels_overlay;
+        return this->pixels_overlay;
     };
 
     // configurations
@@ -188,12 +188,12 @@ public:
         out.print(F("-"));
     };
 
-    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-    virtual void render_overlay() {
+    // virtual void render_overlay() {
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
             this->pixels_overlay[i] = CRGB::Black;
         }
-        // return this->pixels_overlay;
+        return this->pixels_overlay;
     };
 
 private:
