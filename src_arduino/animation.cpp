@@ -209,8 +209,8 @@ void MyAnimation::animation_update() {
         // from one effect to the other..
         pixels = fx_current->pixels;
         overwrite_black();
+        render_parameter_overlay();
     }
-    render_parameter_overlay();
     // write data to chips
     FastLED.show();
 }
