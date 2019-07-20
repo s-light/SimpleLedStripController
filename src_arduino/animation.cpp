@@ -138,8 +138,12 @@ void MyAnimation::output_toggle() {
 }
 
 void MyAnimation::output_off() {
-    fx_last = fx_current;
-    fx_current = &fx_black;
+    if (fx_current != &fx_black) {
+        fx_last = fx_current;
+        fx_current = &fx_black;
+    }
+    mode = MODE::FADE;
+    mode = MODE::OFF;
     update();
     animation_run = false;
     // deactivate level-shifter output
@@ -152,18 +156,18 @@ void MyAnimation::output_off() {
 }
 
 void MyAnimation::output_on() {
-    if (!output_active) {
-        // activate power supply
-        digitalWrite(psu_on_pin, HIGH);
-        delay(1);
-        digitalWrite(psu_on_pin, LOW);
-        // activate level-shifter output
-        digitalWrite(output_active_pin, LOW);
-        // reactivate fx that was active before black
-        fx_current = fx_last;
-        animation_run = true;
-        output_active = true;
-    }
+    // activate power supply
+    digitalWrite(psu_on_pin, HIGH);
+    delay(1);
+    digitalWrite(psu_on_pin, LOW);
+    // activate level-shifter output
+    digitalWrite(output_active_pin, LOW);
+    // reactivate fx that was active before black
+    fx_current = fx_last;
+    animation_run = true;
+    output_active = true;
+    mode = MODE::FADE;
+    mode = MODE::RUN;
 }
 
 

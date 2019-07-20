@@ -137,7 +137,19 @@ class SettingsUI {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // power modes
+
+    enum class POWER_MODE {
+        UNDEFINED,
+        WAIT_FOR_POWER_OFF,
+        OFF,
+        WAIT_FOR_POWER_ON_CLICK,
+        WAIT_FOR_POWER_ON,
+        ON,
+    };
+
     void system_power_off();
+    void system_power_on();
+    const uint32_t auto_power_off_wait = 5 * 1000;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
@@ -184,10 +196,14 @@ class SettingsUI {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // power modes
     uint32_t board_dotstar_standby_color = Adafruit_DotStar::Color(0, 0, 10);
+    uint32_t board_dotstar_wait_color = Adafruit_DotStar::Color(100, 100, 0);
     uint32_t board_dotstar_active_color = Adafruit_DotStar::Color(0, 40, 0);
+
+    POWER_MODE power_mode = POWER_MODE::UNDEFINED;
 
     void sleepmode_init(Stream &out);
     void go_to_sleep();
+    void handle_power_mode();
 };  // class SettingsUI
 
 #endif  // SRC_ARDUINO_SETTINGSUI_H_

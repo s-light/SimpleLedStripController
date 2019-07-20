@@ -123,16 +123,11 @@ void SettingsUI::update() {
         mybutton.update();
         myencoder.update();
 
-        // if (counter != counter_last) {
-        //     counter_last = counter;
-        //     Serial.print("counter changed: ");
-        //     Serial.print(counter);
-        //     Serial.println();
-        // }
+        handle_power_mode();
 
-
-
-        active_update();
+        if (power_mode == POWER_MODE::ON) {
+            active_update();
+        }
     }
 }
 
@@ -177,6 +172,7 @@ void SettingsUI::active_leave() {
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~
+// parameter handling
 
 void SettingsUI::switch_mode() {
     switch (settings_mode) {
@@ -335,15 +331,59 @@ void SettingsUI::go_to_sleep() {
 
 
 void SettingsUI::system_power_off() {
+    power_mode = POWER_MODE::WAIT_FOR_POWER_OFF;
+    board_dotstar.setPixelColor(0, board_dotstar_wait_color);
+    board_dotstar.show();
     animation.output_off();
-    board_dotstar.setPixelColor(0, board_dotstar_standby_color);
-    board_dotstar.show();
+}
 
-    go_to_sleep();
-
+void SettingsUI::system_power_on() {
+    power_mode = POWER_MODE::WAIT_FOR_POWER_ON;
     animation.output_on();
-    board_dotstar.setPixelColor(0, board_dotstar_active_color);
+    board_dotstar.setPixelColor(0, board_dotstar_wait_color);
     board_dotstar.show();
+}
+
+void SettingsUI::handle_power_mode() {
+    switch (power_mode) {
+        case POWER_MODE::UNDEFINED: {
+            system_power_off();
+        } break;
+        case POWER_MODE::WAIT_FOR_POWER_OFF: {
+            if (animation.mode == MyAnimation::MODE::OFF) {
+                power_mode = POWER_MODE::OFF;
+            }
+        } break;
+        case POWER_MODE::OFF: {
+            board_dotstar.setPixelColor(0, board_dotstar_standby_color);
+            board_dotstar.show();
+            power_mode = POWER_MODE::OFF;
+
+            go_to_sleep();
+
+            // welcomem back.
+            power_mode = POWER_MODE::WAIT_FOR_POWER_ON_CLICK;
+            active_last = millis();
+            // animation.output_on();
+            board_dotstar.setPixelColor(0, board_dotstar_wait_color);
+            board_dotstar.show();
+        } break;
+        case POWER_MODE::WAIT_FOR_POWER_ON_CLICK: {
+            if (millis() - active_last > auto_power_off_wait) {
+                system_power_off();
+            }
+        } break;
+        case POWER_MODE::WAIT_FOR_POWER_ON: {
+            if (animation.mode == MyAnimation::MODE::RUN) {
+                power_mode = POWER_MODE::ON;
+                board_dotstar.setPixelColor(0, board_dotstar_active_color);
+                board_dotstar.show();
+            }
+        } break;
+        case POWER_MODE::ON: {
+            // nothing to do here..
+        } break;
+    }
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -393,7 +433,11 @@ void SettingsUI::mybutton_event(slight_ButtonInput *instance) {
         } break;
         case slight_ButtonInput::event_click : {
             Serial.println(F("click"));
-            switch_param();
+            if (power_mode == POWER_MODE::WAIT_FOR_POWER_ON_CLICK) {
+                system_power_on();
+            } else {
+                switch_param();
+            }
             // if (animation.output_get()) {
             //     switch_param();
             // } else {
@@ -453,8 +497,12 @@ void SettingsUI::myencoder_event(slight_RotaryEncoder *instance) {
             // Serial.println(temp_stepsAccel);
             // counter += temp_stepsAccel;
 
-            active_activate();
-            change_param(temp_stepsAccel);
+            if (power_mode == POWER_MODE::WAIT_FOR_POWER_ON_CLICK) {
+                system_power_on();
+            } else {
+                active_activate();
+                change_param(temp_stepsAccel);
+            }
         } break;
         // currently there are no other events fired.
     }  // end switch

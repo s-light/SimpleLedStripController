@@ -113,6 +113,7 @@ public:
         FADE,
         RUN,
     };
+    MODE mode = MODE::OFF;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // pixels
