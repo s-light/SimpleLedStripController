@@ -105,7 +105,14 @@ public:
     ~MyAnimation();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // attributes
+    // modes
+
+    // parameter handling
+    enum class MODE {
+        OFF,
+        FADE,
+        RUN,
+    };
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // pixels
@@ -123,10 +130,11 @@ public:
     void update();
     void end();
 
-    // FastLED helper
-    void show();
     void setBrightness(uint8_t value);
     uint8_t getBrightness();
+
+    // FastLED helper
+    void show();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // helper
@@ -184,6 +192,9 @@ private:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes
     bool ready;
+
+    uint8_t global_brightness = 255;
+    const uint8_t leave_every_n_pixel_on = 5;
 
     uint8_t psu_off_pin = 7;
     uint8_t psu_on_pin = 9;

@@ -228,11 +228,16 @@ void MyAnimation::show() {
 }
 
 void MyAnimation::setBrightness(uint8_t value) {
-    FastLED.setBrightness(value);
+    global_brightness = value;
+    if (global_brightness > 0) {
+        FastLED.setBrightness(value);
+    } else {
+        FastLED.setBrightness(1);
+    }
 }
 
 uint8_t MyAnimation::getBrightness() {
-    return FastLED.getBrightness();
+    return global_brightness;
 }
 
 
@@ -240,8 +245,16 @@ uint8_t MyAnimation::getBrightness() {
 // overwrite
 
 void MyAnimation::overwrite_black() {
-    if (overwrite_end- overwrite_start > 0) {
+    if (overwrite_end - overwrite_start > 0) {
         pixels(overwrite_start, overwrite_end) = CRGB::Black;
+    }
+    if (global_brightness == 0) {
+        // leave only every nth pixel on
+        for (int i = 0; i < PIXEL_COUNT; i++) {
+            if (i % leave_every_n_pixel_on != 0) {
+                pixels[i] = CRGB::Black;
+            }
+        }
     }
 }
 
