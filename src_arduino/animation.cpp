@@ -217,8 +217,9 @@ void MyAnimation::animation_update() {
 
 void MyAnimation::render_parameter_overlay() {
     if (parameter_overlay_func != nullptr) {
-        CRGBArray<PIXEL_COUNT_OVERLAY> overlay = parameter_overlay_func();
-        pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
+        // CRGBArray<PIXEL_COUNT_OVERLAY> overlay = parameter_overlay_func();
+        parameter_overlay_func();
+        // pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
     }
 }
 

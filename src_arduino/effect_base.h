@@ -58,11 +58,12 @@ public:
 
     CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
 
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    virtual void render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
             this->pixels_overlay[i] = CRGB::Black;
         }
-        return this->pixels_overlay;
+        // return this->pixels_overlay;
     };
 
 };  // class ParameterBase
@@ -171,11 +172,12 @@ public:
         // }
     };
 
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    virtual void render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
             this->pixels_overlay[i] = CRGB::Black;
         }
-        return this->pixels_overlay;
+        // return this->pixels_overlay;
     };
 
     virtual void parameter_set_duration_relative(int16_t value) {

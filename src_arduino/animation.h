@@ -92,11 +92,12 @@ SOFTWARE.
 template <uint16_t PIXEL_COUNT_OVERLAY>
 class ParameterGlobalBRIGHTNESS: public ParameterBase<PIXEL_COUNT_OVERLAY> {
 public:
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    virtual void render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
             this->pixels_overlay[i] = CRGB::Black;
         }
-        return this->pixels_overlay;
+        // return this->pixels_overlay;
     };
 };  // class ParameterGlobalBRIGHTNESS
 
@@ -104,11 +105,12 @@ public:
 template <uint16_t PIXEL_COUNT_OVERLAY>
 class ParameterGlobalOVERWRITE: public ParameterBase<PIXEL_COUNT_OVERLAY> {
 public:
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    virtual void render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
             this->pixels_overlay[i] = CRGB::Black;
         }
-        return this->pixels_overlay;
+        // return this->pixels_overlay;
     };
 };  // class ParameterGlobalOVERWRITE
 
@@ -116,11 +118,12 @@ public:
 template <uint16_t PIXEL_COUNT_OVERLAY>
 class ParameterGlobalEFFECT: public ParameterBase<PIXEL_COUNT_OVERLAY> {
 public:
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    virtual void render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
             this->pixels_overlay[i] = CRGB::Black;
         }
-        return this->pixels_overlay;
+        // return this->pixels_overlay;
     };
 };  // class ParameterGlobalEFFECT
 
@@ -239,10 +242,13 @@ public:
     void select_next_effect();
 
     // using parameter_overlay_func_t = void (*)();
-    // using parameter_overlay_func_t = std::function<void()>;
+    using parameter_overlay_func_t = std::function<void()>;
     // using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (*)();
     // using parameter_overlay_func_t = std::function<CRGBArray<PIXEL_COUNT_OVERLAY> ()>;
-    using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (ParameterBase<PIXEL_COUNT_OVERLAY>::*render_overlay)()>;
+    // using parameter_overlay_func_t =
+    //     void (ParameterBase<PIXEL_COUNT_OVERLAY>::*render_overlay)();
+    // using parameter_overlay_func_t =
+    //     std::function<void ParameterBase<PIXEL_COUNT_OVERLAY>::*render_overlay()>;
     parameter_overlay_func_t parameter_overlay_func = nullptr;
 
     ParameterGlobalEFFECT<PIXEL_COUNT_OVERLAY>  param_effect {};
