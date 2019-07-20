@@ -145,6 +145,7 @@ void SettingsUI::active_update() {
 
 void SettingsUI::active_activate() {
     active_last = millis();
+    parameter_activate_overlay();
     if (!flag_active) {
         flag_active = true;
         Serial.println("flag_active = true");
@@ -163,6 +164,7 @@ void SettingsUI::active_leave() {
     out.println();
 
     flag_active = false;
+    animation.parameter_overlay_func = nullptr;
     active_last = millis();
     if (flag_dirty) {
         // save changes
@@ -281,6 +283,35 @@ void SettingsUI::switch_param() {
                 } break;
                 case GLOBAL_PARAM::OVERWRITE: {
                     global_current = GLOBAL_PARAM::EFFECT;
+                } break;
+            }
+        } break;
+    }
+    Print &out = Serial;
+    print_param(out);
+    out.println();
+}
+
+void SettingsUI::parameter_activate_overlay() {
+    switch (settings_mode) {
+        case SETTINGS_MODE::EFFECT: {
+            animation.fx_current->parameter_next();
+            animation.parameter_overlay_func =
+                animation.fx_current->render_overlay;
+        } break;
+        case SETTINGS_MODE::GLOBAL: {
+            switch (global_current) {
+                case GLOBAL_PARAM::EFFECT: {
+                    animation.parameter_overlay_func =
+                        animation.render_overlay_EFFECT;
+                } break;
+                case GLOBAL_PARAM::BRIGHTNESS: {
+                    animation.parameter_overlay_func =
+                        animation.render_overlay_BRIGHTNESS;
+                } break;
+                case GLOBAL_PARAM::OVERWRITE: {
+                    animation.parameter_overlay_func =
+                        animation.render_overlay_OVERWRITE;
                 } break;
             }
         } break;

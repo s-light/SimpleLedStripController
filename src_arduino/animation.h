@@ -119,11 +119,17 @@ public:
     // pixels
 
     static const uint16_t PIXEL_COUNT = 144*3;
+
     // Parameter overlay is 50pixel == ~35cm
     static const uint16_t PIXEL_COUNT_OVERLAY = 50;
+    static const uint16_t PIXEL_OVERLAY_START = (PIXEL_COUNT / 2) - (PIXEL_COUNT_OVERLAY / 2);
+    static const uint16_t PIXEL_OVERLAY_END = PIXEL_OVERLAY_START + PIXEL_COUNT_OVERLAY;
+
     // CRGB pixels[PIXEL_COUNT];
     CRGBArray<PIXEL_COUNT> pixels;
     // CRGBSet overlay(pixels, PIXEL_COUNT);
+
+    CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
@@ -171,7 +177,8 @@ public:
 
     void select_next_effect();
 
-    bool show_current_param = false;
+    using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (*)(void);
+    parameter_overlay_func_t parameter_overlay_func = nullptr;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // output
@@ -191,10 +198,32 @@ private:
     void animation_update();
     void fps_update();
     void overwrite_black();
-
     void render_parameter_overlay();
-    using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (*)(void);
-    parameter_overlay_func_t parameter_overlay_func = NULL;
+    void parameter_activate_overlay();
+
+    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            pixels_overlay[i] = CRGB::Black;
+        }
+        return pixels_overlay;
+    };
+    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_BRIGHTNESS() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            pixels_overlay[i] = CRGB::Black;
+        }
+        return pixels_overlay;
+    };
+    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_OVERWRITE() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            pixels_overlay[i] = CRGB::Black;
+        }
+        return pixels_overlay;
+    };
+
+    // // template <uint16_t PIXEL_COUNT_OVERLAY>
+    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT();
+    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_BRIGHTNESS();
+    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_OVERWRITE();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes

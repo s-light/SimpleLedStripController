@@ -143,7 +143,7 @@ public:
         // }
     };
 
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> parameter_render_overlay() {
+    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
             this->pixels_overlay[i] = CRGB::Black;
         }

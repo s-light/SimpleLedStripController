@@ -88,6 +88,15 @@ void MyAnimation::begin(Stream &out) {
 
         // setup
         out.println(F("setup pixels:"));
+        out.print(F("  PIXEL_COUNT: "));
+        out.println(PIXEL_COUNT);
+        out.print(F("  PIXEL_COUNT_OVERLAY: "));
+        out.println(PIXEL_COUNT_OVERLAY);
+        out.print(F("  PIXEL_OVERLAY_START: "));
+        out.println(PIXEL_OVERLAY_START);
+        out.print(F("  PIXEL_OVERLAY_END: "));
+        out.println(PIXEL_OVERLAY_END);
+
         // FastLED.addLeds<APA102>(pixels, PIXEL_COUNT);
         // https://github.com/FastLED/FastLED/wiki/Frequently-Asked-Questions#5-with-apa102-leds-my-wiring-is-right-but-my-leds-are-flickering--or-my-leds-start-flickering-somewhere-down-the-line
         const uint8_t DATA_RATE_MHZ  = 2;
@@ -207,8 +216,9 @@ void MyAnimation::animation_update() {
 }
 
 void MyAnimation::render_parameter_overlay() {
-    if (parameter_overlay_func) {
+    if (parameter_overlay_func != nullptr) {
         CRGBArray<PIXEL_COUNT_OVERLAY> overlay = parameter_overlay_func();
+        pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
     }
 }
 
@@ -364,8 +374,15 @@ void MyAnimation::select_next_effect() {
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// xx
+// parameter overlay rendering
 
+// template <uint16_t PIXEL_COUNT_OVERLAY>
+// CRGBArray<PIXEL_COUNT_OVERLAY> MyAnimation::render_overlay_EFFECT() {
+//     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+//         pixels_overlay[i] = CRGB::Black;
+//     }
+//     return pixels_overlay;
+// }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // THE END

@@ -180,6 +180,7 @@ class SettingsUI {
     void active_update();
     void active_activate();
     void active_leave();
+    void parameter_activate_overlay();
 
     void switch_mode();
     SETTINGS_MODE settings_mode = SETTINGS_MODE::GLOBAL;
