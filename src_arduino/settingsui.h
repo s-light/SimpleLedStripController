@@ -113,7 +113,7 @@ class SettingsUI {
         // const uint16_t duration_holddown_new = 1000,
         1000,
         // const uint16_t duration_click_long_new =   3000,
-        2500,
+        2000,
         // const uint16_t duration_click_double_new = 250
         250
     );
