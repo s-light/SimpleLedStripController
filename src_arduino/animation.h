@@ -143,7 +143,6 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
     bool animation_run = true;
-    uint32_t effect_duration = 30 * 1000; //ms
 
     // float hue = 0.55;
     // float saturation = 1.0;
@@ -187,7 +186,6 @@ private:
     void animation_init(Stream &out);
     void animation_update();
     void fps_update();
-    void calculate_effect_position();
     void overwrite_black();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -201,10 +199,6 @@ private:
     uint8_t psu_on_pin = 9;
     uint8_t output_active_pin = 2;
     bool output_active = false;
-
-    uint32_t effect_start = 0;
-    uint32_t effect_end = 0;
-    float effect_position = 0.0;
 
     uint32_t fps_start = 0;
     uint32_t fps_duration = 10 * 1000;  // ms

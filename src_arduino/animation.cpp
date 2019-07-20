@@ -177,18 +177,15 @@ void MyAnimation::output_on() {
 
 void MyAnimation::animation_init(Stream &out) {
     out.println(F("init animation:")); {
-        out.print(F("  effect_duration: "));
-        out.print(effect_duration);
-        out.println(F("ms"));
+        // out.print(F("  effect duration: "));
+        // out.print(effect_current->duration);
+        // out.println(F("ms"));
 
         // out.println(F("  Set all Pixel to 21845."));
         // tlc.set_pixel_all_16bit_value(21845, 21845, 21845);
-        out.println(F("  Set all Pixel to red=blue=100."));
+        // out.println(F("  Set all Pixel to red=blue=100."));
         // tlc.set_pixel_all_16bit_value(100, 0, 100);
         // tlc.show();
-
-        effect_start = millis();
-        effect_end = millis() + effect_duration;
     }
     out.println(F("  finished."));
 }
