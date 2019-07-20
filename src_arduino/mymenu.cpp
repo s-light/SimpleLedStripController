@@ -344,7 +344,7 @@ void MyMenu::menu__print_help(Print &out) {
     out.print(animation.animation_run);
     out.println(F(")"));
     out.print(F("\t 'd': set effect_duration 'd1000' ("));
-    out.print(animation.effect_duration);
+    out.print(animation.effect_current->duration);
     out.println(F("ms)"));
     // out.print(F("\t 'h': set hue 'h1.0' ("));
     // out.print(animation.hue, 4);
@@ -430,11 +430,11 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             out.println(F(
                 " --> this currently detaches the USB-Serial connection."));
             out.println(F(
-                "     but it does not reattach correctly. "
+                "     but eventually it does not reattach correctly. "
                 "so after the sleep this debug menu "
-                "is not available anymore."));
+                "could be not available anymore."));
             out.println(F(
-                "     you can reconnect only by hitting the reset button."));
+                "     you can reconnect by hitting the reset button."));
             out.flush();
             settingsui.system_power_off();
         } break;
@@ -450,7 +450,7 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             out.println(F("set effect_duration:"));
             uint16_t value = atoi(&command[1]);
             out.print(value);
-            animation.effect_duration = value;
+            animation.effect_current->duration = value;
             out.println();
         } break;
         // case 'h': {
