@@ -58,6 +58,8 @@ public:
     // }
 
     CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
+    const uint16_t BORDER = PIXEL_COUNT_OVERLAY / 10;
+    const uint16_t BORDER_END = PIXEL_COUNT_OVERLAY - BORDER;
 
     // virtual void render_overlay() {
     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
