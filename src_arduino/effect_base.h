@@ -141,53 +141,59 @@ public:
     //     duration = temp;
     // }
 
+    // ParameterTyped<PIXEL_COUNT_OVERLAY, uint32_t>::overlay_func_t overlay_duration = nullptr;
+
     // ParameterTyped(
     //     char * param_name,
     //     T min,
     //     T max,
+    //     T default_value,
     //     overlay_func_t overlay_customfunc = nullptr,
     //     set_func_t set_customfunc = nullptr
     // )
-    // ParameterTyped<int16_t> duration = {
-    //     "duration",
-    //     duration_min,
-    //     duration_max,
-    //     []() -> CRGBArray<PIXEL_COUNT_OVERLAY> {
-    //         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //             this->pixels_overlay[i] = CRGB::Black;
-    //         }
-    //         return this->pixels_overlay;
-    //     },
-    //     [&](int16_t value_new) -> int16_t {
-    //         uint32_t factor = duration_factor_map.mapit(value);
-    //         int32_t value_wf = (value_new * factor);
-    //         uint32_t temp = duration + value_wf;
-    //         // constrain to full step value..
-    //         temp = (temp / factor) * factor;
-    //         // Serial.print("temp ");
-    //         // Serial.println(temp);
-    //         // Serial.print("factor ");
-    //         // Serial.println(factor);
-    //         // Serial.print("temp / factor ");
-    //         // Serial.println(temp / factor);
-    //         // Serial.print("(temp / factor) * factor ");
-    //         // Serial.println((temp / factor) * factor);
-    //         if (temp > duration_max) {
-    //             if (value_wf > 0) {
-    //                 temp = duration_min;
-    //             } else {
-    //                 temp = duration_max;
-    //             }
-    //         } else if (temp < duration_min) {
-    //             if (value_wf > 0) {
-    //                 temp = duration_min;
-    //             } else {
-    //                 temp = duration_max;
-    //             }
-    //         }
-    //         value = temp;
-    //     }
-    // };
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint32_t> duration_obj = {
+        "duration",
+        duration_min,
+        duration_max,
+        30 * 1000 //ms
+        // 30 * 1000, //ms
+        // overlay_duration
+        // [&duration_obj]() -> CRGBArray<PIXEL_COUNT_OVERLAY> {
+        //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //         duration_obj->pixels_overlay[i] = CRGB::Black;
+        //     }
+        //     return duration_obj->pixels_overlay;
+        // }
+        // [&](int16_t value_new) -> int16_t {
+        //     uint32_t factor = duration_factor_map.mapit(value);
+        //     int32_t value_wf = (value_new * factor);
+        //     uint32_t temp = duration + value_wf;
+        //     // constrain to full step value..
+        //     temp = (temp / factor) * factor;
+        //     // Serial.print("temp ");
+        //     // Serial.println(temp);
+        //     // Serial.print("factor ");
+        //     // Serial.println(factor);
+        //     // Serial.print("temp / factor ");
+        //     // Serial.println(temp / factor);
+        //     // Serial.print("(temp / factor) * factor ");
+        //     // Serial.println((temp / factor) * factor);
+        //     if (temp > duration_max) {
+        //         if (value_wf > 0) {
+        //             temp = duration_min;
+        //         } else {
+        //             temp = duration_max;
+        //         }
+        //     } else if (temp < duration_min) {
+        //         if (value_wf > 0) {
+        //             temp = duration_min;
+        //         } else {
+        //             temp = duration_max;
+        //         }
+        //     }
+        //     value = temp;
+        // }
+    };
 
     uint32_t duration = 30 * 1000; //ms
 
