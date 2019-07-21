@@ -221,19 +221,19 @@ void MyAnimation::render_parameter_overlay() {
     //     parameter_overlay_func();
     //     // pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
     // }
-    if (render_overlay_global) {
-        // CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
-        //     param_global_current->render_overlay();
-        // CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
-        //     (this->*parameter_overlay_func)();
-        // CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
-        //     this->parameter_overlay_func();
-        // pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
-    } else if (render_overlay_effect) {
-        // CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
-        //     fx_current->render_overlay();
-        // pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
-    }
+    // if (render_overlay_global) {
+    //     // CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
+    //     //     param_global_current->render_overlay();
+    //     // CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
+    //     //     (this->*parameter_overlay_func)();
+    //     // CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
+    //     //     this->parameter_overlay_func();
+    //     // pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
+    // } else if (render_overlay_effect) {
+    //     // CRGBArray<PIXEL_COUNT_OVERLAY> overlay =
+    //     //     fx_current->render_overlay();
+    //     // pixels(PIXEL_OVERLAY_START, PIXEL_OVERLAY_END) = overlay;
+    // }
 }
 
 void MyAnimation::fps_update() {

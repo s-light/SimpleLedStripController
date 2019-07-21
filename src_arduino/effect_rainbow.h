@@ -95,7 +95,7 @@ public:
         // EffectBase<PIXEL_COUNT>::change_parameter(value);
         switch (this->parameter_current) {
             case PARAM::DURATION: {
-                this->parameter_set_duration_relative(value);
+                // this->parameter_set_duration_relative(value);
             } break;
             case PARAM::SPREAD: {
                 double temp = spread + value * 0.01;
@@ -145,32 +145,32 @@ public:
         }
     };
 
-    // virtual void render_overlay() {
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        switch (this->parameter_current) {
-            case PARAM::DURATION: {
-                for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-                    this->pixels_overlay[i] = CRGB::Black;
-                }
-            } break;
-            case PARAM::SPREAD: {
-                for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-                    this->pixels_overlay[i] = CRGB::Black;
-                }
-            } break;
-            // case PARAM::SATURATION: {
-            //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            //         this->pixels_overlay[i] = CRGB::Black;
-            //     }
-            // } break;
-            // case PARAM::BRIGHTNESS: {
-            //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            //         this->pixels_overlay[i] = CRGB::Black;
-            //     }
-            // } break;
-        }
-        return this->pixels_overlay;
-    };
+    // // virtual void render_overlay() {
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    //     switch (this->parameter_current) {
+    //         case PARAM::DURATION: {
+    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //                 this->pixels_overlay[i] = CRGB::Black;
+    //             }
+    //         } break;
+    //         case PARAM::SPREAD: {
+    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //                 this->pixels_overlay[i] = CRGB::Black;
+    //             }
+    //         } break;
+    //         // case PARAM::SATURATION: {
+    //         //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         //         this->pixels_overlay[i] = CRGB::Black;
+    //         //     }
+    //         // } break;
+    //         // case PARAM::BRIGHTNESS: {
+    //         //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         //         this->pixels_overlay[i] = CRGB::Black;
+    //         //     }
+    //         // } break;
+    //     }
+    //     return this->pixels_overlay;
+    // };
 
     // configurations
     float spread = 0.5;

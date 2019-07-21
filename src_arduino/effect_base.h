@@ -40,46 +40,18 @@ SOFTWARE.
 
 #include <FastLED.h>
 
+#include "parameter_base.h"
 
-// template <class T, T MIN_VALUE, T MAX, uint16_t PIXEL_COUNT_OVERLAY>
-template <uint16_t PIXEL_COUNT_OVERLAY>
-class ParameterBase {
-public:
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // constructor
-    ParameterBase() {
-        fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
-    };
-    ~ParameterBase() {};
-
-    // virtual void print_name(Print &out) {
-    //     out.print("ParameterBase");
-    // }
-
-    CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
-    static const uint16_t BORDER = PIXEL_COUNT_OVERLAY / 10;
-    static const uint16_t BORDER_END = PIXEL_COUNT_OVERLAY - BORDER;
-
-    // virtual void render_overlay() {
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            this->pixels_overlay[i] = CRGB::Black;
-        }
-        return this->pixels_overlay;
-    };
-
-};  // class ParameterBase
 
 
 template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
-class EffectBase: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+class EffectBase {
 public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
     EffectBase() {
-        fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
+        // fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
     };
     ~EffectBase() {};
 
@@ -107,7 +79,7 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
     CRGBArray<PIXEL_COUNT> pixels;
-    CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
+
 
 
     uint32_t duration_min =     300;
@@ -139,7 +111,89 @@ public:
         }
     };
 
+    // virtual void parameter_set_duration_relative(int16_t value) {
+    //     uint32_t factor = duration_factor_map.mapit(duration);
+    //     int32_t value_wf = (value * factor);
+    //     uint32_t temp = duration + value_wf;
+    //     // constrain to full step value..
+    //     temp = (temp / factor) * factor;
+    //     // Serial.print("temp ");
+    //     // Serial.println(temp);
+    //     // Serial.print("factor ");
+    //     // Serial.println(factor);
+    //     // Serial.print("temp / factor ");
+    //     // Serial.println(temp / factor);
+    //     // Serial.print("(temp / factor) * factor ");
+    //     // Serial.println((temp / factor) * factor);
+    //     if (temp > duration_max) {
+    //         if (value_wf > 0) {
+    //             temp = duration_min;
+    //         } else {
+    //             temp = duration_max;
+    //         }
+    //     } else if (temp < duration_min) {
+    //         if (value_wf > 0) {
+    //             temp = duration_min;
+    //         } else {
+    //             temp = duration_max;
+    //         }
+    //     }
+    //     duration = temp;
+    // }
+
+    // ParameterTyped(
+    //     char * param_name,
+    //     T min,
+    //     T max,
+    //     overlay_func_t overlay_customfunc = nullptr,
+    //     set_func_t set_customfunc = nullptr
+    // )
+    // ParameterTyped<int16_t> duration = {
+    //     "duration",
+    //     duration_min,
+    //     duration_max,
+    //     []() -> CRGBArray<PIXEL_COUNT_OVERLAY> {
+    //         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //             this->pixels_overlay[i] = CRGB::Black;
+    //         }
+    //         return this->pixels_overlay;
+    //     },
+    //     [&](int16_t value_new) -> int16_t {
+    //         uint32_t factor = duration_factor_map.mapit(value);
+    //         int32_t value_wf = (value_new * factor);
+    //         uint32_t temp = duration + value_wf;
+    //         // constrain to full step value..
+    //         temp = (temp / factor) * factor;
+    //         // Serial.print("temp ");
+    //         // Serial.println(temp);
+    //         // Serial.print("factor ");
+    //         // Serial.println(factor);
+    //         // Serial.print("temp / factor ");
+    //         // Serial.println(temp / factor);
+    //         // Serial.print("(temp / factor) * factor ");
+    //         // Serial.println((temp / factor) * factor);
+    //         if (temp > duration_max) {
+    //             if (value_wf > 0) {
+    //                 temp = duration_min;
+    //             } else {
+    //                 temp = duration_max;
+    //             }
+    //         } else if (temp < duration_min) {
+    //             if (value_wf > 0) {
+    //                 temp = duration_min;
+    //             } else {
+    //                 temp = duration_max;
+    //             }
+    //         }
+    //         value = temp;
+    //     }
+    // };
+
     uint32_t duration = 30 * 1000; //ms
+
+
+
+
     uint32_t start = 0;
     uint32_t end = 0;
     float position = 0.0;
@@ -175,43 +229,12 @@ public:
         // }
     };
 
-    // virtual void render_overlay() {
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            this->pixels_overlay[i] = CRGB::Black;
-        }
-        return this->pixels_overlay;
-    };
-
-    virtual void parameter_set_duration_relative(int16_t value) {
-        uint32_t factor = duration_factor_map.mapit(duration);
-        int32_t value_wf = (value * factor);
-        uint32_t temp = duration + value_wf;
-        // constrain to full step value..
-        temp = (temp / factor) * factor;
-        // Serial.print("temp ");
-        // Serial.println(temp);
-        // Serial.print("factor ");
-        // Serial.println(factor);
-        // Serial.print("temp / factor ");
-        // Serial.println(temp / factor);
-        // Serial.print("(temp / factor) * factor ");
-        // Serial.println((temp / factor) * factor);
-        if (temp > duration_max) {
-            if (value_wf > 0) {
-                temp = duration_min;
-            } else {
-                temp = duration_max;
-            }
-        } else if (temp < duration_min) {
-            if (value_wf > 0) {
-                temp = duration_min;
-            } else {
-                temp = duration_max;
-            }
-        }
-        duration = temp;
-    }
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         this->pixels_overlay[i] = CRGB::Black;
+    //     }
+    //     return this->pixels_overlay;
+    // };
 
 protected:
     // PARAM parameter_current;

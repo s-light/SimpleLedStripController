@@ -125,26 +125,26 @@ public:
     };
 
     // virtual void render_overlay() {
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        switch (this->parameter_current) {
-            case PARAM::HUE: {
-                for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-                    this->pixels_overlay[i] = CRGB::Black;
-                }
-            } break;
-            case PARAM::SATURATION: {
-                for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-                    this->pixels_overlay[i] = CRGB::Black;
-                }
-            } break;
-            // case PARAM::BRIGHTNESS: {
-            //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            //         this->pixels_overlay[i] = CRGB::Black;
-            //     }
-            // } break;
-        }
-        return this->pixels_overlay;
-    };
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    //     switch (this->parameter_current) {
+    //         case PARAM::HUE: {
+    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //                 this->pixels_overlay[i] = CRGB::Black;
+    //             }
+    //         } break;
+    //         case PARAM::SATURATION: {
+    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //                 this->pixels_overlay[i] = CRGB::Black;
+    //             }
+    //         } break;
+    //         // case PARAM::BRIGHTNESS: {
+    //         //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         //         this->pixels_overlay[i] = CRGB::Black;
+    //         //     }
+    //         // } break;
+    //     }
+    //     return this->pixels_overlay;
+    // };
 
     // configurations
     // const CHSV warm_white = CHSV(142, 100, 255);
@@ -189,12 +189,12 @@ public:
     };
 
     // virtual void render_overlay() {
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            this->pixels_overlay[i] = CRGB::Black;
-        }
-        return this->pixels_overlay;
-    };
+    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         this->pixels_overlay[i] = CRGB::Black;
+    //     }
+    //     return this->pixels_overlay;
+    // };
 
 private:
 
