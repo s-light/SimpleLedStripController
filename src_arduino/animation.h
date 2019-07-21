@@ -87,87 +87,86 @@ SOFTWARE.
 
 
 
-
-
-template <uint16_t PIXEL_COUNT_OVERLAY>
-class ParameterGlobal: public ParameterBase<PIXEL_COUNT_OVERLAY> {
-public:
-    ParameterGlobal() {
-        uint16_t temp = this->BORDER/2;
-        this->pixels_overlay[temp] = CHSV(200, 255, 200);
-        this->pixels_overlay[this->BORDER_END - temp] = CHSV(200, 255, 200);
-    };
-};  // class ParameterGlobal
-
-
-template <uint16_t PIXEL_COUNT_OVERLAY>
-class ParameterGlobalBRIGHTNESS: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
-public:
-    // virtual void render_overlay() {
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-        //     this->pixels_overlay[i] = CRGB::Black;
-        // }
-        this->pixels_overlay(this->BORDER, this->BORDER_END).fill_gradient(
-            CHSV(0, 0, 0),
-            CHSV(0, 0, 255)
-        );
-        // this->pixels_overlay[]
-        return this->pixels_overlay;
-    };
-};  // class ParameterGlobalBRIGHTNESS
-
-
-template <uint16_t PIXEL_COUNT_OVERLAY>
-class ParameterGlobalOVERWRITE: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
-public:
-    // virtual void render_overlay() {
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        for (int i = this->BORDER; i < this->BORDER_END; i++) {
-            if (i % this->BORDER != 0) {
-                this->pixels_overlay[i] = CRGB::Black;
-            } else {
-                this->pixels_overlay[i] = CRGB::White;
-            }
-        }
-        return this->pixels_overlay;
-    };
-};  // class ParameterGlobalOVERWRITE
-
-
-template <uint16_t PIXEL_COUNT_OVERLAY>
-class ParameterGlobalEFFECT: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
-public:
-    // virtual void render_overlay() {
-    virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-        //     this->pixels_overlay[i] = CRGB::Black;
-        // }
-        uint16_t temp_count = (this->BORDER_END - this->BORDER);
-        temp_count -= (3*this->BORDER);
-        temp_count = temp_count / 3;
-        // static
-        uint16_t start = this->BORDER;
-        this->pixels_overlay(start, start + temp_count).fill_gradient(
-            CHSV(0, 0, 0),
-            CHSV(0, 0, 255)
-        );
-        // rainbo
-        start += temp_count + this->BORDER;
-        this->pixels_overlay(start, start + temp_count).fill_gradient(
-            CHSV(0, 255, 255),
-            CHSV(255, 255, 255),
-            LONGEST_HUES
-        );
-        // plasma
-        start += temp_count + this->BORDER;
-        this->pixels_overlay(start, start + temp_count).fill_gradient(
-            CHSV(150, 255, 255),
-            CHSV(200, 255, 255)
-        );
-        return this->pixels_overlay;
-    };
-};  // class ParameterGlobalEFFECT
+// the idea here is nice -
+// but it gets very complicated ad the classed have no access to the parent object.
+//
+// template <uint16_t PIXEL_COUNT_OVERLAY>
+// class ParameterGlobal: public ParameterBase<PIXEL_COUNT_OVERLAY> {
+// public:
+//     ParameterGlobal() {
+//         uint16_t temp = this->BORDER/2;
+//         this->pixels_overlay[temp] = CHSV(200, 255, 200);
+//         this->pixels_overlay[this->BORDER_END - temp] = CHSV(200, 255, 200);
+//     };
+// };  // class ParameterGlobal
+//
+//
+// template <uint16_t PIXEL_COUNT_OVERLAY>
+// class ParameterGlobalBRIGHTNESS: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
+// public:
+//     // virtual void render_overlay() {
+//     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+//         // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+//         //     this->pixels_overlay[i] = CRGB::Black;
+//         // }
+//         this->pixels_overlay(this->BORDER, this->BORDER_END).fill_gradient(
+//             CHSV(0, 0, 0),
+//             CHSV(0, 0, 255)
+//         );
+//         // this->pixels_overlay[]
+//         return this->pixels_overlay;
+//     };
+// };  // class ParameterGlobalBRIGHTNESS
+//
+// template <uint16_t PIXEL_COUNT_OVERLAY>
+// class ParameterGlobalOVERWRITE: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
+// public:
+//     // virtual void render_overlay() {
+//     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+//         for (int i = this->BORDER; i < this->BORDER_END; i++) {
+//             if (i % this->BORDER != 0) {
+//                 this->pixels_overlay[i] = CRGB::Black;
+//             } else {
+//                 this->pixels_overlay[i] = CRGB::White;
+//             }
+//         }
+//         return this->pixels_overlay;
+//     };
+// };  // class ParameterGlobalOVERWRITE
+//
+// template <uint16_t PIXEL_COUNT_OVERLAY>
+// class ParameterGlobalEFFECT: public ParameterGlobal<PIXEL_COUNT_OVERLAY> {
+// public:
+//     // virtual void render_overlay() {
+//     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
+//         // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+//         //     this->pixels_overlay[i] = CRGB::Black;
+//         // }
+//         uint16_t temp_count = (this->BORDER_END - this->BORDER);
+//         temp_count -= (3*this->BORDER);
+//         temp_count = temp_count / 3;
+//         // static
+//         uint16_t start = this->BORDER;
+//         this->pixels_overlay(start, start + temp_count).fill_gradient(
+//             CHSV(0, 0, 0),
+//             CHSV(0, 0, 255)
+//         );
+//         // rainbo
+//         start += temp_count + this->BORDER;
+//         this->pixels_overlay(start, start + temp_count).fill_gradient(
+//             CHSV(0, 255, 255),
+//             CHSV(255, 255, 255),
+//             LONGEST_HUES
+//         );
+//         // plasma
+//         start += temp_count + this->BORDER;
+//         this->pixels_overlay(start, start + temp_count).fill_gradient(
+//             CHSV(150, 255, 255),
+//             CHSV(200, 255, 255)
+//         );
+//         return this->pixels_overlay;
+//     };
+// };  // class ParameterGlobalEFFECT
 
 
 
@@ -228,6 +227,8 @@ public:
 
     // Parameter overlay is 50pixel == ~35cm
     static const uint16_t PIXEL_COUNT_OVERLAY = 50;
+    static const uint16_t BORDER = PIXEL_COUNT_OVERLAY / 10;
+    static const uint16_t BORDER_END = PIXEL_COUNT_OVERLAY - BORDER;
     static const uint16_t PIXEL_OVERLAY_START = (PIXEL_COUNT / 2) - (PIXEL_COUNT_OVERLAY / 2);
     static const uint16_t PIXEL_OVERLAY_END = PIXEL_OVERLAY_START + PIXEL_COUNT_OVERLAY;
 
@@ -235,7 +236,7 @@ public:
     CRGBArray<PIXEL_COUNT> pixels;
     // CRGBSet overlay(pixels, PIXEL_COUNT);
 
-    // CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
+    CRGBArray<PIXEL_COUNT_OVERLAY> pixels_overlay;
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // public functions
@@ -276,7 +277,6 @@ public:
     EffectRainbow<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_rainbow {};
     EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_plasma {};
 
-
     EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_last = &fx_static;
     EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_current = &fx_static;
     EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_next = &fx_rainbow;
@@ -284,24 +284,86 @@ public:
     void select_next_effect();
 
 
+    bool render_overlay_global = false;
+    bool render_overlay_effect = false;
+
     // using parameter_overlay_func_t = void (*)();
     // using parameter_overlay_func_t = std::function<void()>;
     // using parameter_overlay_func_t = CRGBArray<PIXEL_COUNT_OVERLAY> (*)();
-    // using parameter_overlay_func_t = std::function<CRGBArray<PIXEL_COUNT_OVERLAY> ()>;
     // using parameter_overlay_func_t =
     //     void (ParameterBase<PIXEL_COUNT_OVERLAY>::*render_overlay)();
     // using parameter_overlay_func_t =
     //     std::function<void ParameterBase<PIXEL_COUNT_OVERLAY>::*render_overlay()>;
+    using parameter_overlay_func_t =
+        std::function<CRGBArray<PIXEL_COUNT_OVERLAY> ()>;
+
+    // using parameter_overlay_func_t =
+    //     CRGBArray<PIXEL_COUNT_OVERLAY> (MyAnimation::*)();
+
     // parameter_overlay_func_t parameter_overlay_func = nullptr;
+    // parameter_overlay_func_t parameter_overlay_func =
+    //     &MyAnimation::render_overlay_EFFECT;
+    parameter_overlay_func_t parameter_overlay_func = std::bind(
+            &MyAnimation::render_overlay_EFFECT, this);
 
-    ParameterGlobalEFFECT<PIXEL_COUNT_OVERLAY>  param_effect {};
-    ParameterGlobalBRIGHTNESS<PIXEL_COUNT_OVERLAY>  param_brightness {};
-    ParameterGlobalOVERWRITE<PIXEL_COUNT_OVERLAY>  param_overwrite {};
+    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_BRIGHTNESS() {
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     this->pixels_overlay[i] = CRGB::Black;
+        // }
+        this->pixels_overlay(this->BORDER, this->BORDER_END).fill_gradient(
+            CHSV(0, 0, 0),
+            CHSV(0, 0, 255)
+        );
+        // this->pixels_overlay[]
+        return this->pixels_overlay;
+    };
 
-    ParameterBase<PIXEL_COUNT_OVERLAY> * param_global_current = &param_effect;
+    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_OVERWRITE() {
+        for (int i = this->BORDER; i < this->BORDER_END; i++) {
+            if (i % this->BORDER != 0) {
+                this->pixels_overlay[i] = CRGB::Black;
+            } else {
+                this->pixels_overlay[i] = CRGB::White;
+            }
+        }
+        return this->pixels_overlay;
+    };
 
-    bool render_overlay_global = false;
-    bool render_overlay_effect = false;
+    CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT() {
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     this->pixels_overlay[i] = CRGB::Black;
+        // }
+        uint16_t temp_count = (this->BORDER_END - this->BORDER);
+        temp_count -= (3*this->BORDER);
+        temp_count = temp_count / 3;
+        // static
+        uint16_t start = this->BORDER;
+        this->pixels_overlay(start, start + temp_count).fill_solid(
+            CHSV(0, 0, 255)
+        );
+        // rainbo
+        start += temp_count + this->BORDER;
+        this->pixels_overlay(start, start + temp_count).fill_gradient(
+            CHSV(0, 255, 255),
+            CHSV(255, 255, 255),
+            LONGEST_HUES
+        );
+        // plasma
+        start += temp_count + this->BORDER;
+        this->pixels_overlay(start, start + temp_count).fill_gradient(
+            CHSV(150, 255, 255),
+            CHSV(200, 255, 255)
+        );
+        return this->pixels_overlay;
+    };
+
+
+    // ParameterGlobalEFFECT<PIXEL_COUNT_OVERLAY>  param_effect {};
+    // ParameterGlobalBRIGHTNESS<PIXEL_COUNT_OVERLAY>  param_brightness {};
+    // ParameterGlobalOVERWRITE<PIXEL_COUNT_OVERLAY>  param_overwrite {};
+    // ParameterBase<PIXEL_COUNT_OVERLAY> * param_global_current = &param_effect;
+
+
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // output

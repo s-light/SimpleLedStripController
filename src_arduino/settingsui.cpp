@@ -187,6 +187,7 @@ void SettingsUI::switch_mode() {
             settings_mode = SETTINGS_MODE::EFFECT;
         } break;
     }
+    parameter_activate_overlay();
     Print &out = Serial;
     print_settings_mode(out);
     out.println();
@@ -289,6 +290,7 @@ void SettingsUI::switch_param() {
             }
         } break;
     }
+    parameter_activate_overlay();
     Print &out = Serial;
     print_param(out);
     out.println();
@@ -297,32 +299,36 @@ void SettingsUI::switch_param() {
 void SettingsUI::parameter_activate_overlay() {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
-            animation.render_overlay_global = true;
-            animation.render_overlay_effect = false;
+            animation.render_overlay_global = false;
+            animation.render_overlay_effect = true;
             // animation.parameter_overlay_func =
             //     animation.fx_current->render_overlay;
         } break;
         case SETTINGS_MODE::GLOBAL: {
-            animation.render_overlay_global = false;
-            animation.render_overlay_effect = true;
+            animation.render_overlay_global = true;
+            animation.render_overlay_effect = false;
             switch (global_current) {
                 case GLOBAL_PARAM::EFFECT: {
                     // animation.parameter_overlay_func =
-                    //     animation.render_overlay_EFFECT;
-                    animation.param_global_current =
-                        &animation.param_effect;
+                    //     &(animation.render_overlay_EFFECT);
+                    // animation.parameter_overlay_func = std::bind(
+                    //     &MyAnimation::render_overlay_EFFECT, animation);
+                    animation.parameter_overlay_func =
+                        animation.render_overlay_EFFECT;
+                    // animation.param_global_current =
+                    //     &animation.param_effect;
                 } break;
                 case GLOBAL_PARAM::BRIGHTNESS: {
                     // animation.parameter_overlay_func =
-                    //     animation.render_overlay_BRIGHTNESS;
-                    animation.param_global_current =
-                        &animation.param_brightness;
+                    //     &(animation.render_overlay_BRIGHTNESS);
+                    // animation.param_global_current =
+                    //     &animation.param_brightness;
                 } break;
                 case GLOBAL_PARAM::OVERWRITE: {
                     // animation.parameter_overlay_func =
-                    //     animation.render_overlay_OVERWRITE;
-                    animation.param_global_current =
-                        &animation.param_overwrite;
+                    //     &(animation.render_overlay_OVERWRITE);
+                    // animation.param_global_current =
+                    //     &animation.param_overwrite;
                 } break;
             }
         } break;
