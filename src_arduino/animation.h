@@ -350,6 +350,8 @@ public:
     };
 
 
+    ParameterBase<PIXEL_COUNT_OVERLAY> * param_for_overlay = nullptr;
+
     // bool render_overlay_global = false;
     // bool render_overlay_effect = false;
 

@@ -164,7 +164,7 @@ void SettingsUI::active_leave() {
     out.println();
 
     flag_active = false;
-    // animation.parameter_overlay_func = nullptr;
+    animation.param_for_overlay = nullptr;
     // animation.render_overlay_global = false;
     // animation.render_overlay_effect = false;
     active_last = millis();
@@ -274,42 +274,21 @@ void SettingsUI::switch_param() {
 }
 
 void SettingsUI::parameter_activate_overlay() {
-    // switch (settings_mode) {
-    //     case SETTINGS_MODE::EFFECT: {
-    //         animation.render_overlay_global = false;
-    //         animation.render_overlay_effect = true;
-    //         // animation.parameter_overlay_func =
-    //         //     animation.fx_current->render_overlay;
-    //     } break;
-    //     case SETTINGS_MODE::GLOBAL: {
-    //         animation.render_overlay_global = true;
-    //         animation.render_overlay_effect = false;
-    //         switch (global_current) {
-    //             case GLOBAL_PARAM::EFFECT: {
-    //                 // animation.parameter_overlay_func =
-    //                 //     &(animation.render_overlay_EFFECT);
-    //                 // animation.parameter_overlay_func = std::bind(
-    //                 //     &MyAnimation::render_overlay_EFFECT, animation);
-    //                 animation.parameter_overlay_func =
-    //                     animation.render_overlay_EFFECT;
-    //                 // animation.param_global_current =
-    //                 //     &animation.param_effect;
-    //             } break;
-    //             case GLOBAL_PARAM::BRIGHTNESS: {
-    //                 // animation.parameter_overlay_func =
-    //                 //     &(animation.render_overlay_BRIGHTNESS);
-    //                 // animation.param_global_current =
-    //                 //     &animation.param_brightness;
-    //             } break;
-    //             case GLOBAL_PARAM::OVERWRITE: {
-    //                 // animation.parameter_overlay_func =
-    //                 //     &(animation.render_overlay_OVERWRITE);
-    //                 // animation.param_global_current =
-    //                 //     &animation.param_overwrite;
-    //             } break;
-    //         }
-    //     } break;
-    // }
+    switch (settings_mode) {
+        case SETTINGS_MODE::EFFECT: {
+            // animation.render_overlay_global = false;
+            // animation.render_overlay_effect = true;
+            // animation.parameter_overlay_func =
+            //     animation.fx_current->render_overlay;
+            animation.param_for_overlay =
+                animation.fx_current->parameter_current;
+        } break;
+        case SETTINGS_MODE::GLOBAL: {
+            // animation.render_overlay_global = true;
+            // animation.render_overlay_effect = false;
+            animation.param_for_overlay = animation.global_current;
+        } break;
+    }
 }
 
 

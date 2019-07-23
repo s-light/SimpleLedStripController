@@ -82,10 +82,16 @@ public:
     static const uint16_t BORDER_END = PIXEL_COUNT_OVERLAY - BORDER;
 
     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            this->pixels_overlay[i] = CRGB::Black;
+        if (overlay_customfunc != nullptr) {
+            // this->pixels_overlay = overlay_customfunc();
+            return overlay_customfunc();
+        } else {
+            for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+                this->pixels_overlay[i] = CRGB::Black;
+            }
+            return this->pixels_overlay;
         }
-        return this->pixels_overlay;
+        // return this->pixels_overlay;
     };
 
 
