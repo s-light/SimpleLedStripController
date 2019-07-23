@@ -129,15 +129,22 @@ public:
     // configurations
 
     CRGBArray<PIXEL_COUNT_OVERLAY> spread_render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            spread.pixels_overlay[i] = CRGB::Green;
-        }
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     spread.pixels_overlay[i] = CRGB::Green;
+        // }
+        spread.pixels_overlay(
+            spread.BORDER,
+            spread.BORDER_END
+        ).fill_gradient(
+            CHSV(50, 255, 0),
+            CHSV(50, 255, 255)
+        );
         return spread.pixels_overlay;
     }
 
     void spread_set_relative(int16_t offset) {
         double temp = spread + offset * 0.01;
-        spread = clamp(temp, 0.0, 1.0);
+        spread = clamp(temp, spread.value_min, spread.value_max);
     }
 
     ParameterTyped<PIXEL_COUNT_OVERLAY, double> spread = {
@@ -157,21 +164,29 @@ public:
     };
 
     CRGBArray<PIXEL_COUNT_OVERLAY> hue_render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            hue.pixels_overlay[i] = CRGB::Green;
-        }
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     hue.pixels_overlay[i] = CRGB::Green;
+        // }
+        hue.pixels_overlay(
+            hue.BORDER,
+            hue.BORDER_END
+        ).fill_gradient(
+            CHSV(0, 255, 255),
+            CHSV(255, 255, 255),
+            LONGEST_HUES
+        );
         return hue.pixels_overlay;
     }
 
     void hue_set_relative(int16_t offset) {
         double temp = hue + offset * 0.01;
-        hue = clamp(temp, 0.0, 2.0);
+        hue = clamp(temp, hue.value_min, hue.value_max);
     }
 
     ParameterTyped<PIXEL_COUNT_OVERLAY, double> hue = {
         "hue",
         0.0,
-        2.0,
+        1.0,
         0.5,
         std::bind(
             &EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY>::hue_render_overlay,

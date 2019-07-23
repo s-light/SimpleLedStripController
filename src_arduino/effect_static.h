@@ -59,9 +59,17 @@ public:
     // parameter handling
 
     CRGBArray<PIXEL_COUNT_OVERLAY> hue_render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            hue.pixels_overlay[i] = CRGB::Black;
-        }
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     hue.pixels_overlay[i] = CRGB::Black;
+        // }
+        hue.pixels_overlay(
+            hue.BORDER,
+            hue.BORDER_END
+        ).fill_gradient(
+            CHSV(0, saturation, brightness),
+            CHSV(255, saturation, brightness),
+            LONGEST_HUES
+        );
         return hue.pixels_overlay;
     }
 
@@ -77,9 +85,16 @@ public:
     };
 
     CRGBArray<PIXEL_COUNT_OVERLAY> saturation_render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            saturation.pixels_overlay[i] = CRGB::Black;
-        }
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     saturation.pixels_overlay[i] = CRGB::Black;
+        // }
+        saturation.pixels_overlay(
+            saturation.BORDER,
+            saturation.BORDER_END
+        ).fill_gradient(
+            CHSV(hue, 0, brightness),
+            CHSV(hue, 255, brightness)
+        );
         return saturation.pixels_overlay;
     }
 
@@ -95,9 +110,16 @@ public:
     };
 
     CRGBArray<PIXEL_COUNT_OVERLAY> brightness_render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            brightness.pixels_overlay[i] = CRGB::Black;
-        }
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     brightness.pixels_overlay[i] = CRGB::Black;
+        // }
+        brightness.pixels_overlay(
+            brightness.BORDER,
+            brightness.BORDER_END
+        ).fill_gradient(
+            CHSV(hue, saturation, 0),
+            CHSV(hue, saturation, 255)
+        );
         return brightness.pixels_overlay;
     }
 

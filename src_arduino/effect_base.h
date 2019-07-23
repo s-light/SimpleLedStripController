@@ -115,9 +115,16 @@ public:
     };
 
     CRGBArray<PIXEL_COUNT_OVERLAY> duration_render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            duration.pixels_overlay[i] = CRGB::Black;
-        }
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     duration.pixels_overlay[i] = CRGB::Black;
+        // }
+        duration.pixels_overlay(
+            duration.BORDER,
+            duration.BORDER_END
+        ).fill_gradient(
+            CHSV(240, 255, 0),
+            CHSV(240, 255, 255)
+        );
         return duration.pixels_overlay;
     }
 
