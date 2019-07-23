@@ -114,72 +114,81 @@ public:
         }
     };
 
-    // virtual void duration_set(int16_t value) {
-    //     uint32_t factor = duration_factor_map.mapit(duration);
-    //     int32_t value_wf = (value * factor);
-    //     uint32_t temp = duration + value_wf;
-    //     // constrain to full step value..
-    //     temp = (temp / factor) * factor;
-    //     // Serial.print("temp ");
-    //     // Serial.println(temp);
-    //     // Serial.print("factor ");
-    //     // Serial.println(factor);
-    //     // Serial.print("temp / factor ");
-    //     // Serial.println(temp / factor);
-    //     // Serial.print("(temp / factor) * factor ");
-    //     // Serial.println((temp / factor) * factor);
-    //     if (temp > duration_max) {
-    //         if (value_wf > 0) {
-    //             temp = duration_min;
-    //         } else {
-    //             temp = duration_max;
-    //         }
-    //     } else if (temp < duration_min) {
-    //         if (value_wf > 0) {
-    //             temp = duration_min;
-    //         } else {
-    //             temp = duration_max;
-    //         }
-    //     }
-    //     return temp;
-    // }
-
     CRGBArray<PIXEL_COUNT_OVERLAY> duration_render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            duration_x.pixels_overlay[i] = CRGB::Black;
+            duration_obj.pixels_overlay[i] = CRGB::Black;
         }
-        return duration_x.pixels_overlay;
+        return duration_obj.pixels_overlay;
     }
 
+    virtual uint32_t duration_set_relative(int16_t value) {
+        uint32_t factor = duration_factor_map.mapit(duration);
+        int32_t value_wf = (value * factor);
+        uint32_t temp = duration + value_wf;
+        // constrain to full step value..
+        temp = (temp / factor) * factor;
+        // Serial.print("temp ");
+        // Serial.println(temp);
+        // Serial.print("factor ");
+        // Serial.println(factor);
+        // Serial.print("temp / factor ");
+        // Serial.println(temp / factor);
+        // Serial.print("(temp / factor) * factor ");
+        // Serial.println((temp / factor) * factor);
+        if (temp > duration_max) {
+            if (value_wf > 0) {
+                temp = duration_min;
+            } else {
+                temp = duration_max;
+            }
+        } else if (temp < duration_min) {
+            if (value_wf > 0) {
+                temp = duration_min;
+            } else {
+                temp = duration_max;
+            }
+        }
+        return temp;
+    }
+
+    // virtual uint32_t duration_set(uint32_t value_set) {
+    //     return value_set;
+    // }
+
     // ParameterTyped(
-    //     char * param_name,
-    //     T min,
-    //     T max,
-    //     T default_value,
+    //     char const * param_name,
+    //     T value_min,
+    //     T value_max,
+    //     T value_default,
     //     overlay_func_t overlay_customfunc = nullptr,
+    //     set_relative_func_t set_relative_customfunc = nullptr
     //     set_func_t set_customfunc = nullptr
     // )
-    ParameterTyped<PIXEL_COUNT_OVERLAY, uint32_t> duration_x = {
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint32_t> duration_obj = {
         "duration",
         duration_min,
         duration_max,
         30 * 1000, //ms
         std::bind(&EffectBase::duration_render_overlay, this),
+        std::bind(&EffectBase::duration_set_relative, this, std::placeholders::_1),
         // std::bind(&EffectBase::duration_set, this, std::placeholders::_1),
     };
 
     uint32_t duration = 30 * 1000;
 
+
     uint32_t start = 0;
     uint32_t end = 0;
     float position = 0.0;
 
+    ParameterBase<PIXEL_COUNT_OVERLAY> * parameter_current = &duration_obj;
+
     virtual void parameter_next() {
-        // switch (parameter_current) {
-        //     case PARAM::BRIGHTNESS: {
-        //         parameter_current = PARAM::BRIGHTNESS;
-        //     } break;
-        // }
+        if (parameter_current == &duration_obj) {
+            parameter_current = &duration_obj;
+        } else if (parameter_current == &duration_obj) {
+            parameter_current = &duration_obj;
+        }
     };
 
     virtual void change_parameter(__attribute__((unused)) int16_t value) {

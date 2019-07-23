@@ -96,6 +96,7 @@ public:
     // using overlay_func_t = ParameterBase<PIXEL_COUNT_OVERLAY>::overlay_func_t;
     using overlay_func_t = std::function<CRGBArray<PIXEL_COUNT_OVERLAY> ()>;
     using set_func_t = std::function<T (T value_new)>;
+    using set_relative_func_t = std::function<T (int16_t offset)>;
 
     // constructor
     ParameterTyped(
@@ -104,26 +105,55 @@ public:
         T value_max,
         T value_default,
         overlay_func_t overlay_customfunc = nullptr,
+        set_relative_func_t set_relative_customfunc = nullptr,
         set_func_t set_customfunc = nullptr
     ):
         ParameterBase<PIXEL_COUNT_OVERLAY> (param_name, overlay_customfunc),
         value_min(value_min),
         value_max(value_max),
         value_default(value_default),
+        set_relative_customfunc(set_relative_customfunc),
         set_customfunc(set_customfunc)
     {
         fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
-        value = value_default;
+        this->value = this->value_default;
     };
+
 
     const T value_min;
     const T value_max;
     const T value_default;
     T value;
 
+
+    set_relative_func_t set_relative_customfunc = nullptr;
+
+    virtual T set_relative(int16_t offset) {
+        Serial.print("set relative called: ");
+        Serial.print(this->value);
+        Serial.print(" + '");
+        Serial.print(offset);
+        Serial.print("' -> ");
+        T temp = this->value + offset;
+        if (set_relative_customfunc != nullptr) {
+            Serial.println("set_relative_customfunc called.");
+            temp = set_relative_customfunc(offset);
+        }
+        this->value = clamp(temp, this->value_min, this->value_max);
+        Serial.print(this->value);
+        Serial.println();
+        return this->value;
+    }
+
+    virtual T operator+=(int16_t offset) {
+        return this->set_relative(offset);
+    };
+
+
+
     set_func_t set_customfunc = nullptr;
 
-    virtual T operator=(T value_new) {
+    virtual T set(T value_new) {
         Serial.print("set called: ");
         Serial.print(value_new);
         Serial.print(" -> ");
@@ -137,9 +167,12 @@ public:
         return this->value;
     }
 
-    virtual T set(T value_new) {
+    virtual T operator=(T value_new) {
         return this->set(value_new);
     };
+
+
+
 
     virtual operator T () const {
         return this->value;
