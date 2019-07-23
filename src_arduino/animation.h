@@ -203,10 +203,10 @@ public:
     }
 
     uint8_t global_effect_set(uint8_t value_new) {
-        Serial.println("global_effect_set custom ");
-        Serial.print("global_effect_set custom ");
-        Serial.print(value_new);
-        Serial.println();
+        // Serial.println("global_effect_set custom ");
+        // Serial.print("global_effect_set custom ");
+        // Serial.print(value_new);
+        // Serial.println();
         switch (value_new) {
             case 0: {
                 fx_current = &fx_static;
@@ -221,6 +221,9 @@ public:
                 fx_current = &fx_static;
             }
         }
+        Print &out = Serial;
+        fx_current->print_name(out);
+        out.print(" ");
         return value_new;
     }
 
@@ -263,7 +266,7 @@ public:
     }
 
     uint8_t global_brightness_set(uint8_t value_new) {
-        Serial.println("custom global_brightness_set called...");
+        // Serial.println("custom global_brightness_set called...");
         if (value_new > 0) {
             FastLED.setBrightness(value_new);
         } else {
@@ -314,7 +317,7 @@ public:
 
     virtual void global_overwrite_set_relative(int16_t offset) {
         overwrite_set_relative(offset);
-
+        global_overwrite = overwrite_start;
     }
 
     ParameterTyped<PIXEL_COUNT_OVERLAY, uint16_t> global_overwrite = {
@@ -334,7 +337,17 @@ public:
     };
 
 
+    ParameterBase<PIXEL_COUNT_OVERLAY> * global_current = &global_effect;
 
+    void global_next() {
+        if (global_current == &global_effect) {
+            global_current = &global_brightness;
+        } else if (global_current == &global_brightness) {
+            global_current = &global_overwrite;
+        } else if (global_current == &global_overwrite) {
+            global_current = &global_effect;
+        }
+    };
 
 
     // bool render_overlay_global = false;

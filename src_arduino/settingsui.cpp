@@ -198,7 +198,8 @@ void SettingsUI::change_param(int16_t value) {
     Print &out = Serial;
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
-            animation.fx_current->print_name(out);
+            out.print(animation.fx_current->effect_name);
+            // animation.fx_current->print_name(out);
             out.print(".");
             out.print(animation.fx_current->parameter_current->param_name);
             // animation.fx_current->parameter_current.print_name(out);
@@ -210,45 +211,18 @@ void SettingsUI::change_param(int16_t value) {
         } break;
         case SETTINGS_MODE::GLOBAL: {
             out.print("global.");
-            // out.print(animation.global_current->parameter_current->param_name);
-            // animation.global_current->parameter_current.print_name(out);
-            // out.print(": ");
-            // animation.global_current->parameter_current->set_relative(value);
-            // animation.global_current->parameter_current->print_value(out);
-            // out.print(animation.global_current->parameter_current);
-            // out.print("; ");
-            switch (global_current) {
-                case GLOBAL_PARAM::EFFECT: {
-                    // animation.select_next_effect();
-                    out.print(animation.global_effect.param_name);
-                    out.print(": ");
-                    out.print(animation.global_effect);
-                    out.print(" -> ");
-                    animation.global_effect.set_relative(value);
-                    animation.fx_current->print_name(out);
-                } break;
-                case GLOBAL_PARAM::BRIGHTNESS: {
-                    out.print(animation.global_brightness.param_name);
-                    out.print(": ");
-                    animation.global_brightness.set_relative(value);
-                    out.print(animation.global_brightness);
-                } break;
-                case GLOBAL_PARAM::OVERWRITE: {
-                    // out.printf(
-                    //     "%+3d (%3d, %3d) --> ",
-                    //     value,
-                    //     animation.overwrite_start_get(),
-                    //     animation.overwrite_end_get());
-                    out.print(animation.global_overwrite.param_name);
-                    out.print(": ");
-                    animation.global_overwrite.set_relative(value);
-                    out.print(animation.global_overwrite);
-                    out.printf(
-                        " (%3d, %3d)",
-                        animation.overwrite_start_get(),
-                        animation.overwrite_end_get());
-                } break;
+            out.print(animation.global_current->param_name);
+            out.print(": ");
+            animation.global_current->set_relative(value);
+            if (animation.global_current == &animation.global_overwrite) {
+                out.printf(
+                    " (%3d, %3d)",
+                    animation.overwrite_start_get(),
+                    animation.overwrite_end_get());
+            } else {
+                animation.global_current->print_value(out);
             }
+            out.print("; ");
         } break;
     }
     out.println();
@@ -279,17 +253,7 @@ void SettingsUI::print_param(Print &out) {
             out.print(animation.fx_current->parameter_current->param_name);
         } break;
         case SETTINGS_MODE::GLOBAL: {
-            switch (global_current) {
-                case GLOBAL_PARAM::EFFECT: {
-                    out.print(F("EFFECT"));
-                } break;
-                case GLOBAL_PARAM::BRIGHTNESS: {
-                    out.print(F("BRIGHTNESS"));
-                } break;
-                case GLOBAL_PARAM::OVERWRITE: {
-                    out.print(F("OVERWRITE"));
-                } break;
-            }
+            out.print(animation.global_current->param_name);
         } break;
     }
 }
@@ -300,17 +264,7 @@ void SettingsUI::switch_param() {
             animation.fx_current->parameter_next();
         } break;
         case SETTINGS_MODE::GLOBAL: {
-            switch (global_current) {
-                case GLOBAL_PARAM::EFFECT: {
-                    global_current = GLOBAL_PARAM::BRIGHTNESS;
-                } break;
-                case GLOBAL_PARAM::BRIGHTNESS: {
-                    global_current = GLOBAL_PARAM::OVERWRITE;
-                } break;
-                case GLOBAL_PARAM::OVERWRITE: {
-                    global_current = GLOBAL_PARAM::EFFECT;
-                } break;
-            }
+            animation.global_next();
         } break;
     }
     parameter_activate_overlay();
