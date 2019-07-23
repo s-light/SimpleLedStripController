@@ -199,10 +199,12 @@ void SettingsUI::change_param(int16_t value) {
         case SETTINGS_MODE::EFFECT: {
             animation.fx_current->print_name(out);
             out.print(".");
-            animation.fx_current->parameter_print_name(out);
+            out.print(animation.fx_current->parameter_current->param_name);
+            // animation.fx_current->parameter_current.print_name(out);
             out.print(": ");
-            animation.fx_current->change_parameter(value);
-            animation.fx_current->parameter_print_value(out);
+            animation.fx_current->parameter_current->set_relative(value);
+            animation.fx_current->parameter_current->print_value(out);
+            // out.print(animation.fx_current->parameter_current);
             out.print("; ");
             // Nothing to do..
         } break;

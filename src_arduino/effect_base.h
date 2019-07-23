@@ -121,7 +121,7 @@ public:
         return duration.pixels_overlay;
     }
 
-    virtual uint32_t duration_set_relative(int16_t value) {
+    virtual void duration_set_relative(int16_t value) {
         uint32_t factor = duration_factor_map.mapit(duration);
         int32_t value_wf = (value * factor);
         uint32_t temp = duration + value_wf;
@@ -148,7 +148,7 @@ public:
                 temp = duration_max;
             }
         }
-        return temp;
+        duration = temp;
     }
 
     // virtual uint32_t duration_set(uint32_t value_set) {

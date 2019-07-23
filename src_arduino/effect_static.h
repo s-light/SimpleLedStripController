@@ -49,110 +49,84 @@ public:
     EffectStatic(char const * effect_name):
         EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> (effect_name)
     {
-        // nothing to do.
+        this->parameter_current = &hue;
     };
     // ~EffectStatic() {};
 
-    // basic library api
-    void update() {
-        fill_solid(this->pixels, PIXEL_COUNT, color_hsv);
-    }
-
-
-    // parameter handling
-    enum class PARAM {
-        HUE,
-        SATURATION,
-        // BRIGHTNESS,
-    };
-
-    void parameter_next() {
-        switch (this->parameter_current) {
-            case PARAM::HUE: {
-                this->parameter_current = PARAM::SATURATION;
-            } break;
-            case PARAM::SATURATION: {
-                this->parameter_current = PARAM::HUE;
-                // parameter_current = PARAM::BRIGHTNESS;
-            } break;
-            // case PARAM::BRIGHTNESS: {
-            //     parameter_current = PARAM::HUE;
-            // } break;
-        }
-    };
-
-    virtual void change_parameter(int16_t value) {
-        // EffectBase<PIXEL_COUNT>::change_parameter(value);
-        switch (this->parameter_current) {
-            case PARAM::HUE: {
-                this->color_hsv.hue += value;
-            } break;
-            case PARAM::SATURATION: {
-                this->color_hsv.saturation += value;
-            } break;
-            // case PARAM::BRIGHTNESS: {
-            //     this->color_hsv.value = value;
-            // } break;
-        }
-    };
-
-    void parameter_print_name(Print &out) {
-        switch (this->parameter_current) {
-            case PARAM::HUE: {
-                out.print(F("HUE"));
-            } break;
-            case PARAM::SATURATION: {
-                out.print(F("SATURATION"));
-            } break;
-            // case PARAM::BRIGHTNESS: {
-            //     out.print(F("BRIGHTNESS"));
-            // } break;
-        }
-    };
-
-    void parameter_print_value(Print &out) {
-        switch (this->parameter_current) {
-            case PARAM::HUE: {
-                out.print(this->color_hsv.hue);
-            } break;
-            case PARAM::SATURATION: {
-                out.print(this->color_hsv.saturation);
-            } break;
-            // case PARAM::BRIGHTNESS: {
-            //     out.print(this->color_hsv.brightness);
-            // } break;
-        }
-    };
-
-    // virtual void render_overlay() {
-    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-    //     switch (this->parameter_current) {
-    //         case PARAM::HUE: {
-    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //                 this->pixels_overlay[i] = CRGB::Black;
-    //             }
-    //         } break;
-    //         case PARAM::SATURATION: {
-    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //                 this->pixels_overlay[i] = CRGB::Black;
-    //             }
-    //         } break;
-    //         // case PARAM::BRIGHTNESS: {
-    //         //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         //         this->pixels_overlay[i] = CRGB::Black;
-    //         //     }
-    //         // } break;
-    //     }
-    //     return this->pixels_overlay;
-    // };
-
-    // configurations
     // const CHSV warm_white = CHSV(142, 100, 255);
     const CHSV warm_white = CHSV(142, 100, 240);
-    CHSV color_hsv = warm_white;
 
-private:
-    PARAM parameter_current;
+    // parameter handling
+
+    CRGBArray<PIXEL_COUNT_OVERLAY> hue_render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            hue.pixels_overlay[i] = CRGB::Black;
+        }
+        return hue.pixels_overlay;
+    }
+
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> hue = {
+        "hue",
+        0,
+        255,
+        warm_white.hue,
+        std::bind(
+            &EffectStatic<PIXEL_COUNT, PIXEL_COUNT_OVERLAY>::hue_render_overlay,
+            this
+        ),
+    };
+
+    // CRGBArray<PIXEL_COUNT_OVERLAY> saturation_render_overlay() {
+    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         saturation.pixels_overlay[i] = CRGB::Black;
+    //     }
+    //     return saturation.pixels_overlay;
+    // }
+    //
+    // ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> saturation = {
+    //     "saturation",
+    //     0,
+    //     255,
+    //     warm_white.saturation,
+    //     std::bind(&EffectBase::saturation_render_overlay, this),
+    // };
+    //
+    // CRGBArray<PIXEL_COUNT_OVERLAY> brightness_render_overlay() {
+    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+    //         brightness.pixels_overlay[i] = CRGB::Black;
+    //     }
+    //     return brightness.pixels_overlay;
+    // }
+    //
+    // ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> brightness = {
+    //     "brightness",
+    //     0,
+    //     255,
+    //     warm_white.brightness,
+    //     std::bind(&EffectBase::brightness_render_overlay, this),
+    // };
+
+
+    virtual void parameter_next() {
+        if (this->parameter_current == &hue) {
+        //     this->parameter_current = &saturation;
+        // } else if (this->parameter_current == &saturation) {
+        //     this->parameter_current = &hue;
+        //     // this->parameter_current = &brightness;
+        // } else if (this->parameter_current == &brightness) {
+            this->parameter_current = &hue;
+        } else {
+            this->parameter_current = &hue;
+        }
+    };
+
+
+    // basic library api
+    void update() {
+        // fill_solid(this->pixels, PIXEL_COUNT, CHSV(hue, saturation, brightness));
+        fill_solid(this->pixels, PIXEL_COUNT, CHSV(hue, 255, 240));
+    }
+
 
 };  // class EffectStatic
 
@@ -172,32 +146,6 @@ public:
     void update() {
         fill_solid(this->pixels, PIXEL_COUNT, CHSV(0, 255, 0));
     }
-
-
-    void parameter_next() {
-        // nothing here..
-    };
-
-    virtual void change_parameter(
-        __attribute__((unused)) int16_t value, Print &out
-    ) {
-        out.print(F("-"));
-    };
-
-    void parameter_print_name(Print &out) {
-        out.print(F("-"));
-    };
-
-    // virtual void render_overlay() {
-    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         this->pixels_overlay[i] = CRGB::Black;
-    //     }
-    //     return this->pixels_overlay;
-    // };
-
-private:
-
 };  // class EffectBlack
 
 #endif  // effect_static_H_

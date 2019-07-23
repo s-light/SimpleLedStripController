@@ -53,24 +53,27 @@ class ParameterBase {
 public:
 
     using overlay_func_t = std::function<CRGBArray<PIXEL_COUNT_OVERLAY> ()>;
+    using set_relative_func_t = std::function<void (int16_t offset)>;
 
     // constructor
     ParameterBase(
         char const * param_name,
-        overlay_func_t overlay_customfunc = nullptr
+        overlay_func_t overlay_customfunc = nullptr,
+        set_relative_func_t set_relative_customfunc = nullptr
     ):
         param_name(param_name),
-        overlay_customfunc(overlay_customfunc)
+        overlay_customfunc(overlay_customfunc),
+        set_relative_customfunc(set_relative_customfunc)
     {
         fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
     };
     ~ParameterBase() {};
 
-
     char const * param_name;
     virtual void print_name(Print &out) {
         out.print(this->param_name);
     }
+
 
     overlay_func_t overlay_customfunc = nullptr;
 
@@ -85,6 +88,27 @@ public:
         return this->pixels_overlay;
     };
 
+
+    set_relative_func_t set_relative_customfunc = nullptr;
+
+    virtual void set_relative(__attribute__((unused)) int16_t offset) {
+        Serial.print("ParameterBase -- set relative called.");
+        if (set_relative_customfunc != nullptr) {
+            Serial.print("ParameterBase -- set_relative_customfunc called.");
+        }
+    }
+
+    virtual void operator+=(int16_t offset) {
+        this->set_relative(offset);
+    };
+
+    virtual void print_value(Print &out) {
+        out.print("-");
+    }
+    // virtual std::ostream& operator<<(std::ostream& os) {
+    //     return os << '-';
+    // }
+
 };  // class ParameterBase
 
 
@@ -96,7 +120,7 @@ public:
     // using overlay_func_t = ParameterBase<PIXEL_COUNT_OVERLAY>::overlay_func_t;
     using overlay_func_t = std::function<CRGBArray<PIXEL_COUNT_OVERLAY> ()>;
     using set_func_t = std::function<T (T value_new)>;
-    using set_relative_func_t = std::function<T (int16_t offset)>;
+    using set_relative_func_t = std::function<void (int16_t offset)>;
 
     // constructor
     ParameterTyped(
@@ -108,11 +132,15 @@ public:
         set_relative_func_t set_relative_customfunc = nullptr,
         set_func_t set_customfunc = nullptr
     ):
-        ParameterBase<PIXEL_COUNT_OVERLAY> (param_name, overlay_customfunc),
+        ParameterBase<PIXEL_COUNT_OVERLAY> (
+            param_name,
+            overlay_customfunc,
+            set_relative_customfunc
+        ),
         value_min(value_min),
         value_max(value_max),
         value_default(value_default),
-        set_relative_customfunc(set_relative_customfunc),
+        // set_relative_customfunc(set_relative_customfunc),
         set_customfunc(set_customfunc)
     {
         fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
@@ -124,31 +152,34 @@ public:
     const T value_max;
     const T value_default;
     T value;
+    virtual void print_value(Print &out) {
+        out.print(value);
+    }
+    // virtual std::ostream& operator<<(std::ostream& os) {
+    //     return os << reinterpate_cast<T>(this->value);
+    // }
 
-
-    set_relative_func_t set_relative_customfunc = nullptr;
-
-    virtual T set_relative(int16_t offset) {
-        Serial.print("set relative called: ");
+    virtual void set_relative(int16_t offset) {
+        Serial.print("ParameterTyped - set relative called: ");
         Serial.print(this->value);
         Serial.print(" + '");
         Serial.print(offset);
         Serial.print("' -> ");
-        T temp = this->value + offset;
-        if (set_relative_customfunc != nullptr) {
-            Serial.println("set_relative_customfunc called.");
-            temp = set_relative_customfunc(offset);
+        if (this->set_relative_customfunc != nullptr) {
+            Serial.println();
+            Serial.print("  ParameterTyped - set_relative_customfunc called: ");
+            this->set_relative_customfunc(offset);
+        } else {
+            T temp = this->value + offset;
+            this->value = clamp(temp, this->value_min, this->value_max);
+            Serial.print(this->value);
         }
-        this->value = clamp(temp, this->value_min, this->value_max);
-        Serial.print(this->value);
         Serial.println();
-        return this->value;
     }
 
-    virtual T operator+=(int16_t offset) {
+    virtual void operator+=(int16_t offset) {
         return this->set_relative(offset);
     };
-
 
 
     set_func_t set_customfunc = nullptr;
@@ -170,8 +201,6 @@ public:
     virtual T operator=(T value_new) {
         return this->set(value_new);
     };
-
-
 
 
     virtual operator T () const {
