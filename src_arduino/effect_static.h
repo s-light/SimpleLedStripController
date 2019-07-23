@@ -76,44 +76,50 @@ public:
         ),
     };
 
-    // CRGBArray<PIXEL_COUNT_OVERLAY> saturation_render_overlay() {
-    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         saturation.pixels_overlay[i] = CRGB::Black;
-    //     }
-    //     return saturation.pixels_overlay;
-    // }
-    //
-    // ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> saturation = {
-    //     "saturation",
-    //     0,
-    //     255,
-    //     warm_white.saturation,
-    //     std::bind(&EffectBase::saturation_render_overlay, this),
-    // };
-    //
-    // CRGBArray<PIXEL_COUNT_OVERLAY> brightness_render_overlay() {
-    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         brightness.pixels_overlay[i] = CRGB::Black;
-    //     }
-    //     return brightness.pixels_overlay;
-    // }
-    //
-    // ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> brightness = {
-    //     "brightness",
-    //     0,
-    //     255,
-    //     warm_white.brightness,
-    //     std::bind(&EffectBase::brightness_render_overlay, this),
-    // };
+    CRGBArray<PIXEL_COUNT_OVERLAY> saturation_render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            saturation.pixels_overlay[i] = CRGB::Black;
+        }
+        return saturation.pixels_overlay;
+    }
+
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> saturation = {
+        "saturation",
+        0,
+        255,
+        warm_white.saturation,
+        std::bind(
+            &EffectStatic<PIXEL_COUNT, PIXEL_COUNT_OVERLAY>::saturation_render_overlay,
+            this
+        ),
+    };
+
+    CRGBArray<PIXEL_COUNT_OVERLAY> brightness_render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            brightness.pixels_overlay[i] = CRGB::Black;
+        }
+        return brightness.pixels_overlay;
+    }
+
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> brightness = {
+        "brightness",
+        0,
+        255,
+        warm_white.value,
+        std::bind(
+            &EffectStatic<PIXEL_COUNT, PIXEL_COUNT_OVERLAY>::brightness_render_overlay,
+            this
+        ),
+    };
 
 
     virtual void parameter_next() {
         if (this->parameter_current == &hue) {
-        //     this->parameter_current = &saturation;
-        // } else if (this->parameter_current == &saturation) {
-        //     this->parameter_current = &hue;
-        //     // this->parameter_current = &brightness;
-        // } else if (this->parameter_current == &brightness) {
+            this->parameter_current = &saturation;
+        } else if (this->parameter_current == &saturation) {
+            this->parameter_current = &hue;
+            // this->parameter_current = &brightness;
+        } else if (this->parameter_current == &brightness) {
             this->parameter_current = &hue;
         } else {
             this->parameter_current = &hue;
@@ -123,8 +129,8 @@ public:
 
     // basic library api
     void update() {
-        // fill_solid(this->pixels, PIXEL_COUNT, CHSV(hue, saturation, brightness));
-        fill_solid(this->pixels, PIXEL_COUNT, CHSV(hue, 255, 240));
+        fill_solid(this->pixels, PIXEL_COUNT, CHSV(hue, saturation, brightness));
+        // fill_solid(this->pixels, PIXEL_COUNT, CHSV(hue, 255, 240));
     }
 
 

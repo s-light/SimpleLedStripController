@@ -121,10 +121,10 @@ public:
         return duration.pixels_overlay;
     }
 
-    virtual void duration_set_relative(int16_t value) {
+    virtual void duration_set_relative(int16_t offset) {
         uint32_t factor = duration_factor_map.mapit(duration);
-        int32_t value_wf = (value * factor);
-        uint32_t temp = duration + value_wf;
+        int32_t offset_with_factor = (offset * factor);
+        uint32_t temp = duration + offset_with_factor;
         // constrain to full step value..
         temp = (temp / factor) * factor;
         // Serial.print("temp ");
@@ -136,13 +136,13 @@ public:
         // Serial.print("(temp / factor) * factor ");
         // Serial.println((temp / factor) * factor);
         if (temp > duration_max) {
-            if (value_wf > 0) {
+            if (offset_with_factor > 0) {
                 temp = duration_min;
             } else {
                 temp = duration_max;
             }
         } else if (temp < duration_min) {
-            if (value_wf > 0) {
+            if (offset_with_factor > 0) {
                 temp = duration_min;
             } else {
                 temp = duration_max;
@@ -174,7 +174,6 @@ public:
         // std::bind(&EffectBase::duration_set, this, std::placeholders::_1),
     };
 
-
     uint32_t start = 0;
     uint32_t end = 0;
     float position = 0.0;
@@ -188,32 +187,6 @@ public:
             parameter_current = &duration;
         }
     };
-
-    virtual void change_parameter(__attribute__((unused)) int16_t value) {
-        // out.print(F("Param: "));
-        // this->parameter_print_name(out);
-        // out.print(F(" = "));
-        // switch (parameter_current) {
-        //     case PARAM::BRIGHTNESS: {
-        //         brightness = value;
-        //     } break;
-        // }
-    };
-
-    virtual void parameter_print_name(__attribute__((unused)) Print &out) {
-        // this->parameter_print_name(out, parameter_current);
-    };
-
-    virtual void parameter_print_value(__attribute__((unused)) Print &out) {
-        // switch (this->parameter_current) {
-        //     case PARAM::DURATION: {
-        //         out.print(this->duration);
-        //     } break;
-        // }
-    };
-
-protected:
-    // PARAM parameter_current;
 
 };  // class EffectBase
 
