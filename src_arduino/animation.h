@@ -130,10 +130,10 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // effects
 
-    EffectBlack<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_black {"black"};
-    EffectStatic<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_static {"static"};
-    EffectRainbow<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_rainbow {"rainbow"};
-    EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_plasma {"plasma"};
+    EffectBlack<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_black = {"black"};
+    EffectStatic<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_static = {"static"};
+    EffectRainbow<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_rainbow = {"rainbow"};
+    EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_plasma = {"plasma"};
 
     EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_last = &fx_static;
     EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_current = &fx_plasma;
@@ -179,14 +179,34 @@ public:
 
     void global_effect_set_relative(int16_t offset) {
         // ignore acceleration...
-        if (offset > 0) {
-            global_effect = global_effect + 1;
-        } else if (offset < 0) {
-            global_effect = global_effect - 1;
+        // if (offset > 0) {
+        //     global_effect = global_effect + 1;
+        // } else if (offset < 0) {
+        //     global_effect = global_effect - 1;
+        // }
+        int16_t temp = global_effect + offset;
+        // wrap around
+        if (temp > global_effect.value_max) {
+            if (offset > 0) {
+                temp = global_effect.value_min;
+            } else {
+                temp = global_effect.value_max;
+            }
+        } else if (temp < global_effect.value_min) {
+            if (offset > 0) {
+                temp = global_effect.value_min;
+            } else {
+                temp = global_effect.value_max;
+            }
         }
+        global_effect = temp;
     }
 
     uint8_t global_effect_set(uint8_t value_new) {
+        Serial.println("global_effect_set custom ");
+        Serial.print("global_effect_set custom ");
+        Serial.print(value_new);
+        Serial.println();
         switch (value_new) {
             case 0: {
                 fx_current = &fx_static;
@@ -207,7 +227,7 @@ public:
     ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> global_effect = {
         "global_effect",
         0,
-        3,
+        2,
         0,
         std::bind(
             &MyAnimation::global_effect_render_overlay,
@@ -227,11 +247,6 @@ public:
 
 
 
-    void overwrite_set(uint16_t start, uint16_t end);
-    void overwrite_set_relative(int16_t value);
-    uint16_t overwrite_start_get();
-    uint16_t overwrite_end_get();
-
     // global_brightness
     CRGBArray<PIXEL_COUNT_OVERLAY> global_brightness_render_overlay() {
         // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
@@ -248,6 +263,7 @@ public:
     }
 
     uint8_t global_brightness_set(uint8_t value_new) {
+        Serial.println("custom global_brightness_set called...");
         if (value_new > 0) {
             FastLED.setBrightness(value_new);
         } else {
@@ -260,7 +276,7 @@ public:
         "global_brightness",
         0,
         255,
-        2,
+        1,
         std::bind(
             &MyAnimation::global_brightness_render_overlay,
             this
@@ -273,7 +289,14 @@ public:
         ),
     };
 
+
+
     // global_overwrite
+    void overwrite_set(uint16_t start, uint16_t end);
+    void overwrite_set_relative(int16_t value);
+    uint16_t overwrite_start_get();
+    uint16_t overwrite_end_get();
+
     CRGBArray<PIXEL_COUNT_OVERLAY> global_overwrite_render_overlay() {
         for (
             int i = global_overwrite.BORDER;

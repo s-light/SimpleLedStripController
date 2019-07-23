@@ -160,21 +160,21 @@ public:
     // }
 
     virtual void set_relative(int16_t offset) {
-        Serial.print("ParameterTyped - set relative called: ");
-        Serial.print(this->value);
-        Serial.print(" + '");
-        Serial.print(offset);
-        Serial.print("' -> ");
+        // Serial.print("ParameterTyped - set relative called: ");
+        // Serial.print(this->value);
+        // Serial.print(" + '");
+        // Serial.print(offset);
+        // Serial.print("' -> ");
         if (this->set_relative_customfunc != nullptr) {
-            Serial.println();
-            Serial.print("  ParameterTyped - set_relative_customfunc called: ");
+            // Serial.println();
+            // Serial.print("  ParameterTyped - set_relative_customfunc called: ");
             this->set_relative_customfunc(offset);
         } else {
             T temp = this->value + offset;
-            this->value = clamp(temp, this->value_min, this->value_max);
-            Serial.print(this->value);
+            this->set(clamp(temp, this->value_min, this->value_max));
+            // Serial.print(this->value);
         }
-        Serial.println();
+        // Serial.println();
     }
 
     virtual void operator+=(int16_t offset) {
@@ -185,16 +185,16 @@ public:
     set_func_t set_customfunc = nullptr;
 
     virtual T set(T value_new) {
-        Serial.print("set called: ");
-        Serial.print(value_new);
-        Serial.print(" -> ");
+        // Serial.print("** set called: ");
+        // Serial.print(value_new);
+        // Serial.print(" -> ");
         if (set_customfunc != nullptr) {
-            Serial.println("set_customfunc called.");
+            // Serial.print(" ** set_customfunc called.");
             value_new = set_customfunc(value_new);
         }
         this->value = clamp(value_new, this->value_min, this->value_max);
-        Serial.print(this->value);
-        Serial.println();
+        // Serial.print(this->value);
+        // Serial.println();
         return this->value;
     }
 

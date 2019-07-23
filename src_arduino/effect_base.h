@@ -135,6 +135,7 @@ public:
         // Serial.println(temp / factor);
         // Serial.print("(temp / factor) * factor ");
         // Serial.println((temp / factor) * factor);
+        // wrap around
         if (temp > duration_max) {
             if (offset_with_factor > 0) {
                 temp = duration_min;

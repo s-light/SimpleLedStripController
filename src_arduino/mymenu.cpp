@@ -277,7 +277,7 @@ void MyMenu::menu__set_overwrite_black_relative(Print &out, char *command) {
         " (%3d, %3d) --> ",
         animation.overwrite_start_get(),
         animation.overwrite_end_get());
-    animation.overwrite_set_relative(value);
+    animation.global_overwrite.set_relative(value);
     out.printf(
         " (%3d, %3d)",
         animation.overwrite_start_get(),

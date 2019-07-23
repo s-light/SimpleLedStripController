@@ -216,21 +216,21 @@ void SettingsUI::change_param(int16_t value) {
             // animation.global_current->parameter_current->set_relative(value);
             // animation.global_current->parameter_current->print_value(out);
             // out.print(animation.global_current->parameter_current);
-            out.print("; ");
+            // out.print("; ");
             switch (global_current) {
                 case GLOBAL_PARAM::EFFECT: {
                     // animation.select_next_effect();
-                    animation.global_effect.set_relative(value);
                     out.print(animation.global_effect.param_name);
                     out.print(": ");
                     out.print(animation.global_effect);
                     out.print(" -> ");
+                    animation.global_effect.set_relative(value);
                     animation.fx_current->print_name(out);
                 } break;
                 case GLOBAL_PARAM::BRIGHTNESS: {
-                    animation.global_brightness.set_relative(value);
                     out.print(animation.global_brightness.param_name);
                     out.print(": ");
+                    animation.global_brightness.set_relative(value);
                     out.print(animation.global_brightness);
                 } break;
                 case GLOBAL_PARAM::OVERWRITE: {
@@ -239,10 +239,12 @@ void SettingsUI::change_param(int16_t value) {
                     //     value,
                     //     animation.overwrite_start_get(),
                     //     animation.overwrite_end_get());
-                    animation.overwrite_set_relative(value);
-                    out.print("global overwrite: ");
+                    out.print(animation.global_overwrite.param_name);
+                    out.print(": ");
+                    animation.global_overwrite.set_relative(value);
+                    out.print(animation.global_overwrite);
                     out.printf(
-                        "(%3d, %3d)",
+                        " (%3d, %3d)",
                         animation.overwrite_start_get(),
                         animation.overwrite_end_get());
                 } break;
