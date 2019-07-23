@@ -52,7 +52,6 @@ public:
         EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> (effect_name)
     {
         this->duration_min = 10000;
-        // this->duration = 60000;
     };
     // ~EffectPlasma() {};
 
@@ -125,160 +124,77 @@ public:
     }
 
     // parameter handling
-    enum class PARAM {
-        DURATION,
-        SPREAD,
-        // CONTRAST,
-        HUE,
-        // SATURATION,
-        // BRIGHTNESS,
-    };
 
-    void parameter_next() {
-        switch (this->parameter_current) {
-            case PARAM::DURATION: {
-                this->parameter_current = PARAM::SPREAD;
-            } break;
-            case PARAM::SPREAD: {
-                // this->parameter_current = PARAM::CONTRAST;
-                this->parameter_current = PARAM::HUE;
-                // this->parameter_current = PARAM::BRIGHTNESS;
-            } break;
-            // case PARAM::CONTRAST: {
-            //     this->parameter_current = PARAM::HUE;
-            //     // this->parameter_current = PARAM::BRIGHTNESS;
-            // } break;
-            case PARAM::HUE: {
-                this->parameter_current = PARAM::DURATION;
-                // this->parameter_current = PARAM::BRIGHTNESS;
-            } break;
-            // case PARAM::BRIGHTNESS: {
-            //     this->parameter_current = PARAM::DURATION;
-            // } break;
-        }
-    };
-
-    virtual void change_parameter(int16_t value) {
-        // EffectBase<PIXEL_COUNT>::change_parameter(value);
-        switch (this->parameter_current) {
-            case PARAM::DURATION: {
-                this->duration.set_relative(value);
-            } break;
-            case PARAM::SPREAD: {
-                double temp = spread + value * 0.01;
-                temp = clamp(temp, 0.0, 1.0);
-                spread = temp;
-            } break;
-            // case PARAM::CONTRAST: {
-            //     double temp = contrast + value * 0.01;
-            //     temp = clamp(temp, 0.0, 2.0);
-            //     contrast = temp;
-            // } break;
-            case PARAM::HUE: {
-                double temp = hue + value * 0.01;
-                temp = clamp(temp, 0.0, 1.0);
-                hue = temp;
-            } break;
-            // case PARAM::SATURATION: {
-            //     color_hsv.saturation = value;
-            // } break;
-            // case PARAM::BRIGHTNESS: {
-            //     color_hsv.value = value;
-            // } break;
-        }
-    };
-
-    void parameter_print_name(Print &out) {
-        switch (this->parameter_current) {
-            case PARAM::DURATION: {
-                out.print(F("DURATION"));
-            } break;
-            case PARAM::SPREAD: {
-                out.print(F("SPREAD"));
-            } break;
-            // case PARAM::CONTRAST: {
-            //     out.print(F("CONTRAST"));
-            // } break;
-            case PARAM::HUE: {
-                out.print(F("HUE"));
-            } break;
-            // case PARAM::SATURATION: {
-            //     out.print(F("SATURATION"));
-            // } break;
-            // case PARAM::BRIGHTNESS: {
-            //     out.print(F("BRIGHTNESS"));
-            // } break;
-        }
-    };
-
-    void parameter_print_value(Print &out) {
-        switch (this->parameter_current) {
-            case PARAM::DURATION: {
-                out.print(this->duration);
-            } break;
-            case PARAM::SPREAD: {
-                out.print(spread);
-            } break;
-            // case PARAM::CONTRAST: {
-            //     out.print(contrast);
-            // } break;
-            case PARAM::HUE: {
-                out.print(hue);
-            } break;
-            // case PARAM::SATURATION: {
-            //     out.print(saturation);
-            // } break;
-            // case PARAM::BRIGHTNESS: {
-            //     out.print(brightness);
-            // } break;
-        }
-    };
-
-    // // virtual void render_overlay() {
-    // virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-    //     switch (this->parameter_current) {
-    //         case PARAM::DURATION: {
-    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //                 this->pixels_overlay[i] = CRGB::Black;
-    //             }
-    //         } break;
-    //         case PARAM::SPREAD: {
-    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //                 this->pixels_overlay[i] = CRGB::Black;
-    //             }
-    //         } break;
-    //         // case PARAM::CONTRAST: {
-    //         //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         //         this->pixels_overlay[i] = CRGB::Black;
-    //         //     }
-    //         // } break;
-    //         case PARAM::HUE: {
-    //             for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //                 this->pixels_overlay[i] = CRGB::Black;
-    //             }
-    //         } break;
-    //         // case PARAM::SATURATION: {
-    //         //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         //         this->pixels_overlay[i] = CRGB::Black;
-    //         //     }
-    //         // } break;
-    //         // case PARAM::BRIGHTNESS: {
-    //         //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         //         this->pixels_overlay[i] = CRGB::Black;
-    //         //     }
-    //         // } break;
-    //     }
-    //     return this->pixels_overlay;
-    // };
 
     // configurations
-    double spread = 0.13;
-    // double contrast = 0.5;
-    double hue = 0.5;
-    // uint8_t brightness = 255;
 
-private:
-    PARAM parameter_current;
+    CRGBArray<PIXEL_COUNT_OVERLAY> spread_render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            spread.pixels_overlay[i] = CRGB::Green;
+        }
+        return spread.pixels_overlay;
+    }
+
+    void spread_set_relative(int16_t offset) {
+        double temp = spread + offset * 0.01;
+        spread = clamp(temp, 0.0, 1.0);
+    }
+
+    ParameterTyped<PIXEL_COUNT_OVERLAY, double> spread = {
+        "spread",
+        0.0,
+        1.0,
+        0.13,
+        std::bind(
+            &EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY>::spread_render_overlay,
+            this
+        ),
+        std::bind(
+            &EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY>::spread_set_relative,
+            this,
+            std::placeholders::_1
+        ),
+    };
+
+    CRGBArray<PIXEL_COUNT_OVERLAY> hue_render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            hue.pixels_overlay[i] = CRGB::Green;
+        }
+        return hue.pixels_overlay;
+    }
+
+    void hue_set_relative(int16_t offset) {
+        double temp = hue + offset * 0.01;
+        hue = clamp(temp, 0.0, 2.0);
+    }
+
+    ParameterTyped<PIXEL_COUNT_OVERLAY, double> hue = {
+        "hue",
+        0.0,
+        2.0,
+        0.5,
+        std::bind(
+            &EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY>::hue_render_overlay,
+            this
+        ),
+        std::bind(
+            &EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY>::hue_set_relative,
+            this,
+            std::placeholders::_1
+        ),
+    };
+
+    virtual void parameter_next() {
+        if (this->parameter_current == &this->duration) {
+            this->parameter_current = &spread;
+        } else if (this->parameter_current == &spread) {
+            this->parameter_current = &hue;
+        } else if (this->parameter_current == &hue) {
+            this->parameter_current = &this->duration;
+        } else {
+            this->parameter_current = &this->duration;
+        }
+    };
 };  // class EffectPlasma
 
 #endif  // effect_plasma_H_
