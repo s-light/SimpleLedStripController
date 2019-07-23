@@ -114,7 +114,9 @@ public:
 
 
     virtual void parameter_next() {
-        if (this->parameter_current == &hue) {
+        if (this->parameter_current == &this->duration) {
+            this->parameter_current = &saturation;
+        } else if (this->parameter_current == &hue) {
             this->parameter_current = &saturation;
         } else if (this->parameter_current == &saturation) {
             this->parameter_current = &hue;

@@ -189,6 +189,7 @@ void SettingsUI::switch_mode() {
     }
     parameter_activate_overlay();
     Print &out = Serial;
+    out.print("Mode: ");
     print_settings_mode(out);
     out.println();
 }
@@ -251,6 +252,12 @@ void SettingsUI::print_settings_mode(Print &out) {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
             out.print(F("EFFECT"));
+            out.print(" - ");
+            animation.fx_current->print_name(out);
+            out.print(".");
+            out.print(animation.fx_current->parameter_current->param_name);
+            out.print(": ");
+            animation.fx_current->parameter_current->print_value(out);
         } break;
         case SETTINGS_MODE::GLOBAL: {
             out.print(F("GLOBAL"));
@@ -261,9 +268,9 @@ void SettingsUI::print_settings_mode(Print &out) {
 void SettingsUI::print_param(Print &out) {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
-            animation.fx_current->print_name(out);
+            out.print(animation.fx_current->effect_name);
             out.print(": ");
-            animation.fx_current->parameter_print_name(out);
+            out.print(animation.fx_current->parameter_current->param_name);
         } break;
         case SETTINGS_MODE::GLOBAL: {
             switch (global_current) {
