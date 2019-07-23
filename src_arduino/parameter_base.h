@@ -38,9 +38,14 @@ SOFTWARE.
 // include Core Arduino functionality
 #include <Arduino.h>
 
+
 #undef min
 #undef max
 #include <functional>
+
+#include <FastLED.h>
+
+#include "mapping.h"
 
 // template <class T, T MIN_VALUE, T MAX, uint16_t PIXEL_COUNT_OVERLAY>
 template <uint16_t PIXEL_COUNT_OVERLAY>
@@ -114,14 +119,21 @@ public:
     const T min;
     const T max;
     const T default_value;
+    T value;
 
     set_func_t set_customfunc = nullptr;
 
     virtual T operator=(T value_new) {
+        Serial.print("set called: ");
+        Serial.print(value_new);
+        Serial.print(" -> ");
         if (set_customfunc != nullptr) {
+            Serial.println("set_customfunc called.");
             value_new = set_customfunc(value_new);
         }
         this->value = clamp(value_new, this->min, this->max);
+        Serial.print(this->value);
+        Serial.println();
         return this->value;
     }
 
@@ -132,41 +144,7 @@ public:
     virtual operator T () const {
         return this->value;
     }
-
-protected:
-    T value;
 };  // class ParameterTyped
-
-
-// class ParameterInt16 {
-// public:
-//     // constructor
-//     ParameterInt16(
-//         char * param_name,
-//         int16_t min,
-//         int16_t max,
-//         set_func_t custom_set_function = nullptr,
-//         set_func_t set_customfunc = nullptr
-//     ):
-//         param_name(param_name),
-//         custom_set_function(custom_set_function),
-//         set_customfunc(set_customfunc),
-//     {
-//         fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
-//     };
-//
-//
-//     using set_func_t = std::function<uint16_t (uint16_t value)>;
-//     set_func_t set_customfunc = nullptr;
-//
-//     virtual CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay() {
-//         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-//             this->pixels_overlay[i] = CRGB::Black;
-//         }
-//         return this->pixels_overlay;
-//     };
-//
-// };  // class ParameterInt16
 
 
 #endif  // parameter_H_

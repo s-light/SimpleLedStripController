@@ -86,7 +86,7 @@ class MyMenu {
     // Debug Output
 
     boolean infoled_state = 0;
-    const byte infoled_pin = 13;
+    const uint8_t infoled_pin = 13;
 
     uint32_t debugOut_LastAction = 0;
     const uint16_t debugOut_interval = 1000; //ms

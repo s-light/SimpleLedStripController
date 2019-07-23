@@ -263,9 +263,9 @@ private:
     //     }
     //     return pixels_overlay;
     // };
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_BRIGHTNESS() {
+    // CRGBArray<PIXEL_COUNT_OVERLAY> global_brightness_render_overlay() {
     //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         pixels_overlay[i] = CRGB::Black;
+    //         pixels_overlay[i] = CRGB::Blue;
     //     }
     //     return pixels_overlay;
     // };
@@ -276,10 +276,16 @@ private:
     //     return pixels_overlay;
     // };
 
-    // // template <uint16_t PIXEL_COUNT_OVERLAY>
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT();
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_BRIGHTNESS();
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_OVERWRITE();
+    // ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> global_brightness = {
+    //     "global_brightness",
+    //     0,
+    //     255,
+    //     1,
+    //     // overlay_duration
+    //     std::bind(&EffectBase::global_brightness_render_overlay, this),
+    //     // std::bind(&EffectBase::duration_set, this, std::placeholders::_1),
+    // };
+
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes
