@@ -116,9 +116,9 @@ public:
 
     CRGBArray<PIXEL_COUNT_OVERLAY> duration_render_overlay() {
         for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            duration_obj.pixels_overlay[i] = CRGB::Black;
+            duration.pixels_overlay[i] = CRGB::Black;
         }
-        return duration_obj.pixels_overlay;
+        return duration.pixels_overlay;
     }
 
     virtual uint32_t duration_set_relative(int16_t value) {
@@ -164,7 +164,7 @@ public:
     //     set_relative_func_t set_relative_customfunc = nullptr
     //     set_func_t set_customfunc = nullptr
     // )
-    ParameterTyped<PIXEL_COUNT_OVERLAY, uint32_t> duration_obj = {
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint32_t> duration = {
         "duration",
         duration_min,
         duration_max,
@@ -174,20 +174,18 @@ public:
         // std::bind(&EffectBase::duration_set, this, std::placeholders::_1),
     };
 
-    uint32_t duration = 30 * 1000;
-
 
     uint32_t start = 0;
     uint32_t end = 0;
     float position = 0.0;
 
-    ParameterBase<PIXEL_COUNT_OVERLAY> * parameter_current = &duration_obj;
+    ParameterBase<PIXEL_COUNT_OVERLAY> * parameter_current = &duration;
 
     virtual void parameter_next() {
-        if (parameter_current == &duration_obj) {
-            parameter_current = &duration_obj;
-        } else if (parameter_current == &duration_obj) {
-            parameter_current = &duration_obj;
+        if (parameter_current == &duration) {
+            parameter_current = &duration;
+        } else if (parameter_current == &duration) {
+            parameter_current = &duration;
         }
     };
 

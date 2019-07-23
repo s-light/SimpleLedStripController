@@ -95,7 +95,7 @@ public:
         // EffectBase<PIXEL_COUNT>::change_parameter(value);
         switch (this->parameter_current) {
             case PARAM::DURATION: {
-                // this->duration_set_relative(value);
+                this->duration.set_relative(value);
             } break;
             case PARAM::SPREAD: {
                 double temp = spread + value * 0.01;
