@@ -356,7 +356,7 @@ void MyMenu::menu__print_help(Print &out) {
     // out.print(animation.brightness, 4);
     // out.println(F(")"));
     out.print(F("\t 'b': set brightness 'b255' ("));
-    out.print(animation.getBrightness(), 4);
+    out.print(animation.global_brightness, 4);
     out.println(F(")"));
     out.println();
     out.print(F("\t 'O': set overwrite 'O432,432'"));
@@ -467,7 +467,7 @@ void MyMenu::handleMenu_Main(slight_DebugMenu *instance) {
             uint8_t command_offset = 1;
             uint8_t value = atoi(&command[command_offset]);
             out.print(value);
-            animation.setBrightness(value);
+            animation.global_brightness = value;
             out.println();
         } break;
         case 'O': {

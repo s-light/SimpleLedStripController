@@ -106,8 +106,6 @@ public:
 
     // Parameter overlay is 50pixel == ~35cm
     static const uint16_t PIXEL_COUNT_OVERLAY = 50;
-    static const uint16_t BORDER = PIXEL_COUNT_OVERLAY / 10;
-    static const uint16_t BORDER_END = PIXEL_COUNT_OVERLAY - BORDER;
     static const uint16_t PIXEL_OVERLAY_START = (PIXEL_COUNT / 2) - (PIXEL_COUNT_OVERLAY / 2);
     static const uint16_t PIXEL_OVERLAY_END = PIXEL_OVERLAY_START + PIXEL_COUNT_OVERLAY;
 
@@ -146,13 +144,175 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // parameters
 
+    // global_effect
+    CRGBArray<PIXEL_COUNT_OVERLAY> global_effect_render_overlay() {
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     global_effect.pixels_overlay[i] = CRGB::Black;
+        // }
+        uint16_t temp_count = (global_effect.BORDER_END - global_effect.BORDER);
+        temp_count -= (3*global_effect.BORDER);
+        temp_count = temp_count / 3;
+        // static
+        uint16_t start = global_effect.BORDER;
+        // global_effect.pixels_overlay(start, start + temp_count).fill_solid(
+        //     CHSV(0, 0, 240)
+        // );
+        global_effect.pixels_overlay(start, start + temp_count).fill_gradient(
+            CHSV(0, 0, 240),
+            CHSV(0, 0, 240)
+        );
+        // rainbo
+        start += temp_count + global_effect.BORDER;
+        global_effect.pixels_overlay(start, start + temp_count).fill_gradient(
+            CHSV(0, 255, 255),
+            CHSV(255, 255, 255),
+            LONGEST_HUES
+        );
+        // plasma
+        start += temp_count + global_effect.BORDER;
+        global_effect.pixels_overlay(start, start + temp_count).fill_gradient(
+            CHSV(150, 255, 255),
+            CHSV(200, 255, 255)
+        );
+        return global_effect.pixels_overlay;
+    }
+
+    void global_effect_set_relative(int16_t offset) {
+        // ignore acceleration...
+        if (offset > 0) {
+            global_effect = global_effect + 1;
+        } else if (offset < 0) {
+            global_effect = global_effect - 1;
+        }
+    }
+
+    uint8_t global_effect_set(uint8_t value_new) {
+        switch (value_new) {
+            case 0: {
+                fx_current = &fx_static;
+            } break;
+            case 1: {
+                fx_current = &fx_rainbow;
+            } break;
+            case 2: {
+                fx_current = &fx_plasma;
+            } break;
+            default: {
+                fx_current = &fx_static;
+            }
+        }
+        return value_new;
+    }
+
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> global_effect = {
+        "global_effect",
+        0,
+        3,
+        0,
+        std::bind(
+            &MyAnimation::global_effect_render_overlay,
+            this
+        ),
+        std::bind(
+            &MyAnimation::global_effect_set_relative,
+            this,
+            std::placeholders::_1
+        ),
+        std::bind(
+            &MyAnimation::global_effect_set,
+            this,
+            std::placeholders::_1
+        ),
+    };
+
+
+
     void overwrite_set(uint16_t start, uint16_t end);
     void overwrite_set_relative(int16_t value);
     uint16_t overwrite_start_get();
     uint16_t overwrite_end_get();
 
-    void setBrightness(uint8_t value);
-    uint8_t getBrightness();
+    // global_brightness
+    CRGBArray<PIXEL_COUNT_OVERLAY> global_brightness_render_overlay() {
+        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        //     global_brightness.pixels_overlay[i] = CRGB::Black;
+        // }
+        global_brightness.pixels_overlay(
+            global_brightness.BORDER,
+            global_brightness.BORDER_END
+        ).fill_gradient(
+            CHSV(0, 0, 0),
+            CHSV(0, 0, 255)
+        );
+        return global_brightness.pixels_overlay;
+    }
+
+    uint8_t global_brightness_set(uint8_t value_new) {
+        if (value_new > 0) {
+            FastLED.setBrightness(value_new);
+        } else {
+            FastLED.setBrightness(1);
+        }
+        return value_new;
+    }
+
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> global_brightness = {
+        "global_brightness",
+        0,
+        255,
+        2,
+        std::bind(
+            &MyAnimation::global_brightness_render_overlay,
+            this
+        ),
+        nullptr,
+        std::bind(
+            &MyAnimation::global_brightness_set,
+            this,
+            std::placeholders::_1
+        ),
+    };
+
+    // global_overwrite
+    CRGBArray<PIXEL_COUNT_OVERLAY> global_overwrite_render_overlay() {
+        for (
+            int i = global_overwrite.BORDER;
+            i < global_overwrite.BORDER_END;
+            i++
+        ) {
+            if (i % global_overwrite.BORDER != 0) {
+                global_overwrite.pixels_overlay[i] = CRGB::Black;
+            } else {
+                global_overwrite.pixels_overlay[i] = CRGB::White;
+            }
+        }
+        return global_overwrite.pixels_overlay;
+    }
+
+    virtual void global_overwrite_set_relative(int16_t offset) {
+        overwrite_set_relative(offset);
+
+    }
+
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint16_t> global_overwrite = {
+        "global_overwrite",
+        0,
+        PIXEL_COUNT,
+        0,
+        std::bind(
+            &MyAnimation::global_overwrite_render_overlay,
+            this
+        ),
+        std::bind(
+            &MyAnimation::global_overwrite_set_relative,
+            this,
+            std::placeholders::_1
+        ),
+    };
+
+
+
+
 
     // bool render_overlay_global = false;
     // bool render_overlay_effect = false;
@@ -175,63 +335,6 @@ public:
     //     &MyAnimation::render_overlay_EFFECT;
     // parameter_overlay_func_t parameter_overlay_func = std::bind(
     //         &MyAnimation::render_overlay_EFFECT, this);
-    //
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_BRIGHTNESS() {
-    //     // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //     //     this->pixels_overlay[i] = CRGB::Black;
-    //     // }
-    //     this->pixels_overlay(this->BORDER, this->BORDER_END).fill_gradient(
-    //         CHSV(0, 0, 0),
-    //         CHSV(0, 0, 255)
-    //     );
-    //     // this->pixels_overlay[]
-    //     return this->pixels_overlay;
-    // };
-    //
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_OVERWRITE() {
-    //     for (int i = this->BORDER; i < this->BORDER_END; i++) {
-    //         if (i % this->BORDER != 0) {
-    //             this->pixels_overlay[i] = CRGB::Black;
-    //         } else {
-    //             this->pixels_overlay[i] = CRGB::White;
-    //         }
-    //     }
-    //     return this->pixels_overlay;
-    // };
-    //
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT() {
-    //     // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //     //     this->pixels_overlay[i] = CRGB::Black;
-    //     // }
-    //     uint16_t temp_count = (this->BORDER_END - this->BORDER);
-    //     temp_count -= (3*this->BORDER);
-    //     temp_count = temp_count / 3;
-    //     // static
-    //     uint16_t start = this->BORDER;
-    //     this->pixels_overlay(start, start + temp_count).fill_solid(
-    //         CHSV(0, 0, 255)
-    //     );
-    //     // rainbo
-    //     start += temp_count + this->BORDER;
-    //     this->pixels_overlay(start, start + temp_count).fill_gradient(
-    //         CHSV(0, 255, 255),
-    //         CHSV(255, 255, 255),
-    //         LONGEST_HUES
-    //     );
-    //     // plasma
-    //     start += temp_count + this->BORDER;
-    //     this->pixels_overlay(start, start + temp_count).fill_gradient(
-    //         CHSV(150, 255, 255),
-    //         CHSV(200, 255, 255)
-    //     );
-    //     return this->pixels_overlay;
-    // };
-
-
-    // ParameterGlobalEFFECT<PIXEL_COUNT_OVERLAY>  param_effect {};
-    // ParameterGlobalBRIGHTNESS<PIXEL_COUNT_OVERLAY>  param_brightness {};
-    // ParameterGlobalOVERWRITE<PIXEL_COUNT_OVERLAY>  param_overwrite {};
-    // ParameterBase<PIXEL_COUNT_OVERLAY> * param_global_current = &param_effect;
 
 
 
@@ -253,44 +356,17 @@ private:
     void animation_update();
     void fps_update();
     void overwrite_black();
+
     void render_parameter_overlay();
     void parameter_activate_overlay();
 
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_EFFECT() {
-    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         pixels_overlay[i] = CRGB::Black;
-    //     }
-    //     return pixels_overlay;
-    // };
-    // CRGBArray<PIXEL_COUNT_OVERLAY> global_brightness_render_overlay() {
-    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         pixels_overlay[i] = CRGB::Blue;
-    //     }
-    //     return pixels_overlay;
-    // };
-    // CRGBArray<PIXEL_COUNT_OVERLAY> render_overlay_OVERWRITE() {
-    //     for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-    //         pixels_overlay[i] = CRGB::Black;
-    //     }
-    //     return pixels_overlay;
-    // };
-
-    // ParameterTyped<PIXEL_COUNT_OVERLAY, uint8_t> global_brightness = {
-    //     "global_brightness",
-    //     0,
-    //     255,
-    //     1,
-    //     // overlay_duration
-    //     std::bind(&EffectBase::global_brightness_render_overlay, this),
-    //     // std::bind(&EffectBase::duration_set, this, std::placeholders::_1),
-    // };
+    uint16_t overwrite_start = 0;
+    uint16_t overwrite_end = 0;
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // attributes
     bool ready;
-
-    uint8_t global_brightness = 255;
     const uint8_t leave_every_n_pixel_on = 15;
 
     static const uint8_t psu_off_pin = 7;
@@ -301,10 +377,6 @@ private:
     uint32_t fps_start = 0;
     uint32_t fps_duration = 10 * 1000;  // ms
     uint32_t fps_loopcount = 0;
-
-    uint16_t overwrite_start = 0;
-    uint16_t overwrite_end = 0;
-
 };  // class MyAnimation
 
 #endif  // MyAnimation_H_

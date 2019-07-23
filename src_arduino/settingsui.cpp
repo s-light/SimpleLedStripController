@@ -207,27 +207,31 @@ void SettingsUI::change_param(int16_t value) {
             animation.fx_current->parameter_current->print_value(out);
             // out.print(animation.fx_current->parameter_current);
             out.print("; ");
-            // Nothing to do..
         } break;
         case SETTINGS_MODE::GLOBAL: {
-            // animation.global_current->print_name(out);
+            out.print("global.");
+            // out.print(animation.global_current->parameter_current->param_name);
+            // animation.global_current->parameter_current.print_name(out);
             // out.print(": ");
-            // animation.global_current->change_parameter(value);
-            // animation.global_current->parameter_print_value(out);
-            // out.print("; ");
+            // animation.global_current->parameter_current->set_relative(value);
+            // animation.global_current->parameter_current->print_value(out);
+            // out.print(animation.global_current->parameter_current);
+            out.print("; ");
             switch (global_current) {
                 case GLOBAL_PARAM::EFFECT: {
-                    animation.select_next_effect();
-                    out.print("global effect: ");
+                    // animation.select_next_effect();
+                    animation.global_effect.set_relative(value);
+                    out.print(animation.global_effect.param_name);
+                    out.print(": ");
+                    out.print(animation.global_effect);
+                    out.print(" -> ");
                     animation.fx_current->print_name(out);
                 } break;
                 case GLOBAL_PARAM::BRIGHTNESS: {
-                    // animation.rainbow_brightness += value;
-                    // out.print(animation.rainbow_brightness);
-                    uint8_t temp = animation.getBrightness() + value;
-                    animation.setBrightness(temp);
-                    out.print("global brightness: ");
-                    out.print(animation.getBrightness());
+                    animation.global_brightness.set_relative(value);
+                    out.print(animation.global_brightness.param_name);
+                    out.print(": ");
+                    out.print(animation.global_brightness);
                 } break;
                 case GLOBAL_PARAM::OVERWRITE: {
                     // out.printf(

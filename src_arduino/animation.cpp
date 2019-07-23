@@ -261,19 +261,6 @@ void MyAnimation::show() {
     FastLED.show();
 }
 
-void MyAnimation::setBrightness(uint8_t value) {
-    global_brightness = value;
-    if (global_brightness > 0) {
-        FastLED.setBrightness(value);
-    } else {
-        FastLED.setBrightness(1);
-    }
-}
-
-uint8_t MyAnimation::getBrightness() {
-    return global_brightness;
-}
-
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // overwrite
