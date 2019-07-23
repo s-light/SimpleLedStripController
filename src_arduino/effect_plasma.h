@@ -48,15 +48,13 @@ template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
 class EffectPlasma: public EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> {
 public:
     // constructor
-    EffectPlasma() {
+    EffectPlasma(char const * effect_name):
+        EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> (effect_name)
+    {
         this->duration_min = 10000;
-        this->duration = 60000;
+        // this->duration = 60000;
     };
     // ~EffectPlasma() {};
-
-    virtual void print_name(Print &out) {
-        out.print("Plasma");
-    }
 
     // basic library api
     void update() {

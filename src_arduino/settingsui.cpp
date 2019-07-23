@@ -198,7 +198,7 @@ void SettingsUI::change_param(int16_t value) {
     switch (settings_mode) {
         case SETTINGS_MODE::EFFECT: {
             animation.fx_current->print_name(out);
-            out.print(" - ");
+            out.print(".");
             animation.fx_current->parameter_print_name(out);
             out.print(": ");
             animation.fx_current->change_parameter(value);
@@ -207,9 +207,15 @@ void SettingsUI::change_param(int16_t value) {
             // Nothing to do..
         } break;
         case SETTINGS_MODE::GLOBAL: {
+            // animation.global_current->print_name(out);
+            // out.print(": ");
+            // animation.global_current->change_parameter(value);
+            // animation.global_current->parameter_print_value(out);
+            // out.print("; ");
             switch (global_current) {
                 case GLOBAL_PARAM::EFFECT: {
                     animation.select_next_effect();
+                    out.print("global effect: ");
                     animation.fx_current->print_name(out);
                 } break;
                 case GLOBAL_PARAM::BRIGHTNESS: {
@@ -217,6 +223,7 @@ void SettingsUI::change_param(int16_t value) {
                     // out.print(animation.rainbow_brightness);
                     uint8_t temp = animation.getBrightness() + value;
                     animation.setBrightness(temp);
+                    out.print("global brightness: ");
                     out.print(animation.getBrightness());
                 } break;
                 case GLOBAL_PARAM::OVERWRITE: {
@@ -226,6 +233,7 @@ void SettingsUI::change_param(int16_t value) {
                     //     animation.overwrite_start_get(),
                     //     animation.overwrite_end_get());
                     animation.overwrite_set_relative(value);
+                    out.print("global overwrite: ");
                     out.printf(
                         "(%3d, %3d)",
                         animation.overwrite_start_get(),

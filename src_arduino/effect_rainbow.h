@@ -48,12 +48,12 @@ template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
 class EffectRainbow: public EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> {
 public:
     // constructor
-    // EffectRainbow() {};
+    EffectRainbow(char const * effect_name):
+        EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> (effect_name)
+    {
+        // nothing to do.
+    };
     // ~EffectRainbow() {};
-
-    virtual void print_name(Print &out) {
-        out.print("Rainbow");
-    }
 
     // basic library api
     void update() {

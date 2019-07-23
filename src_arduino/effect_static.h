@@ -46,12 +46,12 @@ template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
 class EffectStatic: public EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> {
 public:
     // constructor
-    // EffectStatic() {};
+    EffectStatic(char const * effect_name):
+        EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> (effect_name)
+    {
+        // nothing to do.
+    };
     // ~EffectStatic() {};
-
-    virtual void print_name(Print &out) {
-        out.print("Static");
-    }
 
     // basic library api
     void update() {
@@ -161,12 +161,12 @@ template <uint16_t PIXEL_COUNT, uint16_t PIXEL_COUNT_OVERLAY>
 class EffectBlack: public EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> {
 public:
     // constructor
-    // EffectBlack() {};
+    EffectBlack(char const * effect_name):
+        EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> (effect_name)
+    {
+        // nothing to do.
+    };
     // ~EffectBlack() {};
-
-    virtual void print_name(Print &out) {
-        out.print("Black");
-    }
 
     // basic library api
     void update() {

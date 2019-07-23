@@ -132,14 +132,13 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // effects
 
-    // EffectStatic<PIXEL_COUNT> fx_static = EffectStatic<PIXEL_COUNT>();
-    EffectBlack<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_black {};
-    EffectStatic<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_static {};
-    EffectRainbow<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_rainbow {};
-    EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_plasma {};
+    EffectBlack<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_black {"black"};
+    EffectStatic<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_static {"static"};
+    EffectRainbow<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_rainbow {"rainbow"};
+    EffectPlasma<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> fx_plasma {"plasma"};
 
     EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_last = &fx_static;
-    EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_current = &fx_static;
+    EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_current = &fx_plasma;
     EffectBase<PIXEL_COUNT, PIXEL_COUNT_OVERLAY> * fx_next = &fx_rainbow;
 
     void select_next_effect();

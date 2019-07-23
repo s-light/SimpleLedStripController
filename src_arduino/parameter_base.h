@@ -100,25 +100,25 @@ public:
     // constructor
     ParameterTyped(
         char const * param_name,
-        T min,
-        T max,
-        T default_value,
+        T value_min,
+        T value_max,
+        T value_default,
         overlay_func_t overlay_customfunc = nullptr,
         set_func_t set_customfunc = nullptr
     ):
         ParameterBase<PIXEL_COUNT_OVERLAY> (param_name, overlay_customfunc),
-        min(min),
-        max(max),
-        default_value(default_value),
+        value_min(value_min),
+        value_max(value_max),
+        value_default(value_default),
         set_customfunc(set_customfunc)
     {
         fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
-        value = default_value;
+        value = value_default;
     };
 
-    const T min;
-    const T max;
-    const T default_value;
+    const T value_min;
+    const T value_max;
+    const T value_default;
     T value;
 
     set_func_t set_customfunc = nullptr;
@@ -131,7 +131,7 @@ public:
             Serial.println("set_customfunc called.");
             value_new = set_customfunc(value_new);
         }
-        this->value = clamp(value_new, this->min, this->max);
+        this->value = clamp(value_new, this->value_min, this->value_max);
         Serial.print(this->value);
         Serial.println();
         return this->value;

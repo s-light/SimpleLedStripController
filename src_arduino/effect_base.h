@@ -50,13 +50,16 @@ public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
-    EffectBase() {
+    EffectBase(char const * effect_name):
+        effect_name(effect_name)
+    {
         // fill_solid(this->pixels_overlay, PIXEL_COUNT_OVERLAY, CHSV(0, 255, 0));
     };
     ~EffectBase() {};
 
+    char const * effect_name;
     virtual void print_name(Print &out) {
-        out.print("BASE");
+        out.print(effect_name);
     }
 
     // basic library api
@@ -111,13 +114,6 @@ public:
         }
     };
 
-    CRGBArray<PIXEL_COUNT_OVERLAY> duration_render_overlay() {
-        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
-            duration.pixels_overlay[i] = CRGB::Black;
-        }
-        return duration.pixels_overlay;
-    }
-
     // virtual void duration_set(int16_t value) {
     //     uint32_t factor = duration_factor_map.mapit(duration);
     //     int32_t value_wf = (value * factor);
@@ -148,6 +144,13 @@ public:
     //     return temp;
     // }
 
+    CRGBArray<PIXEL_COUNT_OVERLAY> duration_render_overlay() {
+        for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+            duration_x.pixels_overlay[i] = CRGB::Black;
+        }
+        return duration_x.pixels_overlay;
+    }
+
     // ParameterTyped(
     //     char * param_name,
     //     T min,
@@ -156,15 +159,16 @@ public:
     //     overlay_func_t overlay_customfunc = nullptr,
     //     set_func_t set_customfunc = nullptr
     // )
-    ParameterTyped<PIXEL_COUNT_OVERLAY, uint32_t> duration = {
+    ParameterTyped<PIXEL_COUNT_OVERLAY, uint32_t> duration_x = {
         "duration",
         duration_min,
         duration_max,
         30 * 1000, //ms
-        // overlay_duration
         std::bind(&EffectBase::duration_render_overlay, this),
         // std::bind(&EffectBase::duration_set, this, std::placeholders::_1),
     };
+
+    uint32_t duration = 30 * 1000;
 
     uint32_t start = 0;
     uint32_t end = 0;
