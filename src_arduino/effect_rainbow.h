@@ -82,6 +82,7 @@ public:
             CHSV(50, 255, 25),
             CHSV(50, 255, 255)
         );
+        spread.draw_indicator(CHSV(50, 0, 255));
         return spread.pixels_overlay;
     }
 
@@ -114,10 +115,11 @@ public:
     //         hue.BORDER,
     //         hue.BORDER_END
     //     ).fill_gradient(
-    //         CHSV(0, 255, 255),
-    //         CHSV(255, 255, 255),
+    //         CHSV(0, 255, 180),
+    //         CHSV(255, 255, 180),
     //         LONGEST_HUES
     //     );
+    //     hue.draw_indicator(CHSV(50, 0, 255));
     //     return hue.pixels_overlay;
     // }
     //
@@ -142,9 +144,10 @@ public:
         ).fill_gradient(
             // CHSV(hue, 0, brightness),
             // CHSV(hue, 255, brightness)
-            CHSV(0, 0, brightness),
-            CHSV(0, 255, brightness)
+            CHSV(0, 0, limit<uint8_t>(brightness, 180)),
+            CHSV(0, 255, limit<uint8_t>(brightness, 180))
         );
+        saturation.draw_indicator(CHSV(50, 0, 255));
         return saturation.pixels_overlay;
     }
 
@@ -172,6 +175,7 @@ public:
             CHSV(0, saturation, 25),
             CHSV(0, saturation, 255)
         );
+        brightness.draw_indicator(CHSV(50, 0, 255));
         return brightness.pixels_overlay;
     }
 
