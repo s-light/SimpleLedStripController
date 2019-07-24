@@ -152,12 +152,12 @@ public:
                 duration.BORDER_END - 4, duration.BORDER_END -1) = CRGB::Black;
         }
         // draw current position
-        uint16_t value_current = map_range(
+        uint16_t pixel_indicator = map_range(
             duration.value,
             duration.value_min, duration.value_max,
             x_min, x_max);
-        duration.pixels_overlay[value_current] = CHSV(255, 0, 255);
-        // duration.pixels_overlay[value_current] = CHSV(100, 100, 255);
+        duration.pixels_overlay[pixel_indicator] = CHSV(255, 0, 255);
+        // duration.pixels_overlay[pixel_indicator] = CHSV(100, 100, 255);
         return duration.pixels_overlay;
     }
 
