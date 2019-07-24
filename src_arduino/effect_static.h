@@ -62,14 +62,24 @@ public:
         // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
         //     hue.pixels_overlay[i] = CRGB::Black;
         // }
+        uint8_t temp_brightness = brightness;
+        if (temp_brightness >= 180) {
+            temp_brightness = 180;
+        }
         hue.pixels_overlay(
             hue.BORDER,
             hue.BORDER_END
         ).fill_gradient(
-            CHSV(0, saturation, brightness),
-            CHSV(255, saturation, brightness),
+            CHSV(0, saturation, temp_brightness),
+            CHSV(255, saturation, temp_brightness),
             LONGEST_HUES
         );
+        // position indicator
+        uint16_t value_current = map_range<uint32_t>(
+            hue.value,
+            hue.value_min, hue.value_max,
+            hue.BORDER, hue.BORDER_END);
+        hue.pixels_overlay[value_current] = CHSV(100, 0, 255);
         return hue.pixels_overlay;
     }
 
@@ -88,13 +98,23 @@ public:
         // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
         //     saturation.pixels_overlay[i] = CRGB::Black;
         // }
+        uint8_t temp_brightness = brightness;
+        if (temp_brightness >= 180) {
+            temp_brightness = 180;
+        }
         saturation.pixels_overlay(
             saturation.BORDER,
             saturation.BORDER_END
         ).fill_gradient(
-            CHSV(hue, 0, brightness),
-            CHSV(hue, 255, brightness)
+            CHSV(hue, 0, temp_brightness),
+            CHSV(hue, 255, temp_brightness)
         );
+        // position indicator
+        uint16_t value_current = map_range<uint32_t>(
+            saturation.value,
+            saturation.value_min, saturation.value_max,
+            saturation.BORDER, saturation.BORDER_END);
+        saturation.pixels_overlay[value_current] = CHSV(100, 0, 255);
         return saturation.pixels_overlay;
     }
 
@@ -118,8 +138,14 @@ public:
             brightness.BORDER_END
         ).fill_gradient(
             CHSV(hue, saturation, 25),
-            CHSV(hue, saturation, 255)
+            CHSV(hue, saturation, 200)
         );
+        // position indicator
+        uint16_t value_current = map_range<uint32_t>(
+            brightness.value,
+            brightness.value_min, brightness.value_max,
+            brightness.BORDER, brightness.BORDER_END);
+        brightness.pixels_overlay[value_current] = CHSV(100, 255, 255);
         return brightness.pixels_overlay;
     }
 

@@ -277,7 +277,7 @@ public:
             global_brightness.BORDER_END
         ).fill_gradient(
             CHSV(0, 0, 25),
-            CHSV(0, 0, 230)
+            CHSV(0, 0, 200)
         );
         // draw current position
         uint16_t value_current = map_range<uint32_t>(
