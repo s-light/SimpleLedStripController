@@ -70,12 +70,7 @@ public:
             CHSV(255, saturation, limit<uint8_t>(brightness, 180)),
             LONGEST_HUES
         );
-        // position indicator
-        uint16_t pixel_indicator = map_range<uint32_t>(
-            hue.value,
-            hue.value_min, hue.value_max,
-            hue.BORDER, hue.BORDER_END);
-        hue.pixels_overlay[pixel_indicator] = CHSV(100, 0, 255);
+        hue.draw_indicator(CHSV(100, 0, 255));
         return hue.pixels_overlay;
     }
 
@@ -101,12 +96,7 @@ public:
             CHSV(hue, 0, limit<uint8_t>(brightness, 180)),
             CHSV(hue, 255, limit<uint8_t>(brightness, 180))
         );
-        // position indicator
-        uint16_t pixel_indicator = map_range<uint32_t>(
-            saturation.value,
-            saturation.value_min, saturation.value_max,
-            saturation.BORDER, saturation.BORDER_END);
-        saturation.pixels_overlay[pixel_indicator] = CHSV(100, 0, 255);
+        saturation.draw_indicator(CHSV(100, 0, 255));
         return saturation.pixels_overlay;
     }
 
@@ -132,12 +122,7 @@ public:
             CHSV(hue, saturation, 25),
             CHSV(hue, saturation, 200)
         );
-        // position indicator
-        uint16_t pixel_indicator = map_range<uint32_t>(
-            brightness.value,
-            brightness.value_min, brightness.value_max,
-            brightness.BORDER, brightness.BORDER_END);
-        brightness.pixels_overlay[pixel_indicator] = CHSV(100, 255, 255);
+        brightness.draw_indicator(CHSV(100, 255, 255));
         return brightness.pixels_overlay;
     }
 

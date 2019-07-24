@@ -208,9 +208,16 @@ public:
         return this->set(value_new);
     };
 
-
     virtual operator T () const {
         return this->value;
+    }
+
+    virtual void draw_indicator(CHSV color) {
+        uint16_t pixel_indicator = map_range<T, uint16_t>(
+            this->value,
+            this->value_min, this->value_max,
+            this->BORDER, this->BORDER_END);
+        this->pixels_overlay[pixel_indicator] = color;
     }
 };  // class ParameterTyped
 

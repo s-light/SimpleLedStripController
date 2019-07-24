@@ -137,8 +137,9 @@ public:
             spread.BORDER_END
         ).fill_gradient(
             CHSV(50, 255, 25),
-            CHSV(50, 255, 255)
+            CHSV(50, 255, 180)
         );
+        spread.draw_indicator(CHSV(50, 0, 255));
         return spread.pixels_overlay;
     }
 
