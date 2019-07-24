@@ -7,12 +7,28 @@ This is a Arduino sketch for a simple LED-Strip Controller.
 The user-interface is just a normal rotary encoder with pushbutton.
 
 ## usage
-- push or rotate to wake up.
+- push or rotate to wake up, then click (second time) to switch on
 - rotate to change parameter
 - click to switch to next parameter
-- double click to switch to next effect
+- double click to switch between effect and global parameters
 - long click (hold > 4seconds and release) to switch off
 
+### parameter tree
+- Global
+    - effect
+    - brightness
+    - overwrite (use only part of led-strip → rest is overwritten with black)
+- Effect
+    - static
+        - hue
+        - saturation
+    - rainbow
+        - duration
+        - spread
+    - plasma
+        - duration
+        - spread
+        - hue
 
 ## hardware
 - [Adafruit ItsyBitsy M4 Express](https://learn.adafruit.com/introducing-adafruit-itsybitsy-m4)
