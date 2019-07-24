@@ -122,9 +122,22 @@ public:
             duration.BORDER,
             duration.BORDER_END
         ).fill_gradient(
-            CHSV(240, 255, 0),
-            CHSV(240, 255, 255)
+            CHSV(230, 255, 255),
+            CHSV(250, 255, 255)
         );
+        if (millis() % 150 <= 70) {
+            duration.pixels_overlay(
+                duration.BORDER, duration.BORDER + 3) = CRGB::Black;
+        }
+        if (millis() % 500 <= 100) {
+            uint16_t helper = PIXEL_COUNT_OVERLAY/2;
+            duration.pixels_overlay(
+                helper - 1, helper + 1) = CRGB::Black;
+        }
+        if (millis() % 1000 <= 250) {
+            duration.pixels_overlay(
+                duration.BORDER_END - 3, duration.BORDER_END) = CRGB::Black;
+        }
         return duration.pixels_overlay;
     }
 
