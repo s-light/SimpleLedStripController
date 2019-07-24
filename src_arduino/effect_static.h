@@ -66,8 +66,8 @@ public:
             hue.BORDER,
             hue.BORDER_END
         ).fill_gradient(
-            CHSV(0, saturation, limit(brightness, 180)),
-            CHSV(255, saturation, limit(brightness, 180)),
+            CHSV(0, saturation, limit<uint8_t>(brightness, 180)),
+            CHSV(255, saturation, limit<uint8_t>(brightness, 180)),
             LONGEST_HUES
         );
         // position indicator
@@ -98,8 +98,8 @@ public:
             saturation.BORDER,
             saturation.BORDER_END
         ).fill_gradient(
-            CHSV(hue, 0, limit(brightness, 180)),
-            CHSV(hue, 255, limit(brightness, 180))
+            CHSV(hue, 0, limit<uint8_t>(brightness, 180)),
+            CHSV(hue, 255, limit<uint8_t>(brightness, 180))
         );
         // position indicator
         uint16_t pixel_indicator = map_range<uint32_t>(
