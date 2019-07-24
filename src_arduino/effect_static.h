@@ -62,16 +62,12 @@ public:
         // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
         //     hue.pixels_overlay[i] = CRGB::Black;
         // }
-        uint8_t temp_brightness = brightness;
-        if (temp_brightness >= 180) {
-            temp_brightness = 180;
-        }
         hue.pixels_overlay(
             hue.BORDER,
             hue.BORDER_END
         ).fill_gradient(
-            CHSV(0, saturation, temp_brightness),
-            CHSV(255, saturation, temp_brightness),
+            CHSV(0, saturation, limit(brightness, 180)),
+            CHSV(255, saturation, limit(brightness, 180)),
             LONGEST_HUES
         );
         // position indicator
@@ -98,16 +94,12 @@ public:
         // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
         //     saturation.pixels_overlay[i] = CRGB::Black;
         // }
-        uint8_t temp_brightness = brightness;
-        if (temp_brightness >= 180) {
-            temp_brightness = 180;
-        }
         saturation.pixels_overlay(
             saturation.BORDER,
             saturation.BORDER_END
         ).fill_gradient(
-            CHSV(hue, 0, temp_brightness),
-            CHSV(hue, 255, temp_brightness)
+            CHSV(hue, 0, limit(brightness, 180)),
+            CHSV(hue, 255, limit(brightness, 180))
         );
         // position indicator
         uint16_t value_current = map_range<uint32_t>(

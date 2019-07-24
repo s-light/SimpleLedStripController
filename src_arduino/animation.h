@@ -279,7 +279,7 @@ public:
             CHSV(0, 0, 25),
             CHSV(0, 0, 200)
         );
-        // draw current position
+        // position indicator
         uint16_t value_current = map_range<uint32_t>(
             global_brightness.value,
             global_brightness.value_min, global_brightness.value_max,

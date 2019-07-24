@@ -161,6 +161,11 @@ T map_range(T x, T in_min, T in_max, T out_min, T out_max) {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+template<class T1, class T2>
+T2 map_range(T1 x, T1 in_min, T1 in_max, T2 out_min, T2 out_max) {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 template<class T>
 T map_range_11_to(T x, T out_min, T out_max) {
     return (x - -1.0) * (out_max - out_min) / (1.0 - -1.0) + out_min;
@@ -184,7 +189,7 @@ T map_range_11_to(T x, T out_min, T out_max) {
 // ) {
 //     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 // }
-// 
+//
 // uint32_t map_range__uint32(
 //     uint32_t x,
 //     uint32_t in_min, uint32_t in_max,
