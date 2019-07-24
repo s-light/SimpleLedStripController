@@ -66,8 +66,8 @@ public:
             hue.BORDER,
             hue.BORDER_END
         ).fill_gradient(
-            CHSV(0, saturation, limit<uint8_t>(brightness, 180)),
-            CHSV(255, saturation, limit<uint8_t>(brightness, 180)),
+            CHSV(0, clamp<uint8_t>(saturation, 180, 255), limit<uint8_t>(brightness, 180)),
+            CHSV(255, clamp<uint8_t>(saturation, 180, 255), limit<uint8_t>(brightness, 180)),
             LONGEST_HUES
         );
         hue.draw_indicator(CHSV(100, 0, 255));
@@ -96,7 +96,7 @@ public:
             CHSV(hue, 0, limit<uint8_t>(brightness, 180)),
             CHSV(hue, 255, limit<uint8_t>(brightness, 180))
         );
-        saturation.draw_indicator(CHSV(100, 0, 255));
+        saturation.draw_indicator(CHSV(hue-150, 255, 255));
         return saturation.pixels_overlay;
     }
 
