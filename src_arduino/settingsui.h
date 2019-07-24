@@ -68,12 +68,6 @@ class SettingsUI {
         GLOBAL,
     };
 
-    enum class GLOBAL_PARAM {
-        EFFECT,
-        BRIGHTNESS,
-        OVERWRITE,
-    };
-
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
 
@@ -184,7 +178,6 @@ class SettingsUI {
 
     void switch_mode();
     SETTINGS_MODE settings_mode = SETTINGS_MODE::GLOBAL;
-    GLOBAL_PARAM global_current = GLOBAL_PARAM::EFFECT;
     void print_settings_mode(Print &out);
     void print_param(Print &out);
     void switch_param();
