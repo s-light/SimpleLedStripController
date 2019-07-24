@@ -172,10 +172,11 @@ public:
             hue.BORDER,
             hue.BORDER_END
         ).fill_gradient(
-            CHSV(0, 255, 255),
-            CHSV(255, 255, 255),
+            CHSV(0, 255, 180),
+            CHSV(255, 255, 180),
             LONGEST_HUES
         );
+        hue.draw_indicator(CHSV(100, 0, 255));
         return hue.pixels_overlay;
     }
 
