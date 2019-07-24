@@ -123,8 +123,8 @@ public:
             duration.BORDER,
             duration.BORDER_END
         ).fill_gradient(
-            CHSV(230, 255, 230),
-            CHSV(250, 255, 230)
+            CHSV(230, 255, 200),
+            CHSV(250, 255, 200)
         );
         // blinking
         uint32_t x_min = duration.BORDER + 1;

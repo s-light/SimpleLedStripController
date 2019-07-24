@@ -152,27 +152,44 @@ public:
         uint16_t temp_count = (global_effect.BORDER_END - global_effect.BORDER);
         temp_count -= (3*global_effect.BORDER);
         temp_count = temp_count / 3;
+
+        const uint8_t brightness_active = 180;
+        const uint8_t brightness_inactive = 180;
+
         // static
+        uint8_t temp_brightness = brightness_inactive;
+        if (global_effect == 0) {
+            temp_brightness = brightness_active;
+        } else {
+            temp_brightness = brightness_inactive;
+        }
         uint16_t start = global_effect.BORDER;
-        // global_effect.pixels_overlay(start, start + temp_count).fill_solid(
-        //     CHSV(0, 0, 240)
-        // );
         global_effect.pixels_overlay(start, start + temp_count).fill_gradient(
-            CHSV(0, 0, 240),
-            CHSV(0, 0, 240)
+            CHSV(0, 0, temp_brightness),
+            CHSV(0, 0, temp_brightness)
         );
-        // rainbo
+        // rainbow
+        if (global_effect == 1) {
+            temp_brightness = brightness_active;
+        } else {
+            temp_brightness = brightness_inactive;
+        }
         start += temp_count + global_effect.BORDER;
         global_effect.pixels_overlay(start, start + temp_count).fill_gradient(
-            CHSV(0, 255, 255),
-            CHSV(255, 255, 255),
+            CHSV(0, 255, temp_brightness),
+            CHSV(255, 255, temp_brightness),
             LONGEST_HUES
         );
         // plasma
+        if (global_effect == 3) {
+            temp_brightness = brightness_active;
+        } else {
+            temp_brightness = brightness_inactive;
+        }
         start += temp_count + global_effect.BORDER;
         global_effect.pixels_overlay(start, start + temp_count).fill_gradient(
-            CHSV(150, 255, 255),
-            CHSV(200, 255, 255)
+            CHSV(170, 255, temp_brightness),
+            CHSV(200, 255, temp_brightness)
         );
         return global_effect.pixels_overlay;
     }
@@ -259,8 +276,8 @@ public:
             global_brightness.BORDER,
             global_brightness.BORDER_END
         ).fill_gradient(
-            CHSV(0, 0, 0),
-            CHSV(0, 0, 255)
+            CHSV(0, 0, 25),
+            CHSV(0, 0, 230)
         );
         // draw current position
         uint16_t value_current = map_range<uint32_t>(
