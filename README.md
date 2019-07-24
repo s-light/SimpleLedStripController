@@ -6,6 +6,8 @@ Simple Controller for RGB-LED-Strips
 This is a Arduino sketch for a simple LED-Strip Controller.
 The user-interface is just a normal rotary encoder with pushbutton.
 
+![the final bread board setup](media/P1700955_small.jpg)
+
 ## usage
 - push or rotate to wake up, then click (second time) to switch on
 - rotate to change parameter
