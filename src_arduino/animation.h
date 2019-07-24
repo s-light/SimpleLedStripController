@@ -262,6 +262,12 @@ public:
             CHSV(0, 0, 0),
             CHSV(0, 0, 255)
         );
+        // draw current position
+        uint16_t value_current = map_range<uint32_t>(
+            global_brightness.value,
+            global_brightness.value_min, global_brightness.value_max,
+            global_brightness.BORDER, global_brightness.BORDER_END);
+        global_brightness.pixels_overlay[value_current] = CHSV(100, 255, 255);
         return global_brightness.pixels_overlay;
     }
 
