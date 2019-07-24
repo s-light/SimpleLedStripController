@@ -119,9 +119,9 @@ class SettingsUI {
         // uint8_t id_new,
         1,
         // uint8_t pin_A_new,
-        A5,
-        // uint8_t pin_B_new,
         A4,
+        // uint8_t pin_B_new,
+        A5,
         // uint8_t pulse_per_step_new,
         1,
         // tCallbackFunction callbackOnEvent_new
