@@ -123,15 +123,15 @@ public:
             duration.BORDER,
             duration.BORDER_END
         ).fill_gradient(
-            CHSV(230, 255, 200),
-            CHSV(250, 255, 200)
+            CHSV(230, 255, 180),
+            CHSV(250, 255, 180)
         );
         // blinking
-        uint32_t x_min = duration.BORDER + 1;
-        uint32_t x_max = duration.BORDER_END - 1;
         const uint16_t blink_offduration = 80;
         const uint16_t blink_min = 150;
         const uint16_t blink_max = 1500;
+        // const uint32_t x_min = duration.BORDER + 1;
+        // const uint32_t x_max = duration.BORDER_END - 1;
         // for (uint16_t i = x_min; i < x_max; i++) {
         //     uint16_t blink = map_range(i, x_min, x_max, blink_min, blink_max);
         //     if (millis() % blink <= blink_offduration) {
@@ -152,12 +152,7 @@ public:
                 duration.BORDER_END - 4, duration.BORDER_END -1) = CRGB::Black;
         }
         // draw current position
-        uint16_t pixel_indicator = map_range(
-            duration.value,
-            duration.value_min, duration.value_max,
-            x_min, x_max);
-        duration.pixels_overlay[pixel_indicator] = CHSV(255, 0, 255);
-        // duration.pixels_overlay[pixel_indicator] = CHSV(100, 100, 255);
+        duration.draw_indicator(CHSV(255, 0, 255));
         return duration.pixels_overlay;
     }
 
