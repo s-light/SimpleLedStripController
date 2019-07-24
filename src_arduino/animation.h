@@ -153,12 +153,12 @@ public:
         temp_count -= (3*global_effect.BORDER);
         temp_count = temp_count / 3;
 
-        const uint8_t brightness_active = 180;
-        const uint8_t brightness_inactive = 180;
+        const uint8_t brightness_active = 255;
+        const uint8_t brightness_inactive = 100;
 
         // static
         uint8_t temp_brightness = brightness_inactive;
-        if (global_effect == 0) {
+        if (global_effect.value == 0) {
             temp_brightness = brightness_active;
         } else {
             temp_brightness = brightness_inactive;
@@ -169,7 +169,7 @@ public:
             CHSV(0, 0, temp_brightness)
         );
         // rainbow
-        if (global_effect == 1) {
+        if (global_effect.value == 1) {
             temp_brightness = brightness_active;
         } else {
             temp_brightness = brightness_inactive;
@@ -181,7 +181,7 @@ public:
             LONGEST_HUES
         );
         // plasma
-        if (global_effect == 3) {
+        if (global_effect.value == 2) {
             temp_brightness = brightness_active;
         } else {
             temp_brightness = brightness_inactive;
