@@ -117,7 +117,7 @@ public:
             brightness.BORDER,
             brightness.BORDER_END
         ).fill_gradient(
-            CHSV(hue, saturation, 0),
+            CHSV(hue, saturation, 25),
             CHSV(hue, saturation, 255)
         );
         return brightness.pixels_overlay;

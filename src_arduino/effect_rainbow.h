@@ -79,7 +79,7 @@ public:
             spread.BORDER,
             spread.BORDER_END
         ).fill_gradient(
-            CHSV(50, 255, 0),
+            CHSV(50, 255, 25),
             CHSV(50, 255, 255)
         );
         return spread.pixels_overlay;
@@ -169,7 +169,7 @@ public:
         ).fill_gradient(
             // CHSV(hue, saturation, 0),
             // CHSV(hue, saturation, 255)
-            CHSV(0, saturation, 0),
+            CHSV(0, saturation, 25),
             CHSV(0, saturation, 255)
         );
         return brightness.pixels_overlay;
