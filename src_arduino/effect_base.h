@@ -40,6 +40,7 @@ SOFTWARE.
 
 #include <FastLED.h>
 
+#include "mapping.h"
 #include "parameter_base.h"
 
 
@@ -115,29 +116,48 @@ public:
     };
 
     CRGBArray<PIXEL_COUNT_OVERLAY> duration_render_overlay() {
-        // for (int i = 0; i < PIXEL_COUNT_OVERLAY; i++) {
+        // for (int i = duration.BORDER; i < duration.BORDER_END; i++) {
         //     duration.pixels_overlay[i] = CRGB::Black;
         // }
         duration.pixels_overlay(
             duration.BORDER,
             duration.BORDER_END
         ).fill_gradient(
-            CHSV(230, 255, 255),
-            CHSV(250, 255, 255)
+            CHSV(230, 255, 230),
+            CHSV(250, 255, 230)
         );
-        if (millis() % 150 <= 70) {
+        // blinking
+        uint32_t x_min = duration.BORDER + 1;
+        uint32_t x_max = duration.BORDER_END - 1;
+        const uint16_t blink_offduration = 80;
+        const uint16_t blink_min = 150;
+        const uint16_t blink_max = 1500;
+        // for (uint16_t i = x_min; i < x_max; i++) {
+        //     uint16_t blink = map_range(i, x_min, x_max, blink_min, blink_max);
+        //     if (millis() % blink <= blink_offduration) {
+        //         duration.pixels_overlay[i] = CRGB::Black;
+        //     }
+        // }
+        if (millis() % blink_min <= blink_offduration) {
             duration.pixels_overlay(
-                duration.BORDER, duration.BORDER + 3) = CRGB::Black;
+                duration.BORDER + 1, duration.BORDER + 4) = CRGB::Black;
         }
-        if (millis() % 500 <= 100) {
+        if (millis() % 500 <= blink_offduration) {
             uint16_t helper = PIXEL_COUNT_OVERLAY/2;
             duration.pixels_overlay(
-                helper - 1, helper + 1) = CRGB::Black;
+                helper - 2, helper + 2) = CRGB::Black;
         }
-        if (millis() % 1000 <= 250) {
+        if (millis() % blink_max <= blink_offduration) {
             duration.pixels_overlay(
-                duration.BORDER_END - 3, duration.BORDER_END) = CRGB::Black;
+                duration.BORDER_END - 4, duration.BORDER_END -1) = CRGB::Black;
         }
+        // draw current position
+        uint16_t value_current = map_range(
+            duration.value,
+            duration.value_min, duration.value_max,
+            x_min, x_max);
+        duration.pixels_overlay[value_current] = CHSV(255, 0, 255);
+        // duration.pixels_overlay[value_current] = CHSV(100, 100, 255);
         return duration.pixels_overlay;
     }
 
