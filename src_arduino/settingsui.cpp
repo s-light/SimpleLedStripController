@@ -105,7 +105,7 @@ void SettingsUI::begin(
         button_init(out);
         out.println("  myencoder.begin");
         myencoder.begin(funcISR);
-        out.println("done:");
+        out.println("done.");
         ready = true;
     }
 }
